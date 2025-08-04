@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
-import '../models/login_models.dart';
+
 
 class LoginController extends GetxController {
   var isLoading = false.obs;
@@ -19,12 +19,13 @@ class LoginController extends GetxController {
         usernameController.text,
         passwordController.text,
       );
-      final loginResponse = LoginResponse.fromJson(data);
-      if (loginResponse.token != null) {
+      print('LOGIN RESPONSE:');
+      print(data);
+      if (data['status'] == 200 && data['token'] != null) {
         // Success: Navigate to home page
         Get.offAllNamed('/home');
       } else {
-        errorMessage.value = loginResponse.message ?? 'Login failed';
+        errorMessage.value = data['message'] ?? 'Login failed';
         Get.snackbar(
           'Login Gagal',
           errorMessage.value,
@@ -34,6 +35,8 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       errorMessage.value = 'Login error';
+      print('LOGIN ERROR:');
+      print(e);
       Get.snackbar(
         'Login Gagal',
         errorMessage.value,
