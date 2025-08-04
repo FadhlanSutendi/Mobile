@@ -1,22 +1,24 @@
 import 'package:dio/dio.dart';
 
 class AppApi {
-  static final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'https://da7332809535.ngrok-free.app/api',
-      headers: {'Accept': 'application/json'},
-    ),
-  );
+  static final Dio _dio = Dio();
 
-  static Future<Map<String, dynamic>> login(
-      String username, String password) async {
-    final response = await _dio.post(
-      '/login',
-      data: FormData.fromMap({
-        'username': username,
-        'password': password,
-      }),
-    );
-    return response.data;
+  static Future<Map<String, dynamic>> login(String username, String password) async {
+    final url = 'https://da7332809535.ngrok-free.app/api/login';
+    try {
+      final response = await _dio.post(
+        url,
+        data: {
+          'username': username,
+          'password': password,
+        },
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

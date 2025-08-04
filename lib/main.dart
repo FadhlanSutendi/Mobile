@@ -4,6 +4,7 @@ import 'package:project_prapw/presentation/onboarding/onboarding_page.dart';
 import 'presentation/splash/screen_page.dart';
 import 'presentation/login/login_page.dart';
 import 'presentation/login/controller/login_controller.dart';
+import 'presentation/home/home_page.dart';
 import 'routes/app_routes.dart';
 
 void main() {
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.splash: (context) => SplashScreen(),
         AppRoutes.onboarding: (context) => OnboardingPage(),
         AppRoutes.login: (context) => LoginPage(),
+        AppRoutes.home: (context) => HomePage(),
       },
     );
   }
