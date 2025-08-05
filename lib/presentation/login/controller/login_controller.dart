@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
 
-
 class LoginController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
@@ -25,24 +24,22 @@ class LoginController extends GetxController {
         // Success: Navigate to home page
         Get.offAllNamed('/home');
       } else {
-        errorMessage.value = data['message'] ?? 'Login failed';
-        Get.snackbar(
-          'Login Gagal',
-          errorMessage.value,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        // Ambil kode error, pastikan bertipe int, fallback ke 500 jika tidak ada
+        int errorCode = 500;
+        if (data['status'] is int) {
+          errorCode = data['status'];
+        } else if (data['status'] != null) {
+          errorCode = int.tryParse(data['status'].toString()) ?? 500;
+        }
+        // Navigasi ke halaman error
+        Get.toNamed('/error', arguments: errorCode);
       }
     } catch (e) {
       errorMessage.value = 'Login error';
       print('LOGIN ERROR:');
       print(e);
-      Get.snackbar(
-        'Login Gagal',
-        errorMessage.value,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      // Navigasi ke halaman error dengan kode 500 jika terjadi exception
+      Get.toNamed('/error', arguments: 500);
     } finally {
       isLoading.value = false;
     }

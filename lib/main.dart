@@ -6,6 +6,7 @@ import 'presentation/login/login_page.dart';
 import 'presentation/login/controller/login_controller.dart';
 import 'presentation/home/home_page.dart';
 import 'routes/app_routes.dart';
+import 'theme/error_page.dart';
 
 void main() {
   Get.put(LoginController());
@@ -24,6 +25,16 @@ class MyApp extends StatelessWidget {
         AppRoutes.onboarding: (context) => OnboardingPage(),
         AppRoutes.login: (context) => LoginPage(),
         AppRoutes.home: (context) => HomePage(),
+        AppRoutes.error: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          int errorCode = 500;
+          if (args is int) {
+            errorCode = args;
+          } else if (args != null) {
+            errorCode = int.tryParse(args.toString()) ?? 500;
+          }
+          return ErrorPage(errorCode: errorCode);
+        },
       },
     );
   }
