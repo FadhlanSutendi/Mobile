@@ -5,6 +5,8 @@ import 'presentation/splash/screen_page.dart';
 import 'presentation/login/login_page.dart';
 import 'presentation/login/controller/login_controller.dart';
 import 'presentation/home/home_page.dart';
+import 'presentation/scan barcode/scanbarcode_page.dart';
+import 'presentation/cek_item/cek_item_page.dart';
 import 'routes/app_routes.dart';
 import 'theme/error_page.dart';
 
@@ -35,6 +37,8 @@ class MyApp extends StatelessWidget {
           }
           return ErrorPage(errorCode: errorCode);
         },
+        AppRoutes.scanBarcode: (context) => ScanBarcodePage(),
+        AppRoutes.cekItem: (context) => CekItemPage(scannedId: ''),
       },
     );
   }

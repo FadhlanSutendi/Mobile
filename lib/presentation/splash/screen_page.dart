@@ -11,7 +11,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(context, '/onboarding');
     });
   }
@@ -26,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               'assets/logo.png',
-              width: 180,
-              height: 180,
+              width: 140,
+              height: 140,
             ),
             const SizedBox(height: 32),
             const _LoadingDots(),

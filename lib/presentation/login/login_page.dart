@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
                 children: [
                   // Logo
                   SizedBox(height: 40),
-                  Image.asset('assets/logo.png',
+                  Image.asset('assets/logo1.png',
                       height: 80), // Replace with your logo asset
                   SizedBox(height: 40),
                   Text('Welcome Back!',
@@ -84,7 +84,7 @@ class LoginPage extends StatelessWidget {
                           ),
                           onPressed: c.isLoading.value ? null : c.login,
                           child: c.isLoading.value
-                              ? CircularProgressIndicator(color: Colors.white)
+                              ? CircularProgressIndicator(color: const Color.fromARGB(255, 255, 255, 255))
                               : Text('LOGIN',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
