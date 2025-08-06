@@ -38,20 +38,27 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
           Expanded(
             flex: 1,
             child: Center(
-              child: scannedResult != null
-                  ? ElevatedButton(
-                      child: Text('Lanjut ke Cek Item'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                CekItemPage(scannedId: scannedResult!),
-                          ),
-                        );
-                      },
-                    )
-                  : Text('Arahkan kamera ke QR/Barcode'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  scannedResult != null
+                      ? Text('Barcode terdeteksi: $scannedResult')
+                      : Text('Arahkan kamera ke QR/Barcode'),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    child: Text('Selanjutnya'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CekItemPage(scannedId: scannedResult ?? ''),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           )
         ],

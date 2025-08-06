@@ -4,7 +4,7 @@ class AppApi {
   static final Dio _dio = Dio();
 
   static Future<Map<String, dynamic>> login(String username, String password) async {
-    final url = 'https://e4d3c6a96988.ngrok-free.app/api/login';
+    final url = 'https://cce58b6fd28d.ngrok-free.app/api/login';
     try {
       final response = await _dio.post(
         url,
