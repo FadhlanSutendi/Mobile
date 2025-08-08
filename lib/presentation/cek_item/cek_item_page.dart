@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import '../scan barcode/models/scanbarcode_models.dart';
 
 class CekItemPage extends StatefulWidget {
-  final String scannedId;
-  CekItemPage({required this.scannedId});
+  final UnitItem unitItem;
+  CekItemPage({required this.unitItem});
 
   @override
   _CekItemPageState createState() => _CekItemPageState();
 }
 
 class _CekItemPageState extends State<CekItemPage> {
-  // Dummy data, replace with actual data fetch if needed
-  final String type = "Laptop";
-  final String unitCode = "PPLG-LAPTOP-001";
-  final String brand = "Lenovo";
-
   int selectedMode = 0; // 0: Pinjaman, 1: Pengembalian
 
   @override
   Widget build(BuildContext context) {
+    final unitItem = widget.unitItem;
     return Scaffold(
       appBar: AppBar(
         title: Text("Form Borrowing"),
@@ -116,11 +113,11 @@ class _CekItemPageState extends State<CekItemPage> {
             ),
             SizedBox(height: 24),
             // Input fields
-            _readonlyField("Type", type),
+            _readonlyField("Type", unitItem.subItem.merk),
             SizedBox(height: 16),
-            _readonlyField("Unit Code", unitCode),
+            _readonlyField("Unit Code", unitItem.codeUnit),
             SizedBox(height: 16),
-            _readonlyField("Brand", brand),
+            _readonlyField("Brand", unitItem.subItem.merk),
             Spacer(),
             // Navigation buttons
             Row(
