@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
           return ErrorPage(errorCode: errorCode);
         },
         AppRoutes.scanBarcode: (context) => ScanBarcodePage(),
-        AppRoutes.cekItem: (context) => CekItemPage(scannedId: ''),
+        AppRoutes.cekItem: (context) => Scaffold(
+              body: Center(child: Text('No item data provided')),
+            ),
       },
     );
   }
