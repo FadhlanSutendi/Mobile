@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AppApi {
   static final Dio _dio = Dio();
@@ -32,5 +34,14 @@ class AppApi {
     } catch (e) {
       return null;
     }
+  }
+
+  static Future<Map<String, dynamic>?> fetchUnitItemByCode(String codeUnit) async {
+    final url = Uri.parse('https://b398739fe74b.ngrok-free.app/api/unit-item/scan?code_unit=$codeUnit');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    }
+    return null;
   }
 }

@@ -51,7 +51,9 @@ class UnitItem {
       status: json['status'] ?? 0,
       condition: json['condition'] ?? 0,
       qrcode: json['qrcode'] ?? '',
-      subItem: SubItem.fromJson(json['sub_item'] ?? {}),
+      subItem: json['sub_item'] != null
+          ? SubItem.fromJson(json['sub_item'])
+          : SubItem(id: '', merk: '', stock: 0, unit: ''),
     );
   }
 }

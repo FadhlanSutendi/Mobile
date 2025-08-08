@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'controller/cek_item_controller.dart';
 import '../scan barcode/models/scanbarcode_models.dart';
 
 class CekItemPage extends StatefulWidget {
-  final UnitItem unitItem;
-  CekItemPage({required this.unitItem});
+  final UnitItem? unitItem;
+  CekItemPage({this.unitItem});
 
   @override
   _CekItemPageState createState() => _CekItemPageState();
@@ -11,10 +13,19 @@ class CekItemPage extends StatefulWidget {
 
 class _CekItemPageState extends State<CekItemPage> {
   int selectedMode = 0; // 0: Pinjaman, 1: Pengembalian
+  final cekItemController = Get.put(CekItemController());
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.unitItem != null) {
+      cekItemController.unitItem.value = widget.unitItem;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final unitItem = widget.unitItem;
     return Scaffold(
       appBar: AppBar(
         title: Text("Form Borrowing"),
@@ -70,89 +81,143 @@ class _CekItemPageState extends State<CekItemPage> {
               ],
             ),
             SizedBox(height: 24),
-            // Button Pinjaman & Pengembalian
+            // Search Field
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          selectedMode == 0 ? Colors.blue : Colors.white,
-                      foregroundColor:
-                          selectedMode == 0 ? Colors.white : Colors.black,
-                      side: BorderSide(color: Colors.blue),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Cari berdasarkan Code Unit',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        selectedMode = 0;
-                      });
-                    },
-                    child: Text("Pinjaman"),
                   ),
                 ),
                 SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          selectedMode == 1 ? Colors.blue : Colors.white,
-                      foregroundColor:
-                          selectedMode == 1 ? Colors.white : Colors.black,
-                      side: BorderSide(color: Colors.blue),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        selectedMode = 1;
-                      });
-                    },
-                    child: Text("Pengembalian"),
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    cekItemController.searchUnitItem(searchController.text.trim());
+                  },
+                  child: Icon(Icons.search),
                 ),
               ],
             ),
-            SizedBox(height: 24),
-            // Input fields
-            _readonlyField("Type", unitItem.subItem.merk),
             SizedBox(height: 16),
-            _readonlyField("Unit Code", unitItem.codeUnit),
-            SizedBox(height: 16),
-            _readonlyField("Brand", unitItem.subItem.merk),
-            Spacer(),
-            // Navigation buttons
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(Icons.arrow_back),
+            Obx(() {
+              if (cekItemController.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (cekItemController.errorMessage.value.isNotEmpty) {
+                return Text(
+                  cekItemController.errorMessage.value,
+                  style: TextStyle(color: Colors.red),
+                );
+              }
+              final unitItem = cekItemController.unitItem.value;
+              if (unitItem == null) {
+                return SizedBox.shrink();
+              }
+              return Column(
+                children: [
+                  // Button Pinjaman & Pengembalian
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                selectedMode == 0 ? Colors.blue : Colors.white,
+                            foregroundColor:
+                                selectedMode == 0 ? Colors.white : Colors.black,
+                            side: BorderSide(color: Colors.blue),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedMode = 0;
+                            });
+                          },
+                          child: Text("Pinjaman"),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                selectedMode == 1 ? Colors.blue : Colors.white,
+                            foregroundColor:
+                                selectedMode == 1 ? Colors.white : Colors.black,
+                            side: BorderSide(color: Colors.blue),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedMode = 1;
+                            });
+                          },
+                          child: Text("Pengembalian"),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      // Next step action
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Next"),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
+                  SizedBox(height: 24),
+                  // Input fields
+                  _readonlyField("Type", unitItem.subItem.merk),
+                  SizedBox(height: 16),
+                  _readonlyField("Unit Code", unitItem.codeUnit),
+                  SizedBox(height: 16),
+                  _readonlyField("Brand", unitItem.subItem.merk),
+                  SizedBox(height: 16),
+                  _readonlyField("Description", unitItem.description),
+                  SizedBox(height: 16),
+                  _readonlyField("Procurement Date", unitItem.procurementDate),
+                  SizedBox(height: 16),
+                  _readonlyField("Status", unitItem.status.toString()),
+                  SizedBox(height: 16),
+                  _readonlyField("Condition", unitItem.condition.toString()),
+                  Spacer(),
+                  // Navigation buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(Icons.arrow_back),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            // Next step action
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Next"),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ],
         ),
       ),
