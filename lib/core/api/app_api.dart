@@ -7,7 +7,7 @@ class AppApi {
 
   static Future<Map<String, dynamic>> login(
       String username, String password) async {
-    final url = 'https://b398739fe74b.ngrok-free.app/api/login';
+    final url = 'https://44126fe9907e.ngrok-free.app/api/login';
     try {
       final response = await _dio.post(
         url,
@@ -27,7 +27,7 @@ class AppApi {
 
   static Future<Map<String, dynamic>?> fetchUnitItem(String barcode) async {
     final url =
-        'https://b398739fe74b.ngrok-free.app/api/unit-items?code_unit=$barcode';
+        'https://44126fe9907e.ngrok-free.app/api/unit-items?code_unit=$barcode';
     try {
       final response = await _dio.get(url);
       return response.data as Map<String, dynamic>;
@@ -37,7 +37,7 @@ class AppApi {
   }
 
   static Future<Map<String, dynamic>?> fetchUnitItemByCode(String codeUnit) async {
-    final url = Uri.parse('https://b398739fe74b.ngrok-free.app/api/unit-item/scan?code_unit=$codeUnit');
+    final url = Uri.parse('https://44126fe9907e.ngrok-free.app/api/unit-item/scan?code_unit=$codeUnit');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       return json.decode(response.body);

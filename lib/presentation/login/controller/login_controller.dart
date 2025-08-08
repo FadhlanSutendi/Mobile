@@ -1,3 +1,4 @@
+import 'dart:convert'; // untuk jsonEncode
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
@@ -18,13 +19,21 @@ class LoginController extends GetxController {
         usernameController.text,
         passwordController.text,
       );
-      print('LOGIN RESPONSE:');
-      print(data);
+
+      // Log response API
+      print('==== LOGIN RESPONSE START ====');
+      try {
+        print(jsonEncode(data)); // tampilkan respons dalam bentuk JSON
+      } catch (_) {
+        print(data); // fallback kalau bukan Map/JSON
+      }
+      print('==== LOGIN RESPONSE END ====');
+
       if (data['status'] == 200 && data['token'] != null) {
         // Success: Navigate to home page
         Get.offAllNamed('/home');
       } else {
-        // Ambil kode error, pastikan bertipe int, fallback ke 500 jika tidak ada
+        // Ambil kode error, pastikan bertipe int
         int errorCode = 500;
         if (data['status'] is int) {
           errorCode = data['status'];
@@ -34,10 +43,12 @@ class LoginController extends GetxController {
         // Navigasi ke halaman error
         Get.toNamed('/error', arguments: errorCode);
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       errorMessage.value = 'Login error';
-      print('LOGIN ERROR:');
+      print('==== LOGIN ERROR START ====');
       print(e);
+      print(stackTrace);
+      print('==== LOGIN ERROR END ====');
       // Navigasi ke halaman error dengan kode 500 jika terjadi exception
       Get.toNamed('/error', arguments: 500);
     } finally {
