@@ -1,18 +1,20 @@
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
-import '../../scan barcode/models/scanbarcode_models.dart';
+import '../models/cek_item_models.dart'; // gunakan model yang benar
 
 class CekItemController extends GetxController {
   var isLoading = false.obs;
   var unitItem = Rxn<UnitItem>();
   var errorMessage = ''.obs;
 
-  Future<void> searchUnitItem(String codeUnit) async {
+  Future<void> searchUnitItem(String codeUnit, {required String token}) async {
     isLoading.value = true;
     errorMessage.value = '';
     unitItem.value = null;
+    print('searchUnitItem called with codeUnit=$codeUnit, token=$token'); // log
     try {
-      final response = await AppApi.fetchUnitItemByCode(codeUnit);
+      final response = await AppApi.fetchUnitItem(codeUnit, token: token);
+      print('searchUnitItem response: $response'); // log
       if (response != null &&
           response['status'] == 200 &&
           response['data'] != null) {
@@ -21,6 +23,7 @@ class CekItemController extends GetxController {
         errorMessage.value = 'Data tidak ditemukan';
       }
     } catch (e) {
+      print('searchUnitItem error: $e'); // log
       errorMessage.value = 'Terjadi kesalahan';
     }
     isLoading.value = false;

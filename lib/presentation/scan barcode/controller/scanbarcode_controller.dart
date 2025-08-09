@@ -1,15 +1,23 @@
 import '../../../core/api/app_api.dart';
-import '../models/scanbarcode_models.dart';
+import '../../cek_item/models/cek_item_models.dart';
 
 class ScanBarcodeController {
-  Future<UnitItem?> fetchUnitItem(String barcode) async {
-    final response = await AppApi.fetchUnitItem(barcode);
+  Future<UnitItem?> fetchUnitItem(
+    String barcode, {
+    required String token,
+  }) async {
+    final response = await AppApi.fetchUnitLoanCheck(barcode, token: token);
+    print('API response: $response');
+
     if (response != null &&
         response['status'] == 200 &&
-        response['data'] != null &&
-        response['data'].isNotEmpty) {
-      return UnitItem.fromJson(response['data'][0]);
+        response['data'] != null) {
+      final data = response['data'];
+      if (data is Map<String, dynamic>) {
+        return UnitItem.fromJson(data);
+      }
     }
+
     return null;
   }
 }
