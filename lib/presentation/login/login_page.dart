@@ -82,7 +82,18 @@ class LoginPage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24)),
                           ),
-                          onPressed: c.isLoading.value ? null : c.login,
+                          onPressed: c.isLoading.value
+                              ? null
+                              : () async {
+                                  await c.login();
+                                  if (c.token.value != null &&
+                                      c.token.value!.isNotEmpty) {
+                                    // Ganti dengan navigasi ke halaman berikutnya, misal HomePage
+                                    // dan kirim tokennya
+                                    // Contoh:
+                                    // Get.offAll(() => HomePage(token: c.token.value!));
+                                  }
+                                },
                           child: c.isLoading.value
                               ? CircularProgressIndicator(color: const Color.fromARGB(255, 255, 255, 255))
                               : Text('LOGIN',

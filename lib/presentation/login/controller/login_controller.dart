@@ -7,6 +7,7 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var isPasswordHidden = true.obs;
+  var token = ''.obs;
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -29,15 +30,16 @@ class LoginController extends GetxController {
       }
       print('==== LOGIN RESPONSE END ====');
 
-      if (data['status'] == 200 && data['token'] != null) {
+      if (data != null && data['status'] == 200 && data['token'] != null) {
         // Success: Navigate to home page
+        token.value = data['token'];
         Get.offAllNamed('/home');
       } else {
         // Ambil kode error, pastikan bertipe int
         int errorCode = 500;
-        if (data['status'] is int) {
+        if (data != null && data['status'] is int) {
           errorCode = data['status'];
-        } else if (data['status'] != null) {
+        } else if (data != null && data['status'] != null) {
           errorCode = int.tryParse(data['status'].toString()) ?? 500;
         }
         // Navigasi ke halaman error

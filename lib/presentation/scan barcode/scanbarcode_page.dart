@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../cek_item/cek_item_page.dart';
+import '../login/controller/login_controller.dart';
 import 'controller/scanbarcode_controller.dart';
-import 'models/scanbarcode_models.dart';
+import '../cek_item/models/cek_item_models.dart';
 
 class ScanBarcodePage extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
   final ScanBarcodeController scanController = ScanBarcodeController();
   final MobileScannerController mobileScannerController =
       MobileScannerController();
+  final loginController = Get.find<LoginController>();
 
   Future<void> _onBarcodeDetect(BarcodeCapture capture) async {
     if (hasScanned) return;
@@ -27,37 +29,45 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
     hasScanned = true;
     debugPrint('onDetect called');
 
-    final value =
-        capture.barcodes.isNotEmpty ? capture.barcodes.first.rawValue : null;
+    try {
+      final value =
+          capture.barcodes.isNotEmpty ? capture.barcodes.first.rawValue : null;
 
-    if (value != null) {
-      debugPrint('Barcode found: $value');
+      if (value != null) {
+        debugPrint('Barcode found: $value');
+        setState(() {
+          isLoading = true;
+          scannedResult = value;
+        });
 
-      setState(() {
-        isLoading = true;
-        scannedResult = value;
-      });
+        // TODO: Tambahkan suara/getar di sini jika ingin UX feedback
 
-      final unitItem = await scanController.fetchUnitItem(value);
+        final unitItem = await scanController.fetchUnitItem(
+          value,
+          token: loginController.token.value,
+        );
 
+        if (unitItem != null) {
+          await mobileScannerController.stop();
+          await Get.to(() => CekItemPage(unitItem: unitItem));
+          setState(() => scannedResult = null);
+          await mobileScannerController.start();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data tidak ditemukan')),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error saat scanning: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Terjadi kesalahan saat scan')),
+      );
+    } finally {
       setState(() {
         isLoading = false;
+        hasScanned = false;
       });
-
-      if (unitItem != null) {
-        await mobileScannerController.stop();
-        await Get.to(() => CekItemPage(unitItem: unitItem));
-        hasScanned = false;
-        setState(() {
-          scannedResult = null;
-        });
-        await mobileScannerController.start();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data tidak ditemukan')),
-        );
-        hasScanned = false;
-      }
     }
   }
 
@@ -74,9 +84,47 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
                 if (cameraError != null) {
                   return Center(child: Text(cameraError!));
                 }
-                return MobileScanner(
-                  controller: mobileScannerController,
-                  onDetect: _onBarcodeDetect,
+                return Stack(
+                  children: [
+                    MobileScanner(
+                      controller: mobileScannerController,
+                      onDetect: _onBarcodeDetect,
+                      errorBuilder: (context, error, child) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            cameraError = 'Gagal mengakses kamera: $error';
+                          });
+                        });
+                        return Center(child: Text('Gagal mengakses kamera: $error'));
+                      },
+                    ),
+                    // Tombol switch camera & flash
+                    Positioned(
+                      right: 16,
+                      top: 16,
+                      child: Column(
+                        children: [
+                          FloatingActionButton(
+                            heroTag: 'switchCamera',
+                            mini: true,
+                            onPressed: () {
+                              mobileScannerController.switchCamera();
+                            },
+                            child: const Icon(Icons.cameraswitch),
+                          ),
+                          const SizedBox(height: 8),
+                          FloatingActionButton(
+                            heroTag: 'toggleFlash',
+                            mini: true,
+                            onPressed: () {
+                              mobileScannerController.toggleTorch();
+                            },
+                            child: const Icon(Icons.flash_on),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
