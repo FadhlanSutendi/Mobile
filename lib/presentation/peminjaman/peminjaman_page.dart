@@ -6,9 +6,10 @@ import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
 
 class PeminjamanPage extends StatelessWidget {
-  final UnitItem? unitItem; // tambahkan parameter ini
+  final UnitItem? unitItem;
+  final int initialStep; // tambahkan parameter ini
 
-  PeminjamanPage({Key? key, this.unitItem}) : super(key: key);
+  PeminjamanPage({Key? key, this.unitItem, this.initialStep = 0}) : super(key: key);
 
   final controller = Get.put(PeminjamanController());
 
@@ -28,6 +29,10 @@ class PeminjamanPage extends StatelessWidget {
     // Set data unit item ke controller jika ada
     if (unitItem != null && controller.unitItem == null) {
       controller.unitItem = unitItem;
+    }
+    // Set initial step jika belum diatur
+    if (controller.step.value == 0 && initialStep != 0) {
+      controller.step.value = initialStep;
     }
     return Scaffold(
       appBar: AppBar(

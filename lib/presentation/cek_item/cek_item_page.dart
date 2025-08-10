@@ -271,7 +271,8 @@ class _CekItemPageState extends State<CekItemPage> {
                               // Next step action
                               final unitItem = cekItemController.unitItem.value;
                               if (unitItem != null) {
-                                Get.to(() => PeminjamanPage(unitItem: unitItem));
+                                // Kirim initialStep: 1 agar langsung ke step Borrower Info
+                                Get.to(() => PeminjamanPage(unitItem: unitItem, initialStep: 1));
                               }
                             },
                             child: Row(
