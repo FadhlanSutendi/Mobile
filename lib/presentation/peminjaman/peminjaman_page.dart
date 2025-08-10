@@ -87,18 +87,22 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   }
 
   Widget _stepCheckItem() {
-    // Tampilkan data unit item yang dikirim dari cek item
     if (widget.unitItem == null) {
       return Center(child: Text("No item selected"));
     }
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
-        child: ListTile(
-          title: Text(widget.unitItem!.subItem.merk),
-          subtitle: Column(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(widget.unitItem!.subItem.merk,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              SizedBox(height: 8),
               Text("Code: ${widget.unitItem!.codeUnit}"),
               Text("Description: ${widget.unitItem!.description}"),
               Text("Procurement Date: ${widget.unitItem!.procurementDate}"),
@@ -112,85 +116,99 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   }
 
   Widget _stepBorrowerInfo() {
-    return Column(
-      children: [
-        TextFormField(
-          controller: nisController,
-          keyboardType: widget.borrowerType == 'student'
-              ? TextInputType.number
-              : TextInputType.text,
-          decoration: InputDecoration(
-            labelText: widget.borrowerType == 'student' ? "NIS" : "NIP",
-            hintText: widget.borrowerType == 'student'
-                ? "Masukkan NIS siswa"
-                : "Masukkan NIP guru",
-          ),
-          onChanged: (val) {
-            if (widget.borrowerType == 'student') {
-              controller.fetchStudent(val, widget.token);
-            } else {
-              controller.fetchTeacher(val, widget.token);
-            }
-          },
-          onFieldSubmitted: (val) {
-            if (val.isNotEmpty) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+      child: Column(
+        children: [
+          TextFormField(
+            controller: nisController,
+            keyboardType: widget.borrowerType == 'student'
+                ? TextInputType.number
+                : TextInputType.text,
+            decoration: InputDecoration(
+              labelText: widget.borrowerType == 'student' ? "NIS" : "NIP",
+              hintText: widget.borrowerType == 'student'
+                  ? "Masukkan NIS siswa"
+                  : "Masukkan NIP guru",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onChanged: (val) {
               if (widget.borrowerType == 'student') {
                 controller.fetchStudent(val, widget.token);
               } else {
                 controller.fetchTeacher(val, widget.token);
               }
-            }
-          },
-        ),
-        SizedBox(height: 8),
-        if (widget.borrowerType == 'teacher')
-          Obx(() => Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "NIP: ${controller.teacher.value?.id ?? ''}",
-              style: TextStyle(fontSize: 16),
-            ),
-          )),
-        Obx(() => Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Name: ${widget.borrowerType == 'student'
-                ? controller.student.value?.name ?? ''
-                : controller.teacher.value?.name ?? ''}",
-            style: TextStyle(fontSize: 16),
+            },
+            onFieldSubmitted: (val) {
+              if (val.isNotEmpty) {
+                if (widget.borrowerType == 'student') {
+                  controller.fetchStudent(val, widget.token);
+                } else {
+                  controller.fetchTeacher(val, widget.token);
+                }
+              }
+            },
           ),
-        )),
-        if (widget.borrowerType == 'student')
+          SizedBox(height: 16),
+          if (widget.borrowerType == 'teacher')
+            Obx(() => Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "NIP: ${controller.teacher.value?.id ?? ''}",
+                style: TextStyle(fontSize: 16),
+              ),
+            )),
           Obx(() => Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Rayon: ${controller.student.value?.rayon ?? ''}",
+              "Name: ${widget.borrowerType == 'student'
+                  ? controller.student.value?.name ?? ''
+                  : controller.teacher.value?.name ?? ''}",
               style: TextStyle(fontSize: 16),
             ),
           )),
-        if (widget.borrowerType == 'student')
-          Obx(() => Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Major: ${controller.student.value?.major ?? ''}",
-              style: TextStyle(fontSize: 16),
+          if (widget.borrowerType == 'student')
+            Obx(() => Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Rayon: ${controller.student.value?.rayon ?? ''}",
+                style: TextStyle(fontSize: 16),
+              ),
+            )),
+          if (widget.borrowerType == 'student')
+            Obx(() => Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Major: ${controller.student.value?.major ?? ''}",
+                style: TextStyle(fontSize: 16),
+              ),
+            )),
+          SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => controller.nextStep(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text("Next"),
             ),
-          )),
-        SizedBox(height: 8),
-        ElevatedButton(
-          onPressed: () => controller.nextStep(),
-          child: Text("Next"),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _stepCollateral(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Warranty Buttons
+          Text("Select Guarantee", style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
           Row(
             children: [
               Expanded(
@@ -199,6 +217,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     backgroundColor: guarantee == 'BKP' ? Colors.blue : Colors.white,
                     foregroundColor: guarantee == 'BKP' ? Colors.white : Colors.black,
                     side: BorderSide(color: Colors.blue),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: () {
                     setState(() {
@@ -215,6 +234,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     backgroundColor: guarantee == 'STUDENT CARD' ? Colors.blue : Colors.white,
                     foregroundColor: guarantee == 'STUDENT CARD' ? Colors.white : Colors.black,
                     side: BorderSide(color: Colors.blue),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: () {
                     setState(() {
@@ -227,7 +247,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             ],
           ),
           SizedBox(height: 16),
-          // Upload Warranty
           Text("Upload Warranty", style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           Obx(() => controller.imagePath.value.isEmpty
@@ -239,6 +258,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(12),
+                      color: Colors.grey[100],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -266,24 +286,26 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 )
               : Stack(
                   children: [
-                    Image.file(
-                      File(controller.imagePath.value),
-                      width: double.infinity,
-                      height: 120,
-                      fit: BoxFit.cover,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.file(
+                        File(controller.imagePath.value),
+                        width: double.infinity,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     Positioned(
                       right: 0,
                       top: 0,
                       child: IconButton(
-                        icon: Icon(Icons.close),
+                        icon: Icon(Icons.close, color: Colors.red),
                         onPressed: () => controller.imagePath.value = '',
                       ),
                     ),
                   ],
                 )),
           SizedBox(height: 16),
-          // Description
           TextFormField(
             controller: descriptionController,
             decoration: InputDecoration(
@@ -293,7 +315,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             ),
           ),
           SizedBox(height: 16),
-          // Lender's Name
           TextFormField(
             controller: lenderController,
             decoration: InputDecoration(
@@ -303,7 +324,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             ),
           ),
           SizedBox(height: 16),
-          // Date - Pick Up Time
           TextFormField(
             controller: dateController,
             readOnly: true,
@@ -340,7 +360,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             },
           ),
           SizedBox(height: 16),
-          // Checkbox
           Row(
             children: [
               Checkbox(
@@ -355,7 +374,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             ],
           ),
           SizedBox(height: 16),
-          // Submit Button
           Obx(() {
             final isFilled = descriptionController.text.isNotEmpty &&
                 lenderController.text.isNotEmpty &&
@@ -368,6 +386,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isFilled ? Colors.blue : Colors.grey,
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 onPressed: isFilled
                     ? () async {
@@ -382,7 +401,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                           borrowedBy: lenderController.text,
                           borrowedAt: dateController.text,
                           purpose: descriptionController.text,
-                          room: 0, // room tidak ada di UI, set default 0
+                          room: 0,
                           imagePath: controller.imagePath.value,
                           guarantee: guarantee,
                         );
