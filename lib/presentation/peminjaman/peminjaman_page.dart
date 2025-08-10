@@ -4,12 +4,21 @@ import 'dart:io';
 import '../cek_item/models/cek_item_models.dart'; // gunakan model yang benar
 import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
+import '../login/controller/login_controller.dart';
 
 class PeminjamanPage extends StatelessWidget {
   final UnitItem? unitItem;
-  final int initialStep; // tambahkan parameter ini
+  final int initialStep;
+  final String token;
+  final String borrowerType; // 'student' atau 'teacher'
 
-  PeminjamanPage({Key? key, this.unitItem, this.initialStep = 0}) : super(key: key);
+  PeminjamanPage({
+    Key? key,
+    this.unitItem,
+    this.initialStep = 0,
+    required this.token,
+    required this.borrowerType,
+  }) : super(key: key);
 
   final controller = Get.put(PeminjamanController());
 
@@ -95,11 +104,36 @@ class PeminjamanPage extends StatelessWidget {
   Widget _stepBorrowerInfo() {
     return Column(
       children: [
-        TextFormField(controller: nisController, decoration: InputDecoration(labelText: "NIS")),
-        TextFormField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
-        TextFormField(controller: rayonController, decoration: InputDecoration(labelText: "Rayon")),
-        TextFormField(controller: majorController, decoration: InputDecoration(labelText: "Major")),
-        // ...add teacher fields if needed...
+        TextFormField(
+          controller: nisController,
+          decoration: InputDecoration(
+            labelText: borrowerType == 'student' ? "NIS" : "NIP",
+          ),
+          onFieldSubmitted: (val) {
+            if (val.isNotEmpty) {
+              if (borrowerType == 'student') {
+                controller.fetchStudent(val, token);
+              } else {
+                controller.fetchTeacher(val, token);
+              }
+            }
+          },
+        ),
+        TextFormField(
+          controller: nameController,
+          decoration: InputDecoration(labelText: "Name"),
+        ),
+        TextFormField(
+          controller: rayonController,
+          decoration: InputDecoration(labelText: "Rayon"),
+          enabled: borrowerType == 'student',
+        ),
+        TextFormField(
+          controller: majorController,
+          decoration: InputDecoration(labelText: "Major"),
+          enabled: borrowerType == 'student',
+        ),
+        // Jika teacher, bisa tambahkan field khusus guru di sini
         ElevatedButton(
           onPressed: () => controller.nextStep(),
           child: Text("Next"),
