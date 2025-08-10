@@ -127,6 +127,9 @@ class PeminjamanPage extends StatelessWidget {
           controller: nisController,
           decoration: InputDecoration(
             labelText: borrowerType == 'student' ? "NIS" : "NIP",
+            hintText: borrowerType == 'student'
+                ? "Masukkan NIS siswa"
+                : "Masukkan NIP guru",
           ),
           onFieldSubmitted: (val) {
             if (val.isNotEmpty) {
