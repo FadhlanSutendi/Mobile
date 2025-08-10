@@ -268,11 +268,13 @@ class _CekItemPageState extends State<CekItemPage> {
                               foregroundColor: Colors.white,
                             ),
                             onPressed: () {
-                              // Next step action
                               final unitItem = cekItemController.unitItem.value;
                               if (unitItem != null) {
-                                // Kirim initialStep: 1 agar langsung ke step Borrower Info
-                                Get.to(() => PeminjamanPage(unitItem: unitItem, initialStep: 1));
+                                Get.to(() => PeminjamanPage(
+                                  unitItem: unitItem,
+                                  initialStep: 1,
+                                  token: loginController.token.value, // kirim token
+                                ));
                               }
                             },
                             child: Row(

@@ -4,12 +4,14 @@ import 'dart:io';
 import '../cek_item/models/cek_item_models.dart'; // gunakan model yang benar
 import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
+import '../login/controller/login_controller.dart';
 
 class PeminjamanPage extends StatelessWidget {
   final UnitItem? unitItem;
-  final int initialStep; // tambahkan parameter ini
+  final int initialStep;
+  final String token; // tambahkan token
 
-  PeminjamanPage({Key? key, this.unitItem, this.initialStep = 0}) : super(key: key);
+  PeminjamanPage({Key? key, this.unitItem, this.initialStep = 0, required this.token}) : super(key: key);
 
   final controller = Get.put(PeminjamanController());
 
@@ -95,7 +97,15 @@ class PeminjamanPage extends StatelessWidget {
   Widget _stepBorrowerInfo() {
     return Column(
       children: [
-        TextFormField(controller: nisController, decoration: InputDecoration(labelText: "NIS")),
+        TextFormField(
+          controller: nisController,
+          decoration: InputDecoration(labelText: "NIS"),
+          onFieldSubmitted: (val) {
+            if (val.isNotEmpty) {
+              controller.fetchStudent(val, token); // gunakan token
+            }
+          },
+        ),
         TextFormField(controller: nameController, decoration: InputDecoration(labelText: "Name")),
         TextFormField(controller: rayonController, decoration: InputDecoration(labelText: "Rayon")),
         TextFormField(controller: majorController, decoration: InputDecoration(labelText: "Major")),
