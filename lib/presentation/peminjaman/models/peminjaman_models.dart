@@ -9,10 +9,10 @@ class Student {
 
   factory Student.fromJson(Map<String, dynamic> json) => Student(
     id: json['id'],
-    nis: json['nis'],
+    nis: json['nis'].toString(),
     name: json['name'],
     rayon: json['rayon'],
-    major: json['major'],
+    major: json['major'] is Map ? json['major']['name'] : json['major'],
   );
 }
 

@@ -23,8 +23,16 @@ class PeminjamanController extends GetxController {
   Future<void> fetchStudent(String id, String token) async {
     isLoading.value = true;
     final data = await AppApi.fetchPerson(id, type: 'student', token: token);
-    if (data != null) {
-      student.value = Student.fromJson(data['data']);
+    if (data != null && data['data'] is List && data['data'].isNotEmpty) {
+      final studentJson = data['data'][0];
+      // Ambil major dari nested major object
+      student.value = Student(
+        id: studentJson['id'],
+        nis: studentJson['nis'].toString(),
+        name: studentJson['name'] ?? '',
+        rayon: studentJson['rayon'] ?? '',
+        major: studentJson['major']?['name'] ?? '',
+      );
     }
     isLoading.value = false;
   }
@@ -32,8 +40,12 @@ class PeminjamanController extends GetxController {
   Future<void> fetchTeacher(String id, String token) async {
     isLoading.value = true;
     final data = await AppApi.fetchPerson(id, type: 'teacher', token: token);
-    if (data != null) {
-      teacher.value = Teacher.fromJson(data['data']);
+    if (data != null && data['data'] is List && data['data'].isNotEmpty) {
+      final teacherJson = data['data'][0];
+      teacher.value = Teacher(
+        id: teacherJson['id'],
+        name: teacherJson['name'] ?? '',
+      );
     }
     isLoading.value = false;
   }
