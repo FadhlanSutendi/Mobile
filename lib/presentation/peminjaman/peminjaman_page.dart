@@ -138,20 +138,25 @@ class PeminjamanPage extends StatelessWidget {
             }
           },
         ),
-        TextFormField(
-          controller: nameController,
+        Obx(() => TextFormField(
+          readOnly: true,
           decoration: InputDecoration(labelText: "Name"),
-        ),
-        TextFormField(
-          controller: rayonController,
-          decoration: InputDecoration(labelText: "Rayon"),
-          enabled: borrowerType == 'student',
-        ),
-        TextFormField(
-          controller: majorController,
-          decoration: InputDecoration(labelText: "Major"),
-          enabled: borrowerType == 'student',
-        ),
+          initialValue: borrowerType == 'student'
+              ? controller.student.value?.name ?? ''
+              : controller.teacher.value?.name ?? '',
+        )),
+        if (borrowerType == 'student')
+          Obx(() => TextFormField(
+            readOnly: true,
+            decoration: InputDecoration(labelText: "Rayon"),
+            initialValue: controller.student.value?.rayon ?? '',
+          )),
+        if (borrowerType == 'student')
+          Obx(() => TextFormField(
+            readOnly: true,
+            decoration: InputDecoration(labelText: "Major"),
+            initialValue: controller.student.value?.major ?? '',
+          )),
         ElevatedButton(
           onPressed: () => controller.nextStep(),
           child: Text("Next"),
@@ -328,5 +333,5 @@ class StepperWidget extends StatelessWidget {
     );
   }
 }
-    
-  
+
+
