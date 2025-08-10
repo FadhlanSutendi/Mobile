@@ -123,8 +123,7 @@ class PeminjamanPage extends StatelessWidget {
   Widget _stepBorrowerInfo() {
     return Column(
       children: [
-        // Hanya wrap TextFormField yang membaca .obs dengan Obx
-        Obx(() => TextFormField(
+        TextFormField(
           controller: nisController,
           decoration: InputDecoration(
             labelText: borrowerType == 'student' ? "NIS" : "NIP",
@@ -138,21 +137,21 @@ class PeminjamanPage extends StatelessWidget {
               }
             }
           },
-        )),
-        Obx(() => TextFormField(
+        ),
+        TextFormField(
           controller: nameController,
           decoration: InputDecoration(labelText: "Name"),
-        )),
-        Obx(() => TextFormField(
+        ),
+        TextFormField(
           controller: rayonController,
           decoration: InputDecoration(labelText: "Rayon"),
           enabled: borrowerType == 'student',
-        )),
-        Obx(() => TextFormField(
+        ),
+        TextFormField(
           controller: majorController,
           decoration: InputDecoration(labelText: "Major"),
           enabled: borrowerType == 'student',
-        )),
+        ),
         ElevatedButton(
           onPressed: () => controller.nextStep(),
           child: Text("Next"),
@@ -165,7 +164,6 @@ class PeminjamanPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Wrap radio group dengan Obx agar reactive
           Obx(() => Row(
             children: [
               Expanded(
@@ -238,19 +236,17 @@ class PeminjamanPage extends StatelessWidget {
               }
             },
           ),
-          // Wrap checkbox row dengan Obx jika ingin reactive
-          Obx(() => Row(
+          Row(
             children: [
               Checkbox(value: true, onChanged: (_) {}),
               Text("Make sure the data is correct"),
             ],
-          )),
+          ),
           ElevatedButton(
             onPressed: () {
-              // Compose LoanRequest and submit
               final req = LoanRequest(
                 studentId: controller.student.value?.id,
-                unitItemId: unitItem?.id ?? "unit_item_id", // use id (UUID) for unit_item_id
+                unitItemId: unitItem?.id ?? "unit_item_id",
                 borrowedBy: lenderController.text,
                 borrowedAt: dateController.text,
                 purpose: descriptionController.text,
@@ -258,7 +254,7 @@ class PeminjamanPage extends StatelessWidget {
                 imagePath: controller.imagePath.value,
                 guarantee: guarantee.value,
               );
-              controller.submitLoan(req, "token"); // replace token
+              controller.submitLoan(req, "token");
             },
             child: Text("Submit"),
           ),
@@ -332,3 +328,5 @@ class StepperWidget extends StatelessWidget {
     );
   }
 }
+    
+  
