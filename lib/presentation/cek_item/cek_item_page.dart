@@ -261,8 +261,8 @@ class _CekItemPageState extends State<CekItemPage> {
                             ),
                             onPressed: () async {
                               setState(() { borrowerType = 'student'; });
-                              // Fetch student data di halaman peminjaman
-                              Get.to(() => PeminjamanPage(
+                              // Masuk ke tampilan peminjaman step 1 (Borrower Info) untuk student
+                              await Get.to(() => PeminjamanPage(
                                 unitItem: unitItem,
                                 initialStep: 1,
                                 token: loginController.token.value,
@@ -281,8 +281,8 @@ class _CekItemPageState extends State<CekItemPage> {
                             ),
                             onPressed: () async {
                               setState(() { borrowerType = 'teacher'; });
-                              // Fetch teacher data di halaman peminjaman
-                              Get.to(() => PeminjamanPage(
+                              // Masuk ke tampilan peminjaman step 1 (Borrower Info) untuk teacher
+                              await Get.to(() => PeminjamanPage(
                                 unitItem: unitItem,
                                 initialStep: 1,
                                 token: loginController.token.value,
