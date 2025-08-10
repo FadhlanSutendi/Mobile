@@ -73,12 +73,12 @@ class PeminjamanPage extends StatelessWidget {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-      body: Obx(() => StepperWidget(
+      body: StepperWidget(
         step: controller.step.value,
         onStepContinue: () => controller.nextStep(),
         onStepCancel: () => controller.prevStep(),
         child: _buildStepContent(context),
-      )),
+      ),
     );
   }
 
@@ -123,6 +123,7 @@ class PeminjamanPage extends StatelessWidget {
   Widget _stepBorrowerInfo() {
     return Column(
       children: [
+        // Hanya wrap TextFormField yang membaca .obs dengan Obx
         Obx(() => TextFormField(
           controller: nisController,
           decoration: InputDecoration(
@@ -164,7 +165,8 @@ class PeminjamanPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Row(
+          // Wrap radio group dengan Obx agar reactive
+          Obx(() => Row(
             children: [
               Expanded(
                 child: ListTile(
@@ -187,7 +189,7 @@ class PeminjamanPage extends StatelessWidget {
                 ),
               ),
             ],
-          ),
+          )),
           Obx(() => controller.imagePath.value.isEmpty
               ? OutlinedButton.icon(
                   icon: Icon(Icons.camera_alt),
@@ -236,12 +238,13 @@ class PeminjamanPage extends StatelessWidget {
               }
             },
           ),
-          Row(
+          // Wrap checkbox row dengan Obx jika ingin reactive
+          Obx(() => Row(
             children: [
               Checkbox(value: true, onChanged: (_) {}),
               Text("Make sure the data is correct"),
             ],
-          ),
+          )),
           ElevatedButton(
             onPressed: () {
               // Compose LoanRequest and submit
