@@ -30,6 +30,8 @@ class _CekItemPageState extends State<CekItemPage> {
   final TextEditingController statusController = TextEditingController();
   final TextEditingController conditionController = TextEditingController();
 
+  String? borrowerType; // 'student' atau 'teacher'
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +93,7 @@ class _CekItemPageState extends State<CekItemPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView( // Tambahkan ini
+        child: SingleChildScrollView(
           child: Column(
             children: [
               // Step Indicator
@@ -248,43 +250,46 @@ class _CekItemPageState extends State<CekItemPage> {
                       ),
                     ),
                     SizedBox(height: 24), // Ganti Spacer() dengan SizedBox
-                    // Navigation buttons
+                    // Pilihan Student/Teacher
                     Row(
                       children: [
                         Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Icon(Icons.arrow_back),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          flex: 2,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,
                             ),
-                            onPressed: () {
-                              final unitItem = cekItemController.unitItem.value;
-                              if (unitItem != null) {
-                                Get.to(() => PeminjamanPage(
-                                  unitItem: unitItem,
-                                  initialStep: 1,
-                                  token: loginController.token.value, // kirim token
-                                ));
-                              }
+                            onPressed: () async {
+                              setState(() { borrowerType = 'student'; });
+                              // Fetch student data di halaman peminjaman
+                              Get.to(() => PeminjamanPage(
+                                unitItem: unitItem,
+                                initialStep: 1,
+                                token: loginController.token.value,
+                                borrowerType: 'student',
+                              ));
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Next"),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward),
-                              ],
+                            child: Text("Student"),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
                             ),
+                            onPressed: () async {
+                              setState(() { borrowerType = 'teacher'; });
+                              // Fetch teacher data di halaman peminjaman
+                              Get.to(() => PeminjamanPage(
+                                unitItem: unitItem,
+                                initialStep: 1,
+                                token: loginController.token.value,
+                                borrowerType: 'teacher',
+                              ));
+                            },
+                            child: Text("Teacher"),
                           ),
                         ),
                       ],
