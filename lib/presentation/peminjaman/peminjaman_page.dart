@@ -44,24 +44,6 @@ class PeminjamanPage extends StatelessWidget {
       controller.step.value = initialStep;
     }
 
-    // Listen perubahan student/teacher hanya sekali di build
-    controller.student.listen((student) {
-      if (borrowerType == 'student' && student != null) {
-        nisController.text = student.nis ?? '';
-        nameController.text = student.name ?? '';
-        rayonController.text = student.rayon ?? '';
-        majorController.text = student.major ?? '';
-      }
-    });
-    controller.teacher.listen((teacher) {
-      if (borrowerType == 'teacher' && teacher != null) {
-        nisController.text = teacher.id ?? '';
-        nameController.text = teacher.name ?? '';
-        rayonController.clear();
-        majorController.clear();
-      }
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Form Borrowing"),
@@ -125,12 +107,22 @@ class PeminjamanPage extends StatelessWidget {
       children: [
         TextFormField(
           controller: nisController,
+          keyboardType: borrowerType == 'student'
+              ? TextInputType.number
+              : TextInputType.text,
           decoration: InputDecoration(
             labelText: borrowerType == 'student' ? "NIS" : "NIP",
             hintText: borrowerType == 'student'
                 ? "Masukkan NIS siswa"
                 : "Masukkan NIP guru",
           ),
+          onChanged: (val) {
+            if (borrowerType == 'student') {
+              controller.fetchStudent(val, token);
+            } else {
+              controller.fetchTeacher(val, token);
+            }
+          },
           onFieldSubmitted: (val) {
             if (val.isNotEmpty) {
               if (borrowerType == 'student') {
@@ -142,6 +134,14 @@ class PeminjamanPage extends StatelessWidget {
           },
         ),
         SizedBox(height: 8),
+        if (borrowerType == 'teacher')
+          Obx(() => Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "NIP: ${controller.teacher.value?.id ?? ''}",
+              style: TextStyle(fontSize: 16),
+            ),
+          )),
         Obx(() => Align(
           alignment: Alignment.centerLeft,
           child: Text(
