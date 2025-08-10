@@ -19,7 +19,7 @@ class UnitItem {
 
   factory UnitItem.fromJson(Map<String, dynamic> json) {
     return UnitItem(
-      id: json['id'] ?? '',
+      id: json['id'] ?? '', // this should be the UUID for unit_item_id
       codeUnit: json['code_unit'] ?? '',
       subItem: json['sub_item'] != null
           ? SubItem.fromJson(json['sub_item'])

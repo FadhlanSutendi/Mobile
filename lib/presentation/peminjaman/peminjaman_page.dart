@@ -247,7 +247,7 @@ class PeminjamanPage extends StatelessWidget {
               // Compose LoanRequest and submit
               final req = LoanRequest(
                 studentId: controller.student.value?.id,
-                unitItemId: unitItem?.codeUnit ?? "unit_item_id", // gunakan codeUnit dari unitItem
+                unitItemId: unitItem?.id ?? "unit_item_id", // use id (UUID) for unit_item_id
                 borrowedBy: lenderController.text,
                 borrowedAt: dateController.text,
                 purpose: descriptionController.text,
@@ -329,4 +329,3 @@ class StepperWidget extends StatelessWidget {
     );
   }
 }
-   

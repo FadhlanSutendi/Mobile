@@ -9,7 +9,7 @@ class AppApi {
 
   /// LOGIN METHOD
   static Future<Map<String, dynamic>?> login(String username, String password) async {
-    const url = 'https://fc2b4b2855e7.ngrok-free.app/api/login';
+    const url = 'https://556753c4ee69.ngrok-free.app/api/login';
     try {
       final response = await _dio.post(
         url,
@@ -31,7 +31,7 @@ class AppApi {
 
   /// FETCH UNIT ITEM METHOD (dengan http package)+++++++++++++
   static Future<Map<String, dynamic>?> fetchUnitItem(String barcode, {required String token}) async {
-    final url = Uri.parse('https://fc2b4b2855e7.ngrok-free.app/api/unit-items?code_unit=$barcode');
+    final url = Uri.parse('https://556753c4ee69.ngrok-free.app/api/unit-items?code_unit=$barcode');
     try {
       final response = await http.get(
         url,
@@ -55,7 +55,7 @@ class AppApi {
 
   /// FETCH UNIT LOAN CHECK (for scan barcode student)
   static Future<Map<String, dynamic>?> fetchUnitLoanCheck(String codeUnit, {required String token}) async {
-    final url = Uri.parse('https://fc2b4b2855e7.ngrok-free.app/api/unit-loan/check');
+    final url = Uri.parse('https://556753c4ee69.ngrok-free.app/api/unit-loan/check');
     try {
       print('fetchUnitLoanCheck: token=$token, code_unit=$codeUnit'); // debug
       final response = await http.post(
@@ -80,9 +80,10 @@ class AppApi {
     }
   }
 
-  /// FETCH STUDENT/TEACHER DATA
+  /// FETCH STUDENT/TEACHER DATA (search by query param)
   static Future<Map<String, dynamic>?> fetchPerson(String id, {required String type, required String token}) async {
-    final url = Uri.parse('https://fc2b4b2855e7.ngrok-free.app/api/$type/$id');
+    // Use search query for student/teacher
+    final url = Uri.parse('https://556753c4ee69.ngrok-free.app/api/$type?search=$id');
     try {
       final response = await http.get(
         url,
@@ -105,9 +106,10 @@ class AppApi {
 
   /// POST UNIT LOAN
   static Future<Map<String, dynamic>?> postUnitLoan(Map<String, dynamic> data, {required String token}) async {
-    final url = Uri.parse('https://fc2b4b2855e7.ngrok-free.app/api/unit-loan');
+    final url = Uri.parse('https://556753c4ee69.ngrok-free.app/api/unit-loan');
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer $token';
+    // Only add fields that are not null and not 'image'
     data.forEach((key, value) {
       if (value != null && key != 'image') {
         request.fields[key] = value.toString();
@@ -127,6 +129,30 @@ class AppApi {
       }
     } catch (e) {
       print("postUnitLoan Exception: $e");
+      return null;
+    }
+  }
+
+  /// RETURN UNIT LOAN (PUT /unit-loan/{id})
+  static Future<Map<String, dynamic>?> returnUnitLoan(String loanId, String returnedAt, {required String token}) async {
+    final url = Uri.parse('https://556753c4ee69.ngrok-free.app/api/unit-loan/$loanId');
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'returned_at': returnedAt}),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("returnUnitLoan ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("returnUnitLoan Exception: $e");
       return null;
     }
   }
