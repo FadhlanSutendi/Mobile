@@ -6,7 +6,7 @@ import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
 import '../login/controller/login_controller.dart';
 
-class PeminjamanPage extends StatelessWidget {
+class PeminjamanPage extends StatefulWidget {
   final UnitItem? unitItem;
   final int initialStep;
   final String token;
@@ -20,6 +20,11 @@ class PeminjamanPage extends StatelessWidget {
     required this.borrowerType,
   }) : super(key: key);
 
+  @override
+  State<PeminjamanPage> createState() => _PeminjamanPageState();
+}
+
+class _PeminjamanPageState extends State<PeminjamanPage> {
   final controller = Get.put(PeminjamanController());
 
   final nisController = TextEditingController();
@@ -29,27 +34,31 @@ class PeminjamanPage extends StatelessWidget {
   final descriptionController = TextEditingController();
   final lenderController = TextEditingController();
   final dateController = TextEditingController();
-  final purposeController = TextEditingController();
   final roomController = TextEditingController();
-  final guarantee = 'kartu pelajar'.obs;
+  final purposeController = TextEditingController();
+
+  String guarantee = 'STUDENT CARD';
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.unitItem != null && controller.unitItem == null) {
+      controller.unitItem = widget.unitItem;
+    }
+    if (controller.step.value == 0 && widget.initialStep != 0) {
+      controller.step.value = widget.initialStep;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Set data unit item ke controller jika ada
-    if (unitItem != null && controller.unitItem == null) {
-      controller.unitItem = unitItem;
-    }
-    // Set initial step jika belum diatur
-    if (controller.step.value == 0 && initialStep != 0) {
-      controller.step.value = initialStep;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Form Borrowing"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => controller.prevStep(),
+          onPressed: () => Navigator.pop(context),
         ),
         elevation: 0,
         backgroundColor: Colors.white,
@@ -79,22 +88,22 @@ class PeminjamanPage extends StatelessWidget {
 
   Widget _stepCheckItem() {
     // Tampilkan data unit item yang dikirim dari cek item
-    if (unitItem == null) {
+    if (widget.unitItem == null) {
       return Center(child: Text("No item selected"));
     }
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
         child: ListTile(
-          title: Text(unitItem!.subItem.merk),
+          title: Text(widget.unitItem!.subItem.merk),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Code: ${unitItem!.codeUnit}"),
-              Text("Description: ${unitItem!.description}"),
-              Text("Procurement Date: ${unitItem!.procurementDate}"),
-              Text("Status: ${unitItem!.status}"),
-              Text("Condition: ${unitItem!.condition}"),
+              Text("Code: ${widget.unitItem!.codeUnit}"),
+              Text("Description: ${widget.unitItem!.description}"),
+              Text("Procurement Date: ${widget.unitItem!.procurementDate}"),
+              Text("Status: ${widget.unitItem!.status}"),
+              Text("Condition: ${widget.unitItem!.condition}"),
             ],
           ),
         ),
@@ -107,34 +116,34 @@ class PeminjamanPage extends StatelessWidget {
       children: [
         TextFormField(
           controller: nisController,
-          keyboardType: borrowerType == 'student'
+          keyboardType: widget.borrowerType == 'student'
               ? TextInputType.number
               : TextInputType.text,
           decoration: InputDecoration(
-            labelText: borrowerType == 'student' ? "NIS" : "NIP",
-            hintText: borrowerType == 'student'
+            labelText: widget.borrowerType == 'student' ? "NIS" : "NIP",
+            hintText: widget.borrowerType == 'student'
                 ? "Masukkan NIS siswa"
                 : "Masukkan NIP guru",
           ),
           onChanged: (val) {
-            if (borrowerType == 'student') {
-              controller.fetchStudent(val, token);
+            if (widget.borrowerType == 'student') {
+              controller.fetchStudent(val, widget.token);
             } else {
-              controller.fetchTeacher(val, token);
+              controller.fetchTeacher(val, widget.token);
             }
           },
           onFieldSubmitted: (val) {
             if (val.isNotEmpty) {
-              if (borrowerType == 'student') {
-                controller.fetchStudent(val, token);
+              if (widget.borrowerType == 'student') {
+                controller.fetchStudent(val, widget.token);
               } else {
-                controller.fetchTeacher(val, token);
+                controller.fetchTeacher(val, widget.token);
               }
             }
           },
         ),
         SizedBox(height: 8),
-        if (borrowerType == 'teacher')
+        if (widget.borrowerType == 'teacher')
           Obx(() => Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -145,13 +154,13 @@ class PeminjamanPage extends StatelessWidget {
         Obx(() => Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Name: ${borrowerType == 'student'
+            "Name: ${widget.borrowerType == 'student'
                 ? controller.student.value?.name ?? ''
                 : controller.teacher.value?.name ?? ''}",
             style: TextStyle(fontSize: 16),
           ),
         )),
-        if (borrowerType == 'student')
+        if (widget.borrowerType == 'student')
           Obx(() => Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -159,7 +168,7 @@ class PeminjamanPage extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
           )),
-        if (borrowerType == 'student')
+        if (widget.borrowerType == 'student')
           Obx(() => Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -179,42 +188,87 @@ class PeminjamanPage extends StatelessWidget {
   Widget _stepCollateral(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(() => Row(
+          // Warranty Buttons
+          Row(
             children: [
               Expanded(
-                child: ListTile(
-                  title: Text("BKP"),
-                  leading: Radio(
-                    value: 'BKP',
-                    groupValue: guarantee.value,
-                    onChanged: (val) => guarantee.value = val!,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: guarantee == 'BKP' ? Colors.blue : Colors.white,
+                    foregroundColor: guarantee == 'BKP' ? Colors.white : Colors.black,
+                    side: BorderSide(color: Colors.blue),
                   ),
+                  onPressed: () {
+                    setState(() {
+                      guarantee = 'BKP';
+                    });
+                  },
+                  child: Text("BKP"),
                 ),
               ),
+              SizedBox(width: 8),
               Expanded(
-                child: ListTile(
-                  title: Text("STUDENT CARD"),
-                  leading: Radio(
-                    value: 'kartu pelajar',
-                    groupValue: guarantee.value,
-                    onChanged: (val) => guarantee.value = val!,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: guarantee == 'STUDENT CARD' ? Colors.blue : Colors.white,
+                    foregroundColor: guarantee == 'STUDENT CARD' ? Colors.white : Colors.black,
+                    side: BorderSide(color: Colors.blue),
                   ),
+                  onPressed: () {
+                    setState(() {
+                      guarantee = 'STUDENT CARD';
+                    });
+                  },
+                  child: Text("STUDENT CARD"),
                 ),
               ),
             ],
-          )),
+          ),
+          SizedBox(height: 16),
+          // Upload Warranty
+          Text("Upload Warranty", style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
           Obx(() => controller.imagePath.value.isEmpty
-              ? OutlinedButton.icon(
-                  icon: Icon(Icons.camera_alt),
-                  label: Text("Upload Warranty"),
-                  onPressed: () => controller.pickImage(),
+              ? GestureDetector(
+                  onTap: () => controller.pickImage(),
+                  child: Container(
+                    width: double.infinity,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.camera_alt, size: 32, color: Colors.grey),
+                        SizedBox(height: 8),
+                        Text.rich(
+                          TextSpan(
+                            text: "Click ",
+                            children: [
+                              TextSpan(
+                                text: "here",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              TextSpan(text: " to take a photo"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               : Stack(
                   children: [
                     Image.file(
                       File(controller.imagePath.value),
-                      width: 200,
+                      width: double.infinity,
                       height: 120,
                       fit: BoxFit.cover,
                     ),
@@ -228,17 +282,36 @@ class PeminjamanPage extends StatelessWidget {
                     ),
                   ],
                 )),
+          SizedBox(height: 16),
+          // Description
           TextFormField(
             controller: descriptionController,
-            decoration: InputDecoration(labelText: "Description"),
+            decoration: InputDecoration(
+              labelText: "Description",
+              hintText: "Pinjam Laptop untuk Mapel Prod",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            ),
           ),
+          SizedBox(height: 16),
+          // Lender's Name
           TextFormField(
             controller: lenderController,
-            decoration: InputDecoration(labelText: "Lender's Name"),
+            decoration: InputDecoration(
+              labelText: "Lender's Name",
+              hintText: "Nama peminjam",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            ),
           ),
+          SizedBox(height: 16),
+          // Date - Pick Up Time
           TextFormField(
             controller: dateController,
-            decoration: InputDecoration(labelText: "Date - Pick Up Time"),
+            readOnly: true,
+            decoration: InputDecoration(
+              labelText: "Date - Pick Up Time",
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              prefixIcon: Icon(Icons.calendar_today),
+            ),
             onTap: () async {
               FocusScope.of(context).requestFocus(FocusNode());
               final picked = await showDatePicker(
@@ -248,32 +321,84 @@ class PeminjamanPage extends StatelessWidget {
                 lastDate: DateTime(2030),
               );
               if (picked != null) {
-                dateController.text = picked.toString();
+                final time = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay(hour: 8, minute: 0),
+                );
+                if (time != null) {
+                  final dt = DateTime(
+                    picked.year,
+                    picked.month,
+                    picked.day,
+                    time.hour,
+                    time.minute,
+                  );
+                  dateController.text =
+                      "${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}:00";
+                }
               }
             },
           ),
+          SizedBox(height: 16),
+          // Checkbox
           Row(
             children: [
-              Checkbox(value: true, onChanged: (_) {}),
+              Checkbox(
+                value: isChecked,
+                onChanged: (val) {
+                  setState(() {
+                    isChecked = val ?? false;
+                  });
+                },
+              ),
               Text("Make sure the data is correct"),
             ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              final req = LoanRequest(
-                studentId: controller.student.value?.id,
-                unitItemId: unitItem?.id ?? "unit_item_id",
-                borrowedBy: lenderController.text,
-                borrowedAt: dateController.text,
-                purpose: descriptionController.text,
-                room: int.tryParse(roomController.text) ?? 0,
-                imagePath: controller.imagePath.value,
-                guarantee: guarantee.value,
-              );
-              controller.submitLoan(req, "token");
-            },
-            child: Text("Submit"),
-          ),
+          SizedBox(height: 16),
+          // Submit Button
+          Obx(() {
+            final isFilled = descriptionController.text.isNotEmpty &&
+                lenderController.text.isNotEmpty &&
+                dateController.text.isNotEmpty &&
+                controller.imagePath.value.isNotEmpty &&
+                isChecked;
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isFilled ? Colors.blue : Colors.grey,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: isFilled
+                    ? () async {
+                        final req = LoanRequest(
+                          studentId: widget.borrowerType == 'student'
+                              ? controller.student.value?.id
+                              : null,
+                          teacherId: widget.borrowerType == 'teacher'
+                              ? controller.teacher.value?.id
+                              : null,
+                          unitItemId: widget.unitItem?.id ?? "",
+                          borrowedBy: lenderController.text,
+                          borrowedAt: dateController.text,
+                          purpose: descriptionController.text,
+                          room: 0, // room tidak ada di UI, set default 0
+                          imagePath: controller.imagePath.value,
+                          guarantee: guarantee,
+                        );
+                        final result = await controller.submitLoan(req, widget.token);
+                        if (result != null && result['status'] == 200) {
+                          Get.snackbar("Success", "Loan submitted successfully");
+                          Navigator.pop(context);
+                        } else {
+                          Get.snackbar("Error", "Failed to submit loan");
+                        }
+                      }
+                    : null,
+                child: Text("Submit"),
+              ),
+            );
+          }),
         ],
       ),
     );
