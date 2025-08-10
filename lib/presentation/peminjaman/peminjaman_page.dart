@@ -102,7 +102,28 @@ class PeminjamanPage extends StatelessWidget {
   }
 
   Widget _stepBorrowerInfo() {
-    return Column(
+    // Listen perubahan student/teacher dan update field
+    if (borrowerType == 'student') {
+      ever(controller.student, (student) {
+        if (student != null) {
+          nisController.text = student.nis ?? '';
+          nameController.text = student.name ?? '';
+          rayonController.text = student.rayon ?? '';
+          majorController.text = student.major ?? '';
+        }
+      });
+    } else {
+      ever(controller.teacher, (teacher) {
+        if (teacher != null) {
+          nisController.text = teacher.id ?? '';
+          nameController.text = teacher.name ?? '';
+          rayonController.clear();
+          majorController.clear();
+        }
+      });
+    }
+
+    return Obx(() => Column(
       children: [
         TextFormField(
           controller: nisController,
@@ -139,7 +160,7 @@ class PeminjamanPage extends StatelessWidget {
           child: Text("Next"),
         ),
       ],
-    );
+    ));
   }
 
   Widget _stepCollateral(BuildContext context) {
