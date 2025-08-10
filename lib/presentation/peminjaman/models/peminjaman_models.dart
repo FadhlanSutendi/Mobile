@@ -56,7 +56,7 @@ class LoanRequest {
   Map<String, dynamic> toMap() => {
     if (studentId != null) 'student_id': studentId,
     if (teacherId != null) 'teacher_id': teacherId,
-    'unit_item_id': unitItemId,
+    'unit_item_id': unitItemId, // make sure this is the UUID, not code_unit
     'borrowed_by': borrowedBy,
     'borrowed_at': borrowedAt,
     if (returnedAt != null) 'returned_at': returnedAt,
