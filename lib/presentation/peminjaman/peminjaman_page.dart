@@ -43,6 +43,25 @@ class PeminjamanPage extends StatelessWidget {
     if (controller.step.value == 0 && initialStep != 0) {
       controller.step.value = initialStep;
     }
+
+    // Listen perubahan student/teacher hanya sekali di build
+    controller.student.listen((student) {
+      if (borrowerType == 'student' && student != null) {
+        nisController.text = student.nis ?? '';
+        nameController.text = student.name ?? '';
+        rayonController.text = student.rayon ?? '';
+        majorController.text = student.major ?? '';
+      }
+    });
+    controller.teacher.listen((teacher) {
+      if (borrowerType == 'teacher' && teacher != null) {
+        nisController.text = teacher.id ?? '';
+        nameController.text = teacher.name ?? '';
+        rayonController.clear();
+        majorController.clear();
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Form Borrowing"),
@@ -102,30 +121,9 @@ class PeminjamanPage extends StatelessWidget {
   }
 
   Widget _stepBorrowerInfo() {
-    // Listen perubahan student/teacher dan update field
-    if (borrowerType == 'student') {
-      ever(controller.student, (student) {
-        if (student != null) {
-          nisController.text = student.nis ?? '';
-          nameController.text = student.name ?? '';
-          rayonController.text = student.rayon ?? '';
-          majorController.text = student.major ?? '';
-        }
-      });
-    } else {
-      ever(controller.teacher, (teacher) {
-        if (teacher != null) {
-          nisController.text = teacher.id ?? '';
-          nameController.text = teacher.name ?? '';
-          rayonController.clear();
-          majorController.clear();
-        }
-      });
-    }
-
-    return Obx(() => Column(
+    return Column(
       children: [
-        TextFormField(
+        Obx(() => TextFormField(
           controller: nisController,
           decoration: InputDecoration(
             labelText: borrowerType == 'student' ? "NIS" : "NIP",
@@ -139,28 +137,27 @@ class PeminjamanPage extends StatelessWidget {
               }
             }
           },
-        ),
-        TextFormField(
+        )),
+        Obx(() => TextFormField(
           controller: nameController,
           decoration: InputDecoration(labelText: "Name"),
-        ),
-        TextFormField(
+        )),
+        Obx(() => TextFormField(
           controller: rayonController,
           decoration: InputDecoration(labelText: "Rayon"),
           enabled: borrowerType == 'student',
-        ),
-        TextFormField(
+        )),
+        Obx(() => TextFormField(
           controller: majorController,
           decoration: InputDecoration(labelText: "Major"),
           enabled: borrowerType == 'student',
-        ),
-        // Jika teacher, bisa tambahkan field khusus guru di sini
+        )),
         ElevatedButton(
           onPressed: () => controller.nextStep(),
           child: Text("Next"),
         ),
       ],
-    ));
+    );
   }
 
   Widget _stepCollateral(BuildContext context) {
@@ -332,3 +329,4 @@ class StepperWidget extends StatelessWidget {
     );
   }
 }
+   
