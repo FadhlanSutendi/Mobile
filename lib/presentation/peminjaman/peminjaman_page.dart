@@ -138,25 +138,33 @@ class PeminjamanPage extends StatelessWidget {
             }
           },
         ),
-        Obx(() => TextFormField(
-          readOnly: true,
-          decoration: InputDecoration(labelText: "Name"),
-          initialValue: borrowerType == 'student'
-              ? controller.student.value?.name ?? ''
-              : controller.teacher.value?.name ?? '',
+        SizedBox(height: 8),
+        Obx(() => Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Name: ${borrowerType == 'student'
+                ? controller.student.value?.name ?? ''
+                : controller.teacher.value?.name ?? ''}",
+            style: TextStyle(fontSize: 16),
+          ),
         )),
         if (borrowerType == 'student')
-          Obx(() => TextFormField(
-            readOnly: true,
-            decoration: InputDecoration(labelText: "Rayon"),
-            initialValue: controller.student.value?.rayon ?? '',
+          Obx(() => Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Rayon: ${controller.student.value?.rayon ?? ''}",
+              style: TextStyle(fontSize: 16),
+            ),
           )),
         if (borrowerType == 'student')
-          Obx(() => TextFormField(
-            readOnly: true,
-            decoration: InputDecoration(labelText: "Major"),
-            initialValue: controller.student.value?.major ?? '',
+          Obx(() => Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Major: ${controller.student.value?.major ?? ''}",
+              style: TextStyle(fontSize: 16),
+            ),
           )),
+        SizedBox(height: 8),
         ElevatedButton(
           onPressed: () => controller.nextStep(),
           child: Text("Next"),
@@ -333,5 +341,3 @@ class StepperWidget extends StatelessWidget {
     );
   }
 }
-
-
