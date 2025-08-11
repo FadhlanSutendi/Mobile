@@ -25,7 +25,8 @@ class PeminjamanPage extends StatefulWidget {
 }
 
 class _PeminjamanPageState extends State<PeminjamanPage> {
-  final controller = Get.put(PeminjamanController());
+  // Ganti Get.put dengan Get.find agar tidak membuat instance baru setiap kali halaman dibuka
+  final controller = Get.find<PeminjamanController>();
 
   final nisController = TextEditingController();
   final nameController = TextEditingController();
