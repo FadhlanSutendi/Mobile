@@ -70,26 +70,28 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-      body: StepperWidget(
+      body: Obx(() => StepperWidget(
         step: controller.step.value,
         onStepContinue: () => controller.nextStep(),
         onStepCancel: () => controller.prevStep(),
         child: _buildStepContent(context),
-      ),
+      )),
     );
   }
 
   Widget _buildStepContent(BuildContext context) {
-    switch (controller.step.value) {
-      case 0:
-        return _stepCheckItem();
-      case 1:
-        return _stepBorrowerInfo();
-      case 2:
-        return _stepCollateral(context);
-      default:
-        return SizedBox.shrink();
-    }
+    return Obx(() {
+      switch (controller.step.value) {
+        case 0:
+          return _stepCheckItem();
+        case 1:
+          return _stepBorrowerInfo();
+        case 2:
+          return _stepCollateral(context);
+        default:
+          return SizedBox.shrink();
+      }
+    });
   }
 
   Widget _stepCheckItem() {
@@ -166,11 +168,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     flex: 1,
                     child: Obx(() => TextFormField(
                       enabled: false,
-                      controller: TextEditingController(
-                        text: widget.borrowerType == 'student'
-                            ? controller.student.value?.name ?? ''
-                            : controller.teacher.value?.name ?? '',
-                      ),
+                      initialValue: widget.borrowerType == 'student'
+                          ? controller.student.value?.name ?? ''
+                          : controller.teacher.value?.name ?? '',
                       decoration: InputDecoration(
                         labelText: "Name",
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -188,11 +188,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     flex: 1,
                     child: Obx(() => TextFormField(
                       enabled: false,
-                      controller: TextEditingController(
-                        text: widget.borrowerType == 'student'
-                            ? controller.student.value?.rayon ?? ''
-                            : '',
-                      ),
+                      initialValue: widget.borrowerType == 'student'
+                          ? controller.student.value?.rayon ?? ''
+                          : '',
                       decoration: InputDecoration(
                         labelText: "Rayon",
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -206,11 +204,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     flex: 1,
                     child: Obx(() => TextFormField(
                       enabled: false,
-                      controller: TextEditingController(
-                        text: widget.borrowerType == 'student'
-                            ? controller.student.value?.major ?? ''
-                            : '',
-                      ),
+                      initialValue: widget.borrowerType == 'student'
+                          ? controller.student.value?.major ?? ''
+                          : '',
                       decoration: InputDecoration(
                         labelText: "Major",
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
