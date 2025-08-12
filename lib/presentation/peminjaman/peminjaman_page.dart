@@ -5,6 +5,7 @@ import '../cek_item/models/cek_item_models.dart'; // gunakan model yang benar
 import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
 import '../login/controller/login_controller.dart';
+import '../../theme/app_button_custom.dart'; // tambahkan import ini
 
 class PeminjamanPage extends StatefulWidget {
   final UnitItem? unitItem;
@@ -402,12 +403,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     isChecked;
                 return SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isFilled ? Colors.blue : Colors.grey,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
+                  // Ganti ElevatedButton dengan AppButtonCustom
+                  child: AppButtonCustom(
+                    label: "Submit",
+                    color: isFilled ? Colors.blue : Colors.grey,
                     onPressed: isFilled
                         ? () async {
                             final req = LoanRequest(
@@ -434,14 +433,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             }
                           }
                         : null,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Submit"),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
+                    loading: false,
+                    borderRadius: 8,
                   ),
                 );
               }),
@@ -644,12 +637,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     isChecked;
                 return SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isFilled ? Colors.blue : Colors.grey,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
+                  // Ganti ElevatedButton dengan AppButtonCustom
+                  child: AppButtonCustom(
+                    label: "Submit",
+                    color: isFilled ? Colors.blue : Colors.grey,
                     onPressed: isFilled
                         ? () async {
                             final req = LoanRequest(
@@ -676,14 +667,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             }
                           }
                         : null,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Submit"),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward),
-                      ],
-                    ),
+                    loading: false,
+                    borderRadius: 8,
                   ),
                 );
               }),
