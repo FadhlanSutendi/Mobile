@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'app_struckcostom.dart';
 
 class SuccessCustomPage extends StatelessWidget {
-  final VoidCallback? onShowReceipt;
-  // Tambahkan parameter data yang diperlukan
   final Map<String, dynamic>? receiptData;
 
   const SuccessCustomPage({Key? key, this.onShowReceipt, this.receiptData}) : super(key: key);
+
+  final VoidCallback? onShowReceipt;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +64,7 @@ class SuccessCustomPage extends StatelessWidget {
                         room: receiptData!['room'],
                         warranty: receiptData!['warranty'],
                         unitCode: receiptData!['unitCode'],
-                        type: receiptData!['type'],
-                        brand: receiptData!['brand'],
+                        merk: receiptData!['merk'], // gunakan merk untuk type & brand
                         author: receiptData!['author'],
                       ),
                     ),

@@ -10,8 +10,7 @@ class StruckCustomPage extends StatelessWidget {
   final String? room;
   final String? warranty;
   final String? unitCode;
-  final String? type;
-  final String? brand;
+  final String? merk; // gunakan merk untuk type dan brand
   final String? author;
 
   const StruckCustomPage({
@@ -25,8 +24,7 @@ class StruckCustomPage extends StatelessWidget {
     this.room,
     this.warranty,
     this.unitCode,
-    this.type,
-    this.brand,
+    this.merk,
     this.author = "Iqbal Fajar Syahbana",
   }) : super(key: key);
 
@@ -44,7 +42,6 @@ class StruckCustomPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Column(
                 children: [
-                  // Replace with your logo asset if available
                   Icon(Icons.inventory_2, size: 48, color: Colors.white),
                   const SizedBox(height: 8),
                   const Text(
@@ -103,8 +100,8 @@ class StruckCustomPage extends StatelessWidget {
                       Divider(thickness: 1),
                       // Unit info
                       _infoRow("Unit Code", unitCode),
-                      _infoRow("Type", type),
-                      _infoRow("Brand", brand),
+                      _infoRow("Type", merk),   // gunakan merk untuk type
+                      _infoRow("Brand", merk),  // gunakan merk untuk brand
                       Divider(thickness: 1),
                       const SizedBox(height: 16),
                       Align(
