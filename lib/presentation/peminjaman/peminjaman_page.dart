@@ -8,7 +8,6 @@ import 'models/peminjaman_models.dart';
 import '../login/controller/login_controller.dart';
 import '../../theme/app_button_custom.dart'; // tambahkan import ini
 import '../../theme/succes_custome_page.dart'; // tambahkan import ini
-import '../../theme/app_struckcostom.dart'; // tambahkan import ini
 
 class PeminjamanPage extends StatefulWidget {
   final UnitItem? unitItem;
@@ -458,29 +457,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              // Ambil data untuk struk
-                              final now = DateTime.now();
-                              final dateStr = "${now.day.toString().padLeft(2, '0')} ${_monthName(now.month)} ${now.year}";
-                              final timeStr = "${now.hour.toString().padLeft(2, '0')}.${now.minute.toString().padLeft(2, '0')} PM";
-                              final receiptData = {
-                                'date': dateController.text.split('-').first.trim(), // tampilkan sesuai input user
-                                'time': dateController.text.split('-').length > 1 ? dateController.text.split('-')[1].trim() : "",
-                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
-                                'name': nameController.text,
-                                'major': majorController.text,
-                                'description': descriptionController.text,
-                                'room': "403", // Ganti jika ada field room, atau ambil dari controller/unitItem
-                                'warranty': guarantee == "STUDENT_CARD" ? "STUDENT CARD" : guarantee,
-                                'unitCode': widget.unitItem?.codeUnit,
-                                'type': widget.unitItem?.subItem.type ?? "",
-                                'brand': widget.unitItem?.subItem.merk ?? "",
-                                'author': "Iqbal Fajar Syahbana",
-                              };
+                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => SuccessCustomPage(
-                                    receiptData: receiptData,
+                                    onShowReceipt: () {
+                                      // TODO: Implementasi show receipt jika diperlukan
+                                    },
                                   ),
                                 ),
                               );
@@ -732,29 +716,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              // Ambil data untuk struk
-                              final now = DateTime.now();
-                              final dateStr = "${now.day.toString().padLeft(2, '0')} ${_monthName(now.month)} ${now.year}";
-                              final timeStr = "${now.hour.toString().padLeft(2, '0')}.${now.minute.toString().padLeft(2, '0')} PM";
-                              final receiptData = {
-                                'date': dateController.text.split('-').first.trim(),
-                                'time': dateController.text.split('-').length > 1 ? dateController.text.split('-')[1].trim() : "",
-                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
-                                'name': nameController.text,
-                                'major': majorController.text,
-                                'description': descriptionController.text,
-                                'room': "403",
-                                'warranty': guarantee == "STUDENT_CARD" ? "STUDENT CARD" : guarantee,
-                                'unitCode': widget.unitItem?.codeUnit,
-                                'type': widget.unitItem?.subItem.type ?? "",
-                                'brand': widget.unitItem?.subItem.merk ?? "",
-                                'author': "Iqbal Fajar Syahbana",
-                              };
+                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => SuccessCustomPage(
-                                    receiptData: receiptData,
+                                    onShowReceipt: () {
+                                      // TODO: Implementasi show receipt jika diperlukan
+                                    },
                                   ),
                                 ),
                               );

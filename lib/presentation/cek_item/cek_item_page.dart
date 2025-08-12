@@ -55,7 +55,7 @@ class _CekItemPageState extends State<CekItemPage> {
   }
 
   void _setControllers(UnitItem unitItem) {
-    typeController.text = unitItem.subItem.type; // ambil type dari subItem
+    typeController.text = unitItem.subItem.merk;
     codeUnitController.text = unitItem.codeUnit;
     brandController.text = unitItem.subItem.merk;
     descriptionController.text = unitItem.description;
