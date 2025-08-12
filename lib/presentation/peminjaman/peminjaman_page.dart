@@ -7,6 +7,7 @@ import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
 import '../login/controller/login_controller.dart';
 import '../../theme/app_button_custom.dart'; // tambahkan import ini
+import '../../theme/succes_custome_page.dart'; // tambahkan import ini
 
 class PeminjamanPage extends StatefulWidget {
   final UnitItem? unitItem;
@@ -456,7 +457,17 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              Navigator.pop(context);
+                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SuccessCustomPage(
+                                    onShowReceipt: () {
+                                      // TODO: Implementasi show receipt jika diperlukan
+                                    },
+                                  ),
+                                ),
+                              );
                             } else {
                               Get.snackbar("Error", result?['message'] ?? "Failed to submit loan");
                             }
@@ -705,7 +716,17 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              Navigator.pop(context);
+                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SuccessCustomPage(
+                                    onShowReceipt: () {
+                                      // TODO: Implementasi show receipt jika diperlukan
+                                    },
+                                  ),
+                                ),
+                              );
                             } else {
                               Get.snackbar("Error", result?['message'] ?? "Failed to submit loan");
                             }
