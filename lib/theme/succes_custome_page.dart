@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'app_struckcostom.dart';
 
 class SuccessCustomPage extends StatelessWidget {
   final VoidCallback? onShowReceipt;
+  // Tambahkan parameter data yang diperlukan
+  final Map<String, dynamic>? receiptData;
 
-  const SuccessCustomPage({Key? key, this.onShowReceipt}) : super(key: key);
+  const SuccessCustomPage({Key? key, this.onShowReceipt, this.receiptData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,31 @@ class SuccessCustomPage extends StatelessWidget {
             const Spacer(flex: 3),
             // Show receipt button
             TextButton(
-              onPressed: onShowReceipt,
+              onPressed: () {
+                if (receiptData != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => StruckCustomPage(
+                        date: receiptData!['date'] ?? "-",
+                        time: receiptData!['time'] ?? "-",
+                        nis: receiptData!['nis'],
+                        name: receiptData!['name'],
+                        major: receiptData!['major'],
+                        description: receiptData!['description'],
+                        room: receiptData!['room'],
+                        warranty: receiptData!['warranty'],
+                        unitCode: receiptData!['unitCode'],
+                        type: receiptData!['type'],
+                        brand: receiptData!['brand'],
+                        author: receiptData!['author'],
+                      ),
+                    ),
+                  );
+                } else if (onShowReceipt != null) {
+                  onShowReceipt!();
+                }
+              },
               child: const Text(
                 "show receipt",
                 style: TextStyle(
