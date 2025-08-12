@@ -133,7 +133,6 @@ class AppApi {
     }
   }
 
-  /// RETURN UNIT LOAN (PUT /unit-loan/{id})
   static Future<Map<String, dynamic>?> returnUnitLoan(String loanId, String returnedAt, {required String token}) async {
     final url = Uri.parse('https://efc78bb2b33d.ngrok-free.app/api/unit-loan/$loanId');
     try {
