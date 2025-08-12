@@ -136,7 +136,6 @@ class _CekItemPageState extends State<CekItemPage> {
                 ],
               ),
               SizedBox(height: 24),
-              // Search Field
               Row(
                 children: [
                   Expanded(
@@ -244,13 +243,12 @@ class _CekItemPageState extends State<CekItemPage> {
                           _inputField("Procurement Date", procurementDateController),
                           SizedBox(height: 16),
                           _inputField("Status", statusController),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _inputField("Condition", conditionController),
                         ],
                       ),
                     ),
-                    SizedBox(height: 24), // Ganti Spacer() dengan SizedBox
-                    // Pilihan Student/Teacher
+                    const SizedBox(height: 24),
                     Row(
                       children: [
                         Expanded(
@@ -261,7 +259,6 @@ class _CekItemPageState extends State<CekItemPage> {
                             ),
                             onPressed: () async {
                               setState(() { borrowerType = 'student'; });
-                              // Masuk ke tampilan peminjaman step 1 (Borrower Info) untuk student
                               await Get.to(() => PeminjamanPage(
                                 unitItem: unitItem,
                                 initialStep: 1,
@@ -269,10 +266,10 @@ class _CekItemPageState extends State<CekItemPage> {
                                 borrowerType: 'student',
                               ));
                             },
-                            child: Text("Student"),
+                            child: const Text("Student"),
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -281,7 +278,6 @@ class _CekItemPageState extends State<CekItemPage> {
                             ),
                             onPressed: () async {
                               setState(() { borrowerType = 'teacher'; });
-                              // Masuk ke tampilan peminjaman step 1 (Borrower Info) untuk teacher
                               await Get.to(() => PeminjamanPage(
                                 unitItem: unitItem,
                                 initialStep: 1,
@@ -289,7 +285,7 @@ class _CekItemPageState extends State<CekItemPage> {
                                 borrowerType: 'teacher',
                               ));
                             },
-                            child: Text("Teacher"),
+                            child: const Text("Teacher"),
                           ),
                         ),
                       ],
@@ -331,8 +327,8 @@ class _CekItemPageState extends State<CekItemPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-        SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
         TextFormField(
           controller: controller,
           decoration: InputDecoration(
@@ -342,7 +338,7 @@ class _CekItemPageState extends State<CekItemPage> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           ),
         ),
       ],

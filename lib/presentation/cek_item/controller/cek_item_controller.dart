@@ -23,7 +23,7 @@ class CekItemController extends GetxController {
         errorMessage.value = 'Data tidak ditemukan';
       }
     } catch (e) {
-      print('searchUnitItem error: $e'); // log
+      print('searchUnitItem error: $e');
       errorMessage.value = 'Terjadi kesalahan';
     }
     isLoading.value = false;

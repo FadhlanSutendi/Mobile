@@ -8,7 +8,7 @@ class UnitItem {
   final dynamic condition;
 
   UnitItem({
-    required this.id, // tambahkan id
+    required this.id, 
     required this.codeUnit,
     required this.subItem,
     required this.description,

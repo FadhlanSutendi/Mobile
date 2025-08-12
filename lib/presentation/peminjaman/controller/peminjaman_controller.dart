@@ -52,7 +52,7 @@ class PeminjamanController extends GetxController {
 
   Future<Map<String, dynamic>?> submitLoan(LoanRequest req, String token) async {
     isLoading.value = true;
-    // Ensure unit_item_id is the UUID from UnitItem
+    // Ensure unit_item_id is the UUID from 
     if (unitItem != null) {
       req.unitItemId = unitItem!.id;
     }
