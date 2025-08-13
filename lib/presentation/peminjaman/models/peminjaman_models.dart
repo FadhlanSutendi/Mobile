@@ -51,7 +51,7 @@ class LoanRequest {
     required this.room,
     this.imagePath,
     required this.guarantee,
-  });
+  }) : assert(guarantee == 'BKP' || guarantee == 'STUDENT_CARD', 'Guarantee must be BKP or STUDENT_CARD');
 
   Map<String, dynamic> toMap() => {
     if (studentId != null) 'student_id': studentId,
