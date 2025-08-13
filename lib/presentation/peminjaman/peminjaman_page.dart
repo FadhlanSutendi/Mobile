@@ -40,7 +40,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   final roomController = TextEditingController();
   final purposeController = TextEditingController();
 
-  String guarantee = 'STUDENT_CARD'; // default pakai value yang valid
+  String guarantee = 'kartu pelajar'; // default value sesuai permintaan
   bool isChecked = false;
   String? serverDate; // untuk format tanggal ke API
 
@@ -239,11 +239,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               children: [
                 Expanded(
                   child: RadioListTile<String>(
-                    value: 'BKP', // value yang valid untuk API
+                    value: 'BKP', // value dikirim ke API
                     groupValue: guarantee,
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
-                    title: Text('BKP', style: TextStyle(fontSize: 14)), // label sesuai value
+                    title: Text('BKP', style: TextStyle(fontSize: 14)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
@@ -255,11 +255,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 SizedBox(width: 8),
                 Expanded(
                   child: RadioListTile<String>(
-                    value: 'STUDENT_CARD', // value yang valid untuk API
+                    value: 'kartu pelajar', // value dikirim ke API
                     groupValue: guarantee,
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
-                    title: Text('STUDENT CARD', style: TextStyle(fontSize: 14)), // label sesuai value
+                    title: Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
@@ -519,17 +519,17 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: guarantee == 'STUDENT_CARD' ? Colors.blue : Colors.white,
-                      foregroundColor: guarantee == 'STUDENT_CARD' ? Colors.white : Colors.black,
+                      backgroundColor: guarantee == 'kartu pelajar' ? Colors.blue : Colors.white,
+                      foregroundColor: guarantee == 'kartu pelajar' ? Colors.white : Colors.black,
                       side: BorderSide(color: Colors.blue),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     onPressed: () {
                       setState(() {
-                        guarantee = 'STUDENT_CARD';
+                        guarantee = 'kartu pelajar';
                       });
                     },
-                    child: Text("STUDENT CARD"),
+                    child: Text("Kartu Pelajar"),
                   ),
                 ),
               ],
