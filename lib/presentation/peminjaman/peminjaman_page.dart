@@ -40,7 +40,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   final roomController = TextEditingController();
   final purposeController = TextEditingController();
 
-  String guarantee = 'STUDENT_CARD'; // default pakai underscore
+  String guarantee = 'STUDENT_CARD'; // default pakai value yang valid
   bool isChecked = false;
   String? serverDate; // untuk format tanggal ke API
 
@@ -239,11 +239,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               children: [
                 Expanded(
                   child: RadioListTile<String>(
-                    value: 'BKP',
+                    value: 'BKP', // value yang valid untuk API
                     groupValue: guarantee,
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
-                    title: Text('BKP', style: TextStyle(fontSize: 14)),
+                    title: Text('BKP', style: TextStyle(fontSize: 14)), // label sesuai value
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
@@ -255,11 +255,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 SizedBox(width: 8),
                 Expanded(
                   child: RadioListTile<String>(
-                    value: 'STUDENT_CARD',
+                    value: 'STUDENT_CARD', // value yang valid untuk API
                     groupValue: guarantee,
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
-                    title: Text('STUDENT CARD', style: TextStyle(fontSize: 14)),
+                    title: Text('STUDENT CARD', style: TextStyle(fontSize: 14)), // label sesuai value
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
