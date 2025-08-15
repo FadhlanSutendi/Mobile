@@ -63,7 +63,10 @@ class PeminjamanController extends GetxController {
 
   Future<Map<String, dynamic>?> returnLoan(String loanId, String returnedAt, String token) async {
     isLoading.value = true;
-    final result = await AppApi.returnUnitLoan(loanId, returnedAt, token: token);
+    final data = {
+      'returned_at': returnedAt,
+    };
+    final result = await AppApi.putUnitLoan(loanId, data, token: token);
     isLoading.value = false;
     return result;
   }

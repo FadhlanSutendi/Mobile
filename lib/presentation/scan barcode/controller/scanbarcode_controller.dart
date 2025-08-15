@@ -14,7 +14,9 @@ class ScanBarcodeController {
         response['data'] != null) {
       final data = response['data'];
       if (data is Map<String, dynamic>) {
-        return UnitItem.fromJson(data);
+        final unitItem = UnitItem.fromJson(data);
+        print('UnitItem.loan: ${unitItem.loan}'); // debug loan
+        return unitItem;
       }
     }
 

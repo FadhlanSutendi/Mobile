@@ -133,7 +133,31 @@ class AppApi {
     }
   }
 
-  static Future<Map<String, dynamic>?> returnUnitLoan(String loanId, String returnedAt, {required String token}) async {
+  /// GET UNIT LOAN DETAIL (for pengembalian)
+  static Future<Map<String, dynamic>?> getUnitLoanDetail(String loanId, {required String token}) async {
+    final url = Uri.parse('https://efc78bb2b33d.ngrok-free.app/api/unit-loan/$loanId');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("getUnitLoanDetail ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("getUnitLoanDetail Exception: $e");
+      return null;
+    }
+  }
+
+  /// PUT UNIT LOAN (pengembalian barang)
+  static Future<Map<String, dynamic>?> putUnitLoan(String loanId, Map<String, dynamic> data, {required String token}) async {
     final url = Uri.parse('https://efc78bb2b33d.ngrok-free.app/api/unit-loan/$loanId');
     try {
       final response = await http.put(
@@ -142,16 +166,16 @@ class AppApi {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'returned_at': returnedAt}),
+        body: jsonEncode(data),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print("returnUnitLoan ERROR: ${response.statusCode} - ${response.body}");
+        print("putUnitLoan ERROR: ${response.statusCode} - ${response.body}");
         return null;
       }
     } catch (e) {
-      print("returnUnitLoan Exception: $e");
+      print("putUnitLoan Exception: $e");
       return null;
     }
   }
