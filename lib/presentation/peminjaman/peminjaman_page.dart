@@ -457,19 +457,34 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
+                              // Buat data struk dari input dan unitItem
+                              final receiptData = {
+                                'date': dateController.text.split(' - ').first,
+                                'time': dateController.text.split(' - ').length > 1 ? dateController.text.split(' - ')[1] : "-",
+                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
+                                'name': nameController.text,
+                                'major': majorController.text,
+                                'description': descriptionController.text,
+                                'room': roomController.text.isNotEmpty ? roomController.text : null,
+                                'warranty': guarantee,
+                                'unitCode': widget.unitItem?.codeUnit,
+                                'merk': widget.unitItem?.subItem.merk,
+                                'author': "Iqbal Fajar Syahbana",
+                              };
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => SuccessCustomPage(
-                                    onShowReceipt: () {
-                                      // TODO: Implementasi show receipt jika diperlukan
-                                    },
+                                    receiptData: receiptData,
                                   ),
                                 ),
                               );
                             } else {
-                              Get.snackbar("Error", result?['message'] ?? "Failed to submit loan");
+                              // Tampilkan pesan error backend ke user
+                              Get.snackbar(
+                                "Error",
+                                result?['message'] ?? "Failed to submit loan"
+                              );
                             }
                           }
                         : null,
@@ -716,19 +731,34 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             final result = await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
                               Get.snackbar("Success", "Loan submitted successfully");
-                              // Ganti Navigator.pop(context); dengan navigasi ke halaman sukses
+                              // Buat data struk dari input dan unitItem
+                              final receiptData = {
+                                'date': dateController.text.split(' - ').first,
+                                'time': dateController.text.split(' - ').length > 1 ? dateController.text.split(' - ')[1] : "-",
+                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
+                                'name': nameController.text,
+                                'major': majorController.text,
+                                'description': descriptionController.text,
+                                'room': roomController.text.isNotEmpty ? roomController.text : null,
+                                'warranty': guarantee,
+                                'unitCode': widget.unitItem?.codeUnit,
+                                'merk': widget.unitItem?.subItem.merk,
+                                'author': "Iqbal Fajar Syahbana",
+                              };
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => SuccessCustomPage(
-                                    onShowReceipt: () {
-                                      // TODO: Implementasi show receipt jika diperlukan
-                                    },
+                                    receiptData: receiptData,
                                   ),
                                 ),
                               );
                             } else {
-                              Get.snackbar("Error", result?['message'] ?? "Failed to submit loan");
+                              // Tampilkan pesan error backend ke user
+                              Get.snackbar(
+                                "Error",
+                                result?['message'] ?? "Failed to submit loan"
+                              );
                             }
                           }
                         : null,
