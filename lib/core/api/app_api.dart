@@ -64,7 +64,7 @@ class AppApi {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'code_unit': codeUnit}), // pastikan pakai code_unit
+        body: jsonEncode({'code_unit': codeUnit}),
       );
       print('fetchUnitLoanCheck: status=${response.statusCode}, body=${response.body}'); // debug
 
@@ -82,6 +82,7 @@ class AppApi {
 
   /// FETCH STUDENT/TEACHER DATA (search by query param)
   static Future<Map<String, dynamic>?> fetchPerson(String id, {required String type, required String token}) async {
+    // Use search query for student/teacher
     final url = Uri.parse('https://f05a01902eb7.ngrok-free.app/api/$type?search=$id');
     try {
       final response = await http.get(
@@ -132,31 +133,7 @@ class AppApi {
     }
   }
 
-  /// GET UNIT LOAN DETAIL (for pengembalian)
-  static Future<Map<String, dynamic>?> getUnitLoanDetail(String loanId, {required String token}) async {
-    final url = Uri.parse('https://f05a01902eb7.ngrok-free.app/api/unit-loan/$loanId');
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        print("getUnitLoanDetail ERROR: ${response.statusCode} - ${response.body}");
-        return null;
-      }
-    } catch (e) {
-      print("getUnitLoanDetail Exception: $e");
-      return null;
-    }
-  }
-
-  /// PUT UNIT LOAN (pengembalian barang)
-  static Future<Map<String, dynamic>?> putUnitLoan(String loanId, Map<String, dynamic> data, {required String token}) async {
+  static Future<Map<String, dynamic>?> returnUnitLoan(String loanId, String returnedAt, {required String token}) async {
     final url = Uri.parse('https://f05a01902eb7.ngrok-free.app/api/unit-loan/$loanId');
     try {
       final response = await http.put(
@@ -165,16 +142,16 @@ class AppApi {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(data),
+        body: jsonEncode({'returned_at': returnedAt}),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        print("putUnitLoan ERROR: ${response.statusCode} - ${response.body}");
+        print("returnUnitLoan ERROR: ${response.statusCode} - ${response.body}");
         return null;
       }
     } catch (e) {
-      print("putUnitLoan Exception: $e");
+      print("returnUnitLoan Exception: $e");
       return null;
     }
   }
