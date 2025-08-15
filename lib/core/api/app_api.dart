@@ -55,16 +55,16 @@ class AppApi {
 
   /// FETCH UNIT LOAN CHECK (for scan barcode student)
   static Future<Map<String, dynamic>?> fetchUnitLoanCheck(String codeUnit, {required String token}) async {
-    final url = Uri.parse('https://f05a01902eb7.ngrok-free.app/api/unit-loan/check');
+    final url = Uri.parse('http://localhost:8000/api/unit-loan/check');
     try {
-      print('fetchUnitLoanCheck: token=$token, code_unit=$codeUnit'); // debug
+      print('fetchUnitLoanCheck: token=$token, unit_code=$codeUnit'); // debug
       final response = await http.post(
         url,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'code_unit': codeUnit}),
+        body: jsonEncode({'unit_code': codeUnit}), // use 'unit_code' as per backend spec
       );
       print('fetchUnitLoanCheck: status=${response.statusCode}, body=${response.body}'); // debug
 

@@ -6,6 +6,12 @@ class ScanBarcodeController {
     String barcode, {
     required String token,
   }) async {
+    // Validate barcode before API call
+    if (barcode.isEmpty || barcode.trim().isEmpty) {
+      print('Barcode/unit_code kosong, tidak bisa request ke API');
+      return null;
+    }
+
     final response = await AppApi.fetchUnitLoanCheck(barcode, token: token);
     print('API response: $response');
 
