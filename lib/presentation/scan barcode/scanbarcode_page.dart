@@ -6,6 +6,9 @@ import '../cek_item/cek_item_page.dart';
 import '../login/controller/login_controller.dart';
 import 'controller/scanbarcode_controller.dart';
 import '../cek_item/models/cek_item_models.dart';
+import '../pengembalian/pengembalian_page.dart'; // import pengembalian page
+import '../pengembalian/models/pengembalian_models.dart'; // import pengembalian models
+import '../pengembalian/controller/pengembalian_controller.dart';
 
 class ScanBarcodePage extends StatefulWidget {
   @override
@@ -40,18 +43,38 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
           scannedResult = value;
         });
 
-        // TODO: Tambahkan suara/getar di sini jika ingin UX feedback
-
         final unitItem = await scanController.fetchUnitItem(
           value,
           token: loginController.token.value,
         );
 
         if (unitItem != null) {
-          await mobileScannerController.stop();
-          await Get.to(() => CekItemPage(unitItem: unitItem));
-          setState(() => scannedResult = null);
-          await mobileScannerController.start();
+          // Check if item is borrowed
+          if (unitItem.loan != null && unitItem.loan!.status == true) {
+            // Ambil detail loan dari API (GET)
+            final pengembalianController = Get.put(PengembalianController());
+            final loanDetail = await pengembalianController.fetchLoanDetail(unitItem.loan!.id, loginController.token.value);
+            if (loanDetail != null) {
+              await mobileScannerController.stop();
+              await Get.to(() => PengembalianPage(
+                loan: loanDetail,
+                unitItem: unitItem,
+                token: loginController.token.value,
+              ));
+              setState(() => scannedResult = null);
+              await mobileScannerController.start();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Data peminjaman tidak ditemukan')),
+              );
+            }
+          } else {
+            // Item is not borrowed, go to borrowing page
+            await mobileScannerController.stop();
+            await Get.to(() => CekItemPage(unitItem: unitItem));
+            setState(() => scannedResult = null);
+            await mobileScannerController.start();
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Data tidak ditemukan')),

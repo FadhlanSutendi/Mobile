@@ -4,9 +4,10 @@ import 'app_struckcostom.dart';
 class SuccessCustomPage extends StatelessWidget {
   final Map<String, dynamic>? receiptData;
 
-  const SuccessCustomPage({Key? key, this.onShowReceipt, this.receiptData}) : super(key: key);
+  const SuccessCustomPage({Key? key, this.onShowReceipt, this.receiptData, this.showDashboardButton = false}) : super(key: key);
 
   final VoidCallback? onShowReceipt;
+  final bool showDashboardButton;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +83,16 @@ class SuccessCustomPage extends StatelessWidget {
                 ),
               ),
             ),
+            if (showDashboardButton)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  child: Text("Kembali ke Dashboard"),
+                ),
+              ),
             const SizedBox(height: 16),
             // Logo and app name
             Column(
