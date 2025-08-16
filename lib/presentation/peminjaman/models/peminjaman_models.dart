@@ -120,7 +120,9 @@ class Loan {
       nis: json['student']['nis'].toString(),
       name: json['student']['name'] ?? '',
       rayon: json['student']['rayon'] ?? '',
-      major: json['student']['major_id']?.toString() ?? '',
+      major: json['student']['major'] is Map
+        ? json['student']['major']['name'] ?? ''
+        : (json['student']['major'] ?? ''),
     ) : null,
     teacher: json['teacher'] != null ? Teacher.fromJson(json['teacher']) : null,
     unitItem: json['unit_item'] != null ? LoanUnitItem.fromJson(json['unit_item']) : null,

@@ -28,19 +28,29 @@ class PeminjamanController extends GetxController {
   Future<void> fetchStudent(String id, String token) async {
     isLoading.value = true;
     final data = await AppApi.fetchPerson(id, type: 'student', token: token);
+    print('fetchStudent response: $data'); // log seluruh respons
+    if (data != null) {
+      print('fetchStudent status: ${data['status']}'); // log status
+    }
     if (data != null && data['data'] is List && data['data'].isNotEmpty) {
       final studentJson = data['data'][0];
+      // Ambil major dari nested major object jika ada
       student.value = Student(
         id: studentJson['id'],
         nis: studentJson['nis'].toString(),
         name: studentJson['name'] ?? '',
         rayon: studentJson['rayon'] ?? '',
-        major: studentJson['major']?['name'] ?? '',
+        major: studentJson['major'] is Map
+            ? studentJson['major']['name'] ?? ''
+            : (studentJson['major'] ?? ''),
       );
       // Set ke controller jika sudah di-assign dari page
       nameController?.text = student.value?.name ?? '';
       rayonController?.text = student.value?.rayon ?? '';
       majorController?.text = student.value?.major ?? '';
+      print('Student found: ${studentJson['name']} / ${studentJson['nis']} / ${studentJson['major']}');
+    } else {
+      print('Student not found or empty data');
     }
     isLoading.value = false;
   }
@@ -48,6 +58,10 @@ class PeminjamanController extends GetxController {
   Future<void> fetchTeacher(String id, String token) async {
     isLoading.value = true;
     final data = await AppApi.fetchPerson(id, type: 'teacher', token: token);
+    print('fetchTeacher response: $data'); // log seluruh respons
+    if (data != null) {
+      print('fetchTeacher status: ${data['status']}'); // log status
+    }
     if (data != null && data['data'] is List && data['data'].isNotEmpty) {
       final teacherJson = data['data'][0];
       teacher.value = Teacher(
@@ -57,6 +71,9 @@ class PeminjamanController extends GetxController {
       nameController?.text = teacher.value?.name ?? '';
       rayonController?.text = '';
       majorController?.text = '';
+      print('Teacher found: ${teacherJson['name']} / ${teacherJson['id']}');
+    } else {
+      print('Teacher not found or empty data');
     }
     isLoading.value = false;
   }
