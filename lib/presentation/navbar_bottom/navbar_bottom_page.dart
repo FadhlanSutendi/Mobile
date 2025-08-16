@@ -47,7 +47,8 @@ class NavbarBottom extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 if (onItemSelected != null) onItemSelected!(4);
-                Navigator.pushNamed(context, '/scan');
+                // Navigate to scan barcode page
+                Get.toNamed('/scan');
               },
               child: Container(
                 width: 64,
