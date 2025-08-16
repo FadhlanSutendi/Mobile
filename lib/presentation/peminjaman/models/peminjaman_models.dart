@@ -19,12 +19,21 @@ class Student {
 class Teacher {
   final String id;
   final String name;
+  final String nip;
+  final String telephone;
 
-  Teacher({required this.id, required this.name});
+  Teacher({
+    required this.id,
+    required this.name,
+    required this.nip,
+    required this.telephone,
+  });
 
   factory Teacher.fromJson(Map<String, dynamic> json) => Teacher(
     id: json['id'],
     name: json['name'],
+    nip: json['nip'] ?? '',
+    telephone: json['telephone'] ?? '',
   );
 }
 
