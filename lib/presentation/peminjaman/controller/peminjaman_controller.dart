@@ -18,6 +18,9 @@ class PeminjamanController extends GetxController {
   TextEditingController? rayonController;
   TextEditingController? majorController;
 
+  // Add borrowerType to determine if the borrower is a student or teacher
+  String borrowerType = 'student'; // default, set from page
+
   Future<void> pickImage() async {
     final picked = await picker.pickImage(source: ImageSource.camera);
     if (picked != null) {
@@ -51,6 +54,11 @@ class PeminjamanController extends GetxController {
       print('Student found: ${studentJson['name']} / ${studentJson['nis']} / ${studentJson['major']}');
     } else {
       print('Student not found or empty data');
+      // Clear student fields in UI
+      student.value = null;
+      nameController?.text = '';
+      rayonController?.text = '';
+      majorController?.text = '';
     }
     isLoading.value = false;
   }
@@ -67,11 +75,13 @@ class PeminjamanController extends GetxController {
       teacher.value = Teacher(
         id: teacherJson['id'],
         name: teacherJson['name'] ?? '',
+        nip: teacherJson['nip'] ?? '',
+        telephone: teacherJson['telephone'] ?? '',
       );
       nameController?.text = teacher.value?.name ?? '';
       rayonController?.text = '';
       majorController?.text = '';
-      print('Teacher found: ${teacherJson['name']} / ${teacherJson['id']}');
+      print('Teacher found: ${teacherJson['name']} / ${teacherJson['id']} / ${teacherJson['nip']} / ${teacherJson['telephone']}');
     } else {
       print('Teacher not found or empty data');
     }
@@ -80,9 +90,14 @@ class PeminjamanController extends GetxController {
 
   Future<Map<String, dynamic>?> submitLoan(LoanRequest req, String token) async {
     isLoading.value = true;
-    // Ensure unit_item_id is the UUID from 
     if (unitItem != null) {
       req.unitItemId = unitItem!.id;
+    }
+    // Only set the correct ID based on borrowerType
+    if (borrowerType == 'student') {
+      req.teacherId = null;
+    } else if (borrowerType == 'teacher') {
+      req.studentId = null;
     }
     final result = await AppApi.postUnitLoan(req.toMap(), token: token);
     isLoading.value = false;
