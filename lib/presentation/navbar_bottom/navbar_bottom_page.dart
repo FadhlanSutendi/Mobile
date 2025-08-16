@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../login/controller/login_controller.dart';
 import '../../core/api/app_api.dart';
 import 'controller/navbar_bottom_controller.dart';
-import '../../routes/app_routes.dart'; // Tambahkan import ini
+import '../../routes/app_routes.dart'; // sudah ada
 
 class NavbarBottom extends StatelessWidget {
   final int selectedIndex;
@@ -48,8 +48,8 @@ class NavbarBottom extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 if (onItemSelected != null) onItemSelected!(4);
-                // Navigate to scan barcode page
-                Get.toNamed('/scan');
+                // Navigasi ke halaman scan barcode
+                Get.toNamed(AppRoutes.scanBarcode);
               },
               child: Container(
                 width: 64,
@@ -91,7 +91,7 @@ class NavbarBottom extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/reports');
             break;
           case 'History':
-            // Gunakan GetX dan AppRoutes untuk navigasi ke halaman history
+            // Navigasi ke halaman history
             Get.toNamed(AppRoutes.history, arguments: token);
             break;
           case 'log Out':
