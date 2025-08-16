@@ -43,15 +43,25 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
           scannedResult = value;
         });
 
-        final unitItem = await scanController.fetchUnitItem(
-          value, // value adalah unit_code
+        final result = await scanController.fetchUnitItemOrLoan(
+          value,
           token: loginController.token.value,
         );
 
-        if (unitItem != null) {
-          // Tidak ada pengecekan loan, langsung ke halaman detail
+        if (result != null) {
           await mobileScannerController.stop();
-          await Get.to(() => CekItemPage(unitItem: unitItem));
+          // If loan exists, show pengembalian page
+          if (result['loan'] != null) {
+            await Get.to(() => PengembalianPage(
+              loan: result['loan'],
+              unitItem: result['unitItem'],
+              token: loginController.token.value,
+            ));
+          }
+          // If only unitItem exists, show cek item page
+          else if (result['unitItem'] != null) {
+            await Get.to(() => CekItemPage(unitItem: result['unitItem']));
+          }
           setState(() => scannedResult = null);
           await mobileScannerController.start();
         } else {
