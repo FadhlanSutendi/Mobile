@@ -7,7 +7,7 @@ class PengembalianController extends GetxController {
 
   Future<Loan?> fetchLoanDetail(String loanId, String token) async {
     isLoading.value = true;
-    final result = await AppApi.getUnitLoanDetail(loanId, token: token);
+    final result = await AppApi.returnUnitLoan(loanId, '', token: token);
     isLoading.value = false;
     if (result != null && result['data'] != null) {
       return Loan.fromJson(result['data']);
@@ -20,7 +20,7 @@ class PengembalianController extends GetxController {
     final data = {
       'returned_at': returnedAt,
     };
-    final result = await AppApi.putUnitLoan(loanId, data, token: token);
+    final result = await AppApi.returnUnitLoan(loanId, returnedAt, token: token);
     isLoading.value = false;
     return result;
   }
