@@ -1,7 +1,7 @@
 import '../../../core/api/app_api.dart';
-import '../../cek_item/models/cek_item_models.dart';
+import '../../cek_item/models/cek_item_models.dart' as cek_item;
 import '../../pengembalian/models/pengembalian_models.dart';
-import '../../pengembalian/models/unit_loan.dart'; // Ensure this file defines UnitLoan
+import '../../pengembalian/models/unit_loan.dart' as unit_loan; // Ensure this file defines UnitLoan
 
 class ScanBarcodeController {
   /// Returns a map: {'unitItem': UnitItem, 'loan': UnitLoan}
@@ -15,6 +15,7 @@ class ScanBarcodeController {
       return null;
     }
 
+    // Pastikan key yang dikirim ke API adalah 'code_unit'
     final response = await AppApi.fetchUnitLoanCheck(sanitizedUnitCode, token: token);
     print('API response: $response');
 
@@ -22,12 +23,12 @@ class ScanBarcodeController {
       final data = response['data'];
       // If data contains 'unit_item', it's a loan object
       if (data is Map<String, dynamic> && data.containsKey('unit_item')) {
-        final loan = UnitLoan.fromJson(data);
+        final loan = unit_loan.UnitLoan.fromJson(data);
         return {'loan': loan, 'unitItem': loan.unitItem};
       }
       // If data contains 'code_unit', it's a unit item object
       if (data is Map<String, dynamic> && data.containsKey('code_unit')) {
-        final unitItem = UnitLoan.fromJson(data);
+        final unitItem = cek_item.UnitItem.fromJson(data);
         return {'unitItem': unitItem};
       }
     }

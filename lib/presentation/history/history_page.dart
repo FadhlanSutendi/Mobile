@@ -3,6 +3,8 @@ import 'package:provider/provider.dart'; // Add this import for ChangeNotifierPr
 import 'controller/history_controller.dart';
 import 'models/history_models.dart';
 import 'detail_history_page.dart'; // Import the detail page
+import '../../routes/app_routes.dart'; // Tambahkan import ini
+import 'package:get/get.dart'; // Tambahkan import ini
 
 class HistoryPage extends StatelessWidget {
   final String token;
@@ -209,7 +211,8 @@ class HistoryPage extends StatelessWidget {
   Widget _buildQRScannerButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: Implement QR scan navigation
+        // Navigasi ke halaman scan barcode
+        Get.toNamed(AppRoutes.scanBarcode);
       },
       child: Container(
         decoration: BoxDecoration(

@@ -65,7 +65,7 @@ class AppApi {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'unit_code': sanitizedUnitCode}), // gunakan 'unit_code' sesuai backend
+        body: jsonEncode({'code_unit': sanitizedUnitCode}), // gunakan 'code_unit' sesuai backend
       );
       print('fetchUnitLoanCheck: status=${response.statusCode}, body=${response.body}'); // debug
 

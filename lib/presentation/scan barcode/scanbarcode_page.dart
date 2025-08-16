@@ -41,10 +41,12 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
         setState(() {
           isLoading = true;
           scannedResult = value;
+          // Jika pakai searchController, isi hasil scan ke field
+          // searchController.text = value;
         });
 
         final result = await scanController.fetchUnitItemOrLoan(
-          value,
+          value, // value adalah hasil scan barcode
           token: loginController.token.value,
         );
 
