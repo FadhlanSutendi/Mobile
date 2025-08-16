@@ -75,6 +75,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         majorController.text = '';
       }
     });
+    // Assign controller to PeminjamanController for auto set
+    controller.nameController = nameController;
+    controller.rayonController = rayonController;
+    controller.majorController = majorController;
   }
 
   @override
@@ -187,8 +191,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 SizedBox(width: 8),
                 Flexible(
                   flex: 1,
-                  // Tidak perlu Obx di sini, karena pakai controller
-                  child: TextFormField(
+                  child: Obx(() => TextFormField(
                     enabled: false,
                     controller: nameController,
                     decoration: InputDecoration(
@@ -197,7 +200,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                  ),
+                    // Tampilkan nama dari controller.student/teacher
+                    initialValue: widget.borrowerType == 'student'
+                        ? controller.student.value?.name ?? ''
+                        : controller.teacher.value?.name ?? '',
+                  )),
                 ),
               ],
             ),
@@ -206,7 +213,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               children: [
                 Flexible(
                   flex: 1,
-                  child: TextFormField(
+                  child: Obx(() => TextFormField(
                     enabled: false,
                     controller: rayonController,
                     decoration: InputDecoration(
@@ -215,12 +222,15 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                  ),
+                    initialValue: widget.borrowerType == 'student'
+                        ? controller.student.value?.rayon ?? ''
+                        : '',
+                  )),
                 ),
                 SizedBox(width: 8),
                 Flexible(
                   flex: 1,
-                  child: TextFormField(
+                  child: Obx(() => TextFormField(
                     enabled: false,
                     controller: majorController,
                     decoration: InputDecoration(
@@ -229,7 +239,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                  ),
+                    initialValue: widget.borrowerType == 'student'
+                        ? controller.student.value?.major ?? ''
+                        : '',
+                  )),
                 ),
               ],
             ),

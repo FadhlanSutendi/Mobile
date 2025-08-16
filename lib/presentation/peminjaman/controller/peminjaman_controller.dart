@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 import '../../../core/api/app_api.dart';
 import '../models/peminjaman_models.dart';
 import '../../cek_item/models/cek_item_models.dart'; // ganti import ini untuk UnitItem
@@ -13,6 +14,10 @@ class PeminjamanController extends GetxController {
   final picker = ImagePicker();
   UnitItem? unitItem; // pastikan UnitItem sudah terdefinisi dan diimport dari cek_item_models.dart
 
+  TextEditingController? nameController;
+  TextEditingController? rayonController;
+  TextEditingController? majorController;
+
   Future<void> pickImage() async {
     final picked = await picker.pickImage(source: ImageSource.camera);
     if (picked != null) {
@@ -25,7 +30,6 @@ class PeminjamanController extends GetxController {
     final data = await AppApi.fetchPerson(id, type: 'student', token: token);
     if (data != null && data['data'] is List && data['data'].isNotEmpty) {
       final studentJson = data['data'][0];
-      // Ambil major dari nested major object
       student.value = Student(
         id: studentJson['id'],
         nis: studentJson['nis'].toString(),
@@ -33,6 +37,10 @@ class PeminjamanController extends GetxController {
         rayon: studentJson['rayon'] ?? '',
         major: studentJson['major']?['name'] ?? '',
       );
+      // Set ke controller jika sudah di-assign dari page
+      nameController?.text = student.value?.name ?? '';
+      rayonController?.text = student.value?.rayon ?? '';
+      majorController?.text = student.value?.major ?? '';
     }
     isLoading.value = false;
   }
@@ -46,6 +54,9 @@ class PeminjamanController extends GetxController {
         id: teacherJson['id'],
         name: teacherJson['name'] ?? '',
       );
+      nameController?.text = teacher.value?.name ?? '';
+      rayonController?.text = '';
+      majorController?.text = '';
     }
     isLoading.value = false;
   }
