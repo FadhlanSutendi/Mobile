@@ -6,4 +6,6 @@ class AppRoutes {
   static const error = '/error'; // Tambahkan ini
   static const scanBarcode = '/scan-barcode'; // route baru
   static const cekItem = '/cek-item'; // route baru
+  static const history = '/history'; // route untuk history
+  // ...tambahkan route lain jika diperlukan...
 }

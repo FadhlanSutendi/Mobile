@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../login/controller/login_controller.dart';
 import '../../core/api/app_api.dart';
 import 'controller/navbar_bottom_controller.dart';
+import '../../routes/app_routes.dart'; // Tambahkan import ini
 
 class NavbarBottom extends StatelessWidget {
   final int selectedIndex;
@@ -84,13 +85,14 @@ class NavbarBottom extends StatelessWidget {
         if (onItemSelected != null) onItemSelected!(index);
         switch (label) {
           case 'Home':
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context, AppRoutes.home);
             break;
           case 'Reports':
             Navigator.pushReplacementNamed(context, '/reports');
             break;
           case 'History':
-            Navigator.pushReplacementNamed(context, '/history', arguments: token);
+            // Gunakan GetX dan AppRoutes untuk navigasi ke halaman history
+            Get.toNamed(AppRoutes.history, arguments: token);
             break;
           case 'log Out':
             final result = await showDialog<bool>(
