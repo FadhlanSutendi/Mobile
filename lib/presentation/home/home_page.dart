@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../scan barcode/scanbarcode_page.dart';
+import '../history/history_page.dart';
+import '../login/controller/login_controller.dart'; // import LoginController
+import '../navbar_bottom/navbar_bottom_page.dart'; // import komponen navbar
+import '../navbar_bottom/controller/navbar_bottom_controller.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Pastikan controller tersedia
+    Get.put(NavbarBottomController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -195,69 +202,8 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      // Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(Icons.home, 'Home', active: true),
-            _buildNavItem(Icons.inventory_2, 'Invent'),
-            _buildQRScannerButton(context),
-            _buildNavItem(Icons.history, 'History'),
-            _buildNavItem(Icons.bar_chart, 'Reports'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, {bool active = false}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: active ? Colors.black54 : Colors.black26,
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: active ? Colors.black54 : Colors.black26,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQRScannerButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScanBarcodePage()),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF1565C0),
-          shape: BoxShape.circle,
-        ),
-        padding: EdgeInsets.all(12),
-        child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
-      ),
+      // Gunakan hanya NavbarBottom
+      bottomNavigationBar: NavbarBottom(selectedIndex: 0),
     );
   }
 }

@@ -3,16 +3,17 @@ import '../../cek_item/models/cek_item_models.dart';
 
 class ScanBarcodeController {
   Future<UnitItem?> fetchUnitItem(
-    String barcode, {
+    String unitCode, {
     required String token,
   }) async {
-    // Validate barcode before API call
-    if (barcode.isEmpty || barcode.trim().isEmpty) {
-      print('Barcode/unit_code kosong, tidak bisa request ke API');
+    final sanitizedUnitCode = unitCode.trim();
+    // Validate unitCode before API call
+    if (sanitizedUnitCode.isEmpty) {
+      print('unit_code kosong, tidak bisa request ke API');
       return null;
     }
 
-    final response = await AppApi.fetchUnitLoanCheck(barcode, token: token);
+    final response = await AppApi.fetchUnitLoanCheck(sanitizedUnitCode, token: token);
     print('API response: $response');
 
     if (response != null &&
@@ -20,8 +21,8 @@ class ScanBarcodeController {
         response['data'] != null) {
       final data = response['data'];
       if (data is Map<String, dynamic>) {
+        // Sesuaikan parsing UnitItem dengan struktur baru
         final unitItem = UnitItem.fromJson(data);
-        print('UnitItem.loan: ${unitItem.loan}'); // debug loan
         return unitItem;
       }
     }
