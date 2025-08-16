@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Add this import for ChangeNotifierProvider
 import 'controller/history_controller.dart';
 import 'models/history_models.dart';
+import 'detail_history_page.dart'; // Import the detail page
 
 class HistoryPage extends StatelessWidget {
   final String token;
@@ -68,7 +69,7 @@ class HistoryPage extends StatelessWidget {
                             itemCount: controller.filteredItems.length,
                             itemBuilder: (context, idx) {
                               final item = controller.filteredItems[idx];
-                              return _HistoryCard(item: item);
+                              return _HistoryCard(context: context, item: item, token: token); // Pass context and token to _HistoryCard
                             },
                           ),
                 ),
@@ -105,59 +106,69 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _HistoryCard({required HistoryItem item}) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
+  Widget _HistoryCard({required BuildContext context, required HistoryItem item, required String token}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailHistoryPage(id: item.id, token: token),
           ),
-        ],
-      ),
-      child: ListTile(
-        leading: Container(
-          width: 8,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Color(0xFF1565C0),
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(14)),
-          ),
-        ),
-        title: Text(
-          '${item.itemType.toUpperCase()} | ${item.codeUnit}',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.purpose,
-              style: TextStyle(fontSize: 13),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 2),
-            Text(
-              'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey[200]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
           ],
         ),
-        trailing: Text(
-          _getTimeAgo(item.borrowedAt),
-          style: TextStyle(fontSize: 11, color: Colors.black45),
+        child: ListTile(
+          leading: Container(
+            width: 8,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xFF1565C0),
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(14)),
+            ),
+          ),
+          title: Text(
+            '${item.itemType.toUpperCase()} | ${item.codeUnit}',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.purpose,
+                style: TextStyle(fontSize: 13),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 2),
+              Text(
+                'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
+                style: TextStyle(fontSize: 12, color: Colors.black54),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          trailing: Text(
+            _getTimeAgo(item.borrowedAt),
+            style: TextStyle(fontSize: 11, color: Colors.black45),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       ),
     );
   }

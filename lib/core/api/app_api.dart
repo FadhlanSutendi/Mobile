@@ -211,4 +211,29 @@ class AppApi {
       return null;
     }
   }
+
+  /// FETCH DETAIL UNIT LOAN BY ID
+  static Future<Map<String, dynamic>?> fetchUnitLoanDetail(String id, {required String token}) async {
+    final url = Uri.parse('https://bccdebd2a24a.ngrok-free.app/api/unit-loan/$id');
+    try {
+      print('fetchUnitLoanDetail: token=$token, id=$id'); // debug
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      print('fetchUnitLoanDetail: status=${response.statusCode}, body=${response.body}'); // debug
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchUnitLoanDetail ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchUnitLoanDetail Exception: $e");
+      return null;
+    }
+  }
 }
