@@ -30,31 +30,28 @@ class PeminjamanController extends GetxController {
 
   Future<void> fetchStudent(String id, String token) async {
     isLoading.value = true;
+    print('Searching for: $id (Type: student)');
     final data = await AppApi.fetchPerson(id, type: 'student', token: token);
-    print('fetchStudent response: $data'); // log seluruh respons
-    if (data != null) {
-      print('fetchStudent status: ${data['status']}'); // log status
-    }
-    if (data != null && data['data'] is List && data['data'].isNotEmpty) {
-      final studentJson = data['data'][0];
-      // Ambil major dari nested major object jika ada
-      student.value = Student(
-        id: studentJson['id'],
-        nis: studentJson['nis'].toString(),
-        name: studentJson['name'] ?? '',
-        rayon: studentJson['rayon'] ?? '',
-        major: studentJson['major'] is Map
-            ? studentJson['major']['name'] ?? ''
-            : (studentJson['major'] ?? ''),
-      );
-      // Set ke controller jika sudah di-assign dari page
-      nameController?.text = student.value?.name ?? '';
-      rayonController?.text = student.value?.rayon ?? '';
-      majorController?.text = student.value?.major ?? '';
-      print('Student found: ${studentJson['name']} / ${studentJson['nis']} / ${studentJson['major']}');
+    print('API Response: $data'); // Debug respons
+
+    if (data != null && data['data'] is List) {
+      if (data['data'].isNotEmpty) {
+        final studentData = data['data'][0];
+        student.value = Student.fromJson(studentData);
+        print('Student loaded: ${student.value?.name}');
+        // Set ke controller jika sudah di-assign dari page
+        nameController?.text = student.value?.name ?? '';
+        rayonController?.text = student.value?.rayon ?? '';
+        majorController?.text = student.value?.major ?? '';
+      } else {
+        print('No student found with NIS/name: $id');
+        student.value = null;
+        nameController?.text = '';
+        rayonController?.text = '';
+        majorController?.text = '';
+      }
     } else {
-      print('Student not found or empty data');
-      // Clear student fields in UI
+      print('Invalid API response format');
       student.value = null;
       nameController?.text = '';
       rayonController?.text = '';
@@ -65,25 +62,31 @@ class PeminjamanController extends GetxController {
 
   Future<void> fetchTeacher(String id, String token) async {
     isLoading.value = true;
+    print('Searching for: $id (Type: teacher)');
     final data = await AppApi.fetchPerson(id, type: 'teacher', token: token);
-    print('fetchTeacher response: $data'); // log seluruh respons
-    if (data != null) {
-      print('fetchTeacher status: ${data['status']}'); // log status
-    }
-    if (data != null && data['data'] is List && data['data'].isNotEmpty) {
-      final teacherJson = data['data'][0];
-      teacher.value = Teacher(
-        id: teacherJson['id'],
-        name: teacherJson['name'] ?? '',
-        nip: teacherJson['nip'] ?? '',
-        telephone: teacherJson['telephone'] ?? '',
-      );
-      nameController?.text = teacher.value?.name ?? '';
+    print('API Response: $data'); // Debug respons
+
+    if (data != null && data['data'] is List) {
+      if (data['data'].isNotEmpty) {
+        final teacherData = data['data'][0];
+        teacher.value = Teacher.fromJson(teacherData);
+        print('Teacher loaded: ${teacher.value?.name}');
+        nameController?.text = teacher.value?.name ?? '';
+        rayonController?.text = '';
+        majorController?.text = '';
+      } else {
+        print('No teacher found with NIP/name: $id');
+        teacher.value = null;
+        nameController?.text = '';
+        rayonController?.text = '';
+        majorController?.text = '';
+      }
+    } else {
+      print('Invalid API response format');
+      teacher.value = null;
+      nameController?.text = '';
       rayonController?.text = '';
       majorController?.text = '';
-      print('Teacher found: ${teacherJson['name']} / ${teacherJson['id']} / ${teacherJson['nip']} / ${teacherJson['telephone']}');
-    } else {
-      print('Teacher not found or empty data');
     }
     isLoading.value = false;
   }

@@ -84,6 +84,7 @@ class AppApi {
   /// FETCH STUDENT/TEACHER DATA (search by query param)
   static Future<Map<String, dynamic>?> fetchPerson(String id, {required String type, required String token}) async {
     // Use search query for student/teacher
+    print('fetchPerson: search="$id", type="$type"');
     final url = Uri.parse('https://942b4a4785de.ngrok-free.app/api/$type?search=$id');
     try {
       final response = await http.get(
@@ -93,6 +94,7 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
+      print('fetchPerson: status=${response.statusCode}, body=${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
