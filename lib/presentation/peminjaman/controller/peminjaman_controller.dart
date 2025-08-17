@@ -39,23 +39,14 @@ class PeminjamanController extends GetxController {
         final studentData = data['data'][0];
         student.value = Student.fromJson(studentData);
         print('Student loaded: ${student.value?.name}');
-        // Set ke controller jika sudah di-assign dari page
-        nameController?.text = student.value?.name ?? '';
-        rayonController?.text = student.value?.rayon ?? '';
-        majorController?.text = student.value?.major ?? '';
+        // Tidak mengisi name/rayon/major ke controller, user isi manual
       } else {
         print('No student found with NIS/name: $id');
         student.value = null;
-        nameController?.text = '';
-        rayonController?.text = '';
-        majorController?.text = '';
       }
     } else {
       print('Invalid API response format');
       student.value = null;
-      nameController?.text = '';
-      rayonController?.text = '';
-      majorController?.text = '';
     }
     isLoading.value = false;
   }
@@ -71,22 +62,14 @@ class PeminjamanController extends GetxController {
         final teacherData = data['data'][0];
         teacher.value = Teacher.fromJson(teacherData);
         print('Teacher loaded: ${teacher.value?.name}');
-        nameController?.text = teacher.value?.name ?? '';
-        rayonController?.text = '';
-        majorController?.text = '';
+        // Tidak mengisi name/rayon/major ke controller, user isi manual
       } else {
         print('No teacher found with NIP/name: $id');
         teacher.value = null;
-        nameController?.text = '';
-        rayonController?.text = '';
-        majorController?.text = '';
       }
     } else {
       print('Invalid API response format');
       teacher.value = null;
-      nameController?.text = '';
-      rayonController?.text = '';
-      majorController?.text = '';
     }
     isLoading.value = false;
   }
