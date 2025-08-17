@@ -59,7 +59,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
     if (controller.step.value == 0 && widget.initialStep != 0) {
       controller.step.value = widget.initialStep;
     }
-    // Tambahkan listener agar field otomatis update
+    // Aktifkan kembali ever agar field otomatis update dari API
     ever(controller.student, (student) {
       if (widget.borrowerType == 'student' && student != null) {
         nameController.text = student.name ?? '';
@@ -70,12 +70,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
     ever(controller.teacher, (teacher) {
       if (widget.borrowerType == 'teacher' && teacher != null) {
         nameController.text = teacher.name ?? '';
-        // Untuk teacher, rayon dan major biasanya kosong
         rayonController.text = '';
         majorController.text = '';
       }
     });
-    // Assign controller to PeminjamanController for auto set
     controller.nameController = nameController;
     controller.rayonController = rayonController;
     controller.majorController = majorController;
@@ -192,7 +190,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 Flexible(
                   flex: 1,
                   child: TextFormField(
-                    enabled: false,
+                    enabled: false, // otomatis dari API
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: "Name",
@@ -242,7 +240,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 Flexible(
                   flex: 1,
                   child: TextFormField(
-                    enabled: false,
+                    enabled: false, // otomatis dari API
                     controller: rayonController,
                     decoration: InputDecoration(
                       labelText: "Rayon",
@@ -250,14 +248,13 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                    // Hapus initialValue di sini
                   ),
                 ),
                 SizedBox(width: 8),
                 Flexible(
                   flex: 1,
                   child: TextFormField(
-                    enabled: false,
+                    enabled: false, // otomatis dari API
                     controller: majorController,
                     decoration: InputDecoration(
                       labelText: "Major",
@@ -265,7 +262,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                    // Hapus initialValue di sini
                   ),
                 ),
               ],
