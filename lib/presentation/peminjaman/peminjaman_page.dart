@@ -200,11 +200,42 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                     ),
-                    // Hapus initialValue di sini
                   ),
                 ),
               ],
             ),
+            // Tambahkan indikator loading dan pesan error
+            Obx(() {
+              if (controller.isLoading.value) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 8),
+                      Text("Searching...", style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                );
+              }
+              if (widget.borrowerType == 'student' && controller.student.value == null && nisController.text.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text("Student not found", style: TextStyle(color: Colors.red, fontSize: 12)),
+                );
+              }
+              if (widget.borrowerType == 'teacher' && controller.teacher.value == null && nisController.text.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text("Teacher not found", style: TextStyle(color: Colors.red, fontSize: 12)),
+                );
+              }
+              return SizedBox.shrink();
+            }),
             SizedBox(height: 12),
             Row(
               children: [

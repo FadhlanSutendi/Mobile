@@ -5,14 +5,22 @@ class Student {
   final String rayon;
   final String major;
 
-  Student({required this.id, required this.nis, required this.name, required this.rayon, required this.major});
+  Student({
+    required this.id,
+    required this.nis,
+    required this.name,
+    required this.rayon,
+    required this.major,
+  });
 
   factory Student.fromJson(Map<String, dynamic> json) => Student(
-    id: json['id'],
-    nis: json['nis'].toString(),
-    name: json['name'],
-    rayon: json['rayon'],
-    major: json['major'] is Map ? json['major']['name'] : json['major'],
+    id: json['id'] ?? '',
+    nis: json['nis']?.toString() ?? '',
+    name: json['name'] ?? '',
+    rayon: json['rayon'] ?? '',
+    major: json['major'] is Map
+      ? (json['major']?['name'] ?? '')
+      : (json['major'] ?? ''),
   );
 }
 
