@@ -153,54 +153,53 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    controller: nisController,
-                    keyboardType: widget.borrowerType == 'student'
-                        ? TextInputType.number
-                        : TextInputType.text,
-                    decoration: InputDecoration(
-                      labelText: widget.borrowerType == 'student' ? "NIS" : "NIP",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                    onChanged: (val) {
-                      if (widget.borrowerType == 'student') {
-                        controller.fetchStudent(val, widget.token);
-                      } else {
-                        controller.fetchTeacher(val, widget.token);
-                      }
-                    },
-                    onFieldSubmitted: (val) {
-                      if (val.isNotEmpty) {
-                        if (widget.borrowerType == 'student') {
-                          controller.fetchStudent(val, widget.token);
-                        } else {
-                          controller.fetchTeacher(val, widget.token);
-                        }
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    enabled: false, // otomatis dari API
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: "Name",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ),
-                ),
-              ],
+            // NIS input, trigger fetchStudent on change
+            TextFormField(
+              controller: nisController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "NIS",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              ),
+              onChanged: (val) {
+                controller.fetchStudent(val, widget.token);
+              },
+            ),
+            SizedBox(height: 12),
+            // Nama, Rayon, Major otomatis terisi jika student ditemukan
+            TextFormField(
+              enabled: false,
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: "Name",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              ),
+            ),
+            SizedBox(height: 8),
+            TextFormField(
+              enabled: false,
+              controller: rayonController,
+              decoration: InputDecoration(
+                labelText: "Rayon",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              ),
+            ),
+            SizedBox(height: 8),
+            TextFormField(
+              enabled: false,
+              controller: majorController,
+              decoration: InputDecoration(
+                labelText: "Major",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              ),
             ),
             // Tambahkan indikator loading dan pesan error
             Obx(() {
@@ -234,38 +233,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               }
               return SizedBox.shrink();
             }),
-            SizedBox(height: 12),
-            Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    enabled: false, // otomatis dari API
-                    controller: rayonController,
-                    decoration: InputDecoration(
-                      labelText: "Rayon",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  flex: 1,
-                  child: TextFormField(
-                    enabled: false, // otomatis dari API
-                    controller: majorController,
-                    decoration: InputDecoration(
-                      labelText: "Major",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             SizedBox(height: 16),
             // Warranty radio style
             Row(
