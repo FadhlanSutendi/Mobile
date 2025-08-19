@@ -7,6 +7,8 @@ import 'presentation/login/controller/login_controller.dart';
 import 'presentation/home/home_page.dart';
 import 'presentation/scan barcode/scanbarcode_page.dart';
 import 'presentation/cek_item/cek_item_page.dart';
+import 'presentation/history/history_pengembalian_page.dart';
+import 'presentation/history/history_peminjaman_page.dart';
 import 'routes/app_routes.dart';
 import 'theme/error_page.dart';
 
@@ -41,6 +43,14 @@ class MyApp extends StatelessWidget {
         AppRoutes.cekItem: (context) => Scaffold(
               body: Center(child: Text('No item data provided')),
             ),
+        AppRoutes.history: (context) {
+          final token = ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          return HistoryPengembalianPage(token: token);
+        },
+        AppRoutes.historyPeminjaman: (context) {
+          final token = ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          return HistoryPeminjamanPage(token: token);
+        },
       },
     );
   }

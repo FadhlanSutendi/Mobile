@@ -91,8 +91,87 @@ class NavbarBottom extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/reports');
             break;
           case 'History':
-            // Navigasi ke halaman history
-            Get.toNamed(AppRoutes.history, arguments: token);
+            // Tampilkan popup pilihan history
+            final selected = await showDialog<String>(
+              context: context,
+              builder: (ctx) {
+                String? choice = 'history'; // default
+                return Dialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  insetPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 8),
+                        Container(
+                          width: 48,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        CircleAvatar(
+                          radius: 32,
+                          backgroundColor: Colors.blue[50],
+                          child: Icon(Icons.history, color: Color(0xFF1565C0), size: 36),
+                        ),
+                        SizedBox(height: 16),
+                        Text('Select Page', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                        SizedBox(height: 8),
+                        Text('Choose which kind of page you want to show', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                        SizedBox(height: 24),
+                        Column(
+                          children: [
+                            RadioListTile<String>(
+                              value: 'borrow',
+                              groupValue: choice,
+                              title: Text('Borrowed Page'),
+                              activeColor: Color(0xFF1565C0),
+                              onChanged: (val) {
+                                choice = val;
+                                (ctx as Element).markNeedsBuild();
+                              },
+                            ),
+                            RadioListTile<String>(
+                              value: 'history',
+                              groupValue: choice,
+                              title: Text('History Page'),
+                              activeColor: Color(0xFF1565C0),
+                              onChanged: (val) {
+                                choice = val;
+                                (ctx as Element).markNeedsBuild();
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF1565C0),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            child: Text('Continue', style: TextStyle(fontSize: 16, color: Colors.white)),
+                            onPressed: () => Navigator.of(ctx).pop(choice),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+            if (selected == 'borrow') {
+              Get.toNamed('/history-peminjaman', arguments: token);
+            } else if (selected == 'history') {
+              Get.toNamed('/history', arguments: token);
+            }
             break;
           case 'log Out':
             final result = await showDialog<bool>(

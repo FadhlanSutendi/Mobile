@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../scan barcode/scanbarcode_page.dart';
-import '../history/history_page.dart';
+import '../history/history_pengembalian_page.dart';
 import '../login/controller/login_controller.dart'; // import LoginController
 import '../navbar_bottom/navbar_bottom_page.dart'; // import komponen navbar
 import '../navbar_bottom/controller/navbar_bottom_controller.dart';
