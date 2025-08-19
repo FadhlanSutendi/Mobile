@@ -38,21 +38,27 @@ class UnitLoan {
   });
 
   factory UnitLoan.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null) return null;
+      if (value is String) return value;
+      return value.toString();
+    }
+
     return UnitLoan(
-      id: json['id'] ?? '',
-      unitItemId: json['unit_item_id'] ?? '',
-      studentId: json['student_id'],
-      teacherId: json['teacher_id'],
-      borrowedBy: json['borrowed_by'] ?? '',
-      borrowedAt: json['borrowed_at'] ?? '',
-      returnedAt: json['returned_at'],
-      purpose: json['purpose'] ?? '',
+      id: parseString(json['id']) ?? '',
+      unitItemId: parseString(json['unit_item_id']) ?? '',
+      studentId: parseString(json['student_id']),
+      teacherId: parseString(json['teacher_id']),
+      borrowedBy: parseString(json['borrowed_by']) ?? '',
+      borrowedAt: parseString(json['borrowed_at']) ?? '',
+      returnedAt: parseString(json['returned_at']),
+      purpose: parseString(json['purpose']) ?? '',
       room: json['room'],
       status: json['status'] == true,
-      image: json['image'],
-      guarantee: json['guarantee'] ?? '',
-      createdAt: json['created_at'] ?? '',
-      updatedAt: json['updated_at'] ?? '',
+      image: parseString(json['image']),
+      guarantee: parseString(json['guarantee']) ?? '',
+      createdAt: parseString(json['created_at']) ?? '',
+      updatedAt: parseString(json['updated_at']) ?? '',
       student: json['student'],
       teacher: json['teacher'],
       unitItem: json['unit_item'] != null
@@ -91,14 +97,20 @@ class UnitItem {
   });
 
   factory UnitItem.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null) return null;
+      if (value is String) return value;
+      return value.toString();
+    }
+
     return UnitItem(
-      id: json['id'] ?? '',
-      codeUnit: json['code_unit'] ?? '',
+      id: parseString(json['id']) ?? '',
+      codeUnit: parseString(json['code_unit']) ?? '',
       subItem: json['sub_item'] != null
           ? SubItem.fromJson(json['sub_item'])
           : SubItem(merk: ''),
-      description: json['description'] ?? '',
-      procurementDate: json['procurement_date'] ?? '',
+      description: parseString(json['description']) ?? '',
+      procurementDate: parseString(json['procurement_date']) ?? '',
       status: json['status'],
       condition: json['condition'],
     );
@@ -111,8 +123,14 @@ class SubItem {
   SubItem({required this.merk});
 
   factory SubItem.fromJson(Map<String, dynamic> json) {
+    String? parseString(dynamic value) {
+      if (value == null) return '';
+      if (value is String) return value;
+      return value.toString();
+    }
+
     return SubItem(
-      merk: json['merk'] ?? '',
+      merk: parseString(json['merk']) ?? '',
     );
   }
 }
