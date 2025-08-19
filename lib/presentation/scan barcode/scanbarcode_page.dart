@@ -5,9 +5,10 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import '../cek_item/cek_item_page.dart';
 import '../login/controller/login_controller.dart';
 import 'controller/scanbarcode_controller.dart';
-import '../cek_item/models/cek_item_models.dart';
-import '../pengembalian/pengembalian_page.dart'; // import pengembalian page
-import '../pengembalian/models/pengembalian_models.dart'; // import pengembalian models
+// gunakan alias untuk model
+import '../cek_item/models/cek_item_models.dart' as cek_item;
+import '../pengembalian/pengembalian_page.dart';
+import '../pengembalian/models/pengembalian_models.dart' as pengembalian;
 import '../pengembalian/controller/pengembalian_controller.dart';
 
 class ScanBarcodePage extends StatefulWidget {
@@ -55,14 +56,14 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
           // If loan exists, show pengembalian page
           if (result['loan'] != null) {
             await Get.to(() => PengembalianPage(
-              loan: result['loan'],
-              unitItem: result['unitItem'],
+              loan: result['loan'] as pengembalian.UnitLoan,
+              unitItem: result['unitItem'] as pengembalian.UnitItem,
               token: loginController.token.value,
             ));
           }
           // If only unitItem exists, show cek item page
           else if (result['unitItem'] != null) {
-            await Get.to(() => CekItemPage(unitItem: result['unitItem']));
+            await Get.to(() => CekItemPage(unitItem: result['unitItem'] as cek_item.UnitItem));
           }
           setState(() => scannedResult = null);
           await mobileScannerController.start();

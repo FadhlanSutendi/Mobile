@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'controller/pengembalian_controller.dart';
-import 'models/pengembalian_models.dart';
+// gunakan alias untuk model
+import 'models/pengembalian_models.dart' as pengembalian;
 import '../../theme/succes_custome_page.dart';
 
 class PengembalianPage extends StatefulWidget {
-  final UnitLoan loan;
-  final UnitItem unitItem; // Use UnitItem from pengembalian_models.dart
+  final pengembalian.UnitLoan loan;
+  final pengembalian.UnitItem unitItem; // Use UnitItem from pengembalian_models.dart
   final String token;
 
   PengembalianPage({
@@ -350,4 +351,3 @@ class _PengembalianPageState extends State<PengembalianPage> {
     );
   }
 }
-

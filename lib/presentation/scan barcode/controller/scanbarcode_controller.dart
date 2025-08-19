@@ -1,5 +1,7 @@
 import '../../../core/api/app_api.dart';
-import '../../pengembalian/models/pengembalian_models.dart';
+// gunakan alias untuk model
+import '../../pengembalian/models/pengembalian_models.dart' as pengembalian;
+import '../../cek_item/models/cek_item_models.dart' as cek_item;
 
 class ScanBarcodeController {
   /// Returns a map: {'unitItem': UnitItem, 'loan': UnitLoan}
@@ -21,17 +23,19 @@ class ScanBarcodeController {
       final data = response['data'];
       // If data contains 'unit_item', it's a loan object
       if (data is Map<String, dynamic> && data.containsKey('unit_item')) {
-        final loan = UnitLoan.fromJson(data);
-        return {'loan': loan, 'unitItem': loan.unitItem}; // Both are from pengembalian_models.dart
+        final loan = pengembalian.UnitLoan.fromJson(data);
+        return {
+          'loan': loan,
+          'unitItem': loan.unitItem, // pengembalian.UnitItem
+        };
       }
       // If data contains 'code_unit', it's a unit item object
       if (data is Map<String, dynamic> && data.containsKey('code_unit')) {
-        final unitItem = UnitItem.fromJson(data);
-        return {'unitItem': unitItem};
+        final unitItem = cek_item.UnitItem.fromJson(data);
+        return {'unitItem': unitItem}; // cek_item.UnitItem
       }
     }
 
     return null;
   }
 }
-
