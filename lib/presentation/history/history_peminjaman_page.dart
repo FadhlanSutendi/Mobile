@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'controller/history_controller.dart';
+import 'models/history_models.dart';
+import 'detail_history_page.dart';
+import '../../routes/app_routes.dart';
+import 'package:get/get.dart';
+
+class HistoryPeminjamanPage extends StatelessWidget {
+  final String token;
+  HistoryPeminjamanPage({required this.token});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => HistoryController(token: token)..fetchHistory(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text('Borrowed Page', style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+        ),
+        body: Consumer<HistoryController>(
+          builder: (context, controller, _) {
+            // Filter hanya data yang sedang dipinjam (status == false)
+            final borrowedItems = controller.filteredItems.where((item) => item.status == false).toList();
+            return Column(
+              children: [
+                // Category Tabs
+                Container(
+                  height: 48,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: controller.categories.length,
+                    separatorBuilder: (_, __) => SizedBox(width: 8),
+                    itemBuilder: (context, idx) {
+                      final cat = controller.categories[idx];
+                      final selected = cat == controller.selectedCategory;
+                      return GestureDetector(
+                        onTap: () {
+                          controller.setCategory(cat);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: selected ? Color(0xFF1565C0) : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            cat,
+                            style: TextStyle(
+                              color: selected ? Colors.white : Colors.black54,
+                              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 8),
+                // List
+                Expanded(
+                  child: controller.isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : borrowedItems.isEmpty
+                        ? Center(child: Text('No borrowed items found'))
+                        : ListView.builder(
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            itemCount: borrowedItems.length,
+                            itemBuilder: (context, idx) {
+                              final item = borrowedItems[idx];
+                              return _HistoryCard(context: context, item: item, token: token);
+                            },
+                          ),
+                ),
+              ],
+            );
+          },
+        ),
+        bottomNavigationBar: Container(
+          height: 70,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 8,
+                offset: Offset(0, -2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(Icons.home, 'Home'),
+              _buildNavItem(Icons.inventory_2, 'Invent'),
+              _buildQRScannerButton(context),
+              _buildNavItem(Icons.history, 'History', active: true),
+              _buildNavItem(Icons.bar_chart, 'Reports'),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _HistoryCard({required BuildContext context, required HistoryItem item, required String token}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DetailHistoryPage(id: item.id, token: token),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey[200]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          leading: Container(
+            width: 8,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: Color(0xFF1565C0),
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(14)),
+            ),
+          ),
+          title: Text(
+            '${item.itemType.toUpperCase()} | ${item.codeUnit}',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.purpose,
+                style: TextStyle(fontSize: 13),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: 2),
+              Text(
+                'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
+                style: TextStyle(fontSize: 12, color: Colors.black54),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          trailing: Text(
+            _getTimeAgo(item.borrowedAt),
+            style: TextStyle(fontSize: 11, color: Colors.black45),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+        ),
+      ),
+    );
+  }
+
+  String _getTimeAgo(String dateTimeStr) {
+    try {
+      final dt = DateTime.parse(dateTimeStr.replaceFirst(' ', 'T'));
+      final diff = DateTime.now().difference(dt);
+      if (diff.inMinutes < 1) return 'now';
+      if (diff.inMinutes < 60) return '${diff.inMinutes}m';
+      if (diff.inHours < 24) return '${diff.inHours}h';
+      return '${diff.inDays}d';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  Widget _buildNavItem(IconData icon, String label, {bool active = false}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: active ? Colors.black54 : Colors.black26,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: active ? Colors.black54 : Colors.black26,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQRScannerButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(AppRoutes.scanBarcode);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF1565C0),
+          shape: BoxShape.circle,
+        ),
+        padding: EdgeInsets.all(12),
+        child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
+      ),
+    );
+  }
+}

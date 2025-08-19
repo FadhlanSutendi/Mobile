@@ -6,9 +6,9 @@ import 'detail_history_page.dart'; // Import the detail page
 import '../../routes/app_routes.dart'; // Tambahkan import ini
 import 'package:get/get.dart'; // Tambahkan import ini
 
-class HistoryPage extends StatelessWidget {
+class HistoryPengembalianPage extends StatelessWidget {
   final String token;
-  HistoryPage({required this.token});
+  HistoryPengembalianPage({required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,8 @@ class HistoryPage extends StatelessWidget {
         ),
         body: Consumer<HistoryController>(
           builder: (context, controller, _) {
+            // Filter hanya data yang sudah dikembalikan (status == true)
+            final returnedItems = controller.filteredItems.where((item) => item.status == true).toList();
             return Column(
               children: [
                 // Category Tabs
@@ -64,13 +66,13 @@ class HistoryPage extends StatelessWidget {
                 Expanded(
                   child: controller.isLoading
                       ? Center(child: CircularProgressIndicator())
-                      : controller.filteredItems.isEmpty
-                        ? Center(child: Text('No history found'))
+                      : returnedItems.isEmpty
+                        ? Center(child: Text('No returned items found'))
                         : ListView.builder(
                             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            itemCount: controller.filteredItems.length,
+                            itemCount: returnedItems.length,
                             itemBuilder: (context, idx) {
-                              final item = controller.filteredItems[idx];
+                              final item = returnedItems[idx];
                               return _HistoryCard(context: context, item: item, token: token); // Pass context and token to _HistoryCard
                             },
                           ),
