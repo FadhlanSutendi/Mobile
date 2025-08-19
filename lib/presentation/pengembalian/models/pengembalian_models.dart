@@ -40,7 +40,6 @@ class UnitLoan {
   factory UnitLoan.fromJson(Map<String, dynamic> json) {
     String? parseString(dynamic value) {
       if (value == null) return null;
-      if (value is String) return value;
       return value.toString();
     }
 
@@ -99,7 +98,6 @@ class UnitItem {
   factory UnitItem.fromJson(Map<String, dynamic> json) {
     String? parseString(dynamic value) {
       if (value == null) return null;
-      if (value is String) return value;
       return value.toString();
     }
 
@@ -125,7 +123,6 @@ class SubItem {
   factory SubItem.fromJson(Map<String, dynamic> json) {
     String? parseString(dynamic value) {
       if (value == null) return '';
-      if (value is String) return value;
       return value.toString();
     }
 
