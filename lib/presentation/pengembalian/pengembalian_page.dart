@@ -49,6 +49,11 @@ class _PengembalianPageState extends State<PengembalianPage> {
     }
   }
 
+  String safeString(dynamic value) {
+    if (value == null) return '';
+    return value.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final student = widget.loan.student;
@@ -99,7 +104,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?['nis'] ?? '',
+                            initialValue: safeString(student?['nis']),
                             decoration: InputDecoration(
                               labelText: "NIS",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -112,7 +117,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?['name'] ?? '',
+                            initialValue: safeString(student?['name']),
                             decoration: InputDecoration(
                               labelText: "Name",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -130,7 +135,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?['rayon'] ?? '',
+                            initialValue: safeString(student?['rayon']),
                             decoration: InputDecoration(
                               labelText: "Rayon",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -143,7 +148,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?['major'] ?? '',
+                            initialValue: safeString(student?['major']),
                             decoration: InputDecoration(
                               labelText: "Major",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
