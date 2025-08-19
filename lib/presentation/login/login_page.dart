@@ -22,14 +22,17 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 40),
                   Text('Welcome Back!',
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
                   Text('Please enter your details',
-                      style: TextStyle(fontSize: 14)),
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                   SizedBox(height: 32),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Username', style: TextStyle(fontSize: 13)),
+                    child: Text('Username',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold)),
                   ),
                   SizedBox(height: 8),
                   TextField(
@@ -45,7 +48,9 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 16),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Password', style: TextStyle(fontSize: 13)),
+                    child: Text('Password',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold)),
                   ),
                   SizedBox(height: 8),
                   Obx(() => TextField(
@@ -95,13 +100,26 @@ class LoginPage extends StatelessWidget {
                                   }
                                 },
                           child: c.isLoading.value
-                              ? CircularProgressIndicator(color: const Color.fromARGB(255, 255, 255, 255))
-                              : Text('LOGIN',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                              ? CircularProgressIndicator(
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255))
+                              : const Text('LOGIN',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)),
                         ),
                       )),
                   SizedBox(height: 40),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 100),
+                    child: Center(
+                      child: Text('© PPLG XII-V 2025. All Rights Reserved. ',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                    ),
+                  )
                 ],
               ),
             ),

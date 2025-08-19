@@ -25,13 +25,15 @@ class OnboardingPage extends StatelessWidget {
               transform: Matrix4.translationValues(0.0, -70.0, 0.0),
               alignment: Alignment.center,
               child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white,
+                radius: 65, // 🔥 perbesar radius (misalnya 80)
+                backgroundColor: Colors.grey[100],
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Image.asset(
                     'assets/logo1.png',
                     fit: BoxFit.contain,
+                    width: 200, // opsional, bisa disesuaikan
+                    height: 200,
                   ),
                 ),
               ),
@@ -42,7 +44,7 @@ class OnboardingPage extends StatelessWidget {
               'WiKVENTORY',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 22,
+                fontSize: 32,
                 color: Colors.black,
               ),
               textAlign: TextAlign.center,
@@ -60,7 +62,7 @@ class OnboardingPage extends StatelessWidget {
             Spacer(),
             // Tombol Get Started
             Padding(
-              padding: const EdgeInsets.only(bottom: 32.0),
+              padding: const EdgeInsets.only(bottom: 150.0),
               child: SizedBox(
                 width: 220,
                 height: 44,
