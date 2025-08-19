@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
-import '../peminjaman/models/peminjaman_models.dart';
-import '../cek_item/models/cek_item_models.dart';
+import '../cek_item/models/cek_item_models.dart' as cek_item;
 import 'controller/pengembalian_controller.dart';
+import 'models/pengembalian_models.dart';
 import '../../theme/succes_custome_page.dart';
 
 class PengembalianPage extends StatefulWidget {
-  final Loan loan;
-  final UnitItem unitItem;
+  final UnitLoan loan;
+  final cek_item.UnitItem unitItem;
   final String token;
 
   PengembalianPage({
@@ -100,7 +100,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?.nis ?? '',
+                            initialValue: student?['nis'] ?? '',
                             decoration: InputDecoration(
                               labelText: "NIS",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -113,7 +113,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?.name ?? '',
+                            initialValue: student?['name'] ?? '',
                             decoration: InputDecoration(
                               labelText: "Name",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -131,7 +131,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?.rayon ?? '',
+                            initialValue: student?['rayon'] ?? '',
                             decoration: InputDecoration(
                               labelText: "Rayon",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -144,7 +144,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                         Flexible(
                           child: TextFormField(
                             enabled: false,
-                            initialValue: student?.major ?? '',
+                            initialValue: student?['major'] ?? '',
                             decoration: InputDecoration(
                               labelText: "Major",
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
