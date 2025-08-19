@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
-import '../../peminjaman/models/peminjaman_models.dart';
+import '../models/pengembalian_models.dart';
 
 class PengembalianController extends GetxController {
   var isLoading = false.obs;
 
-  Future<Loan?> fetchLoanDetail(String loanId, String token) async {
+  Future<UnitLoan?> fetchLoanDetail(String loanId, String token) async {
     isLoading.value = true;
     final result = await AppApi.returnUnitLoan(loanId, '', token: token);
     isLoading.value = false;
     if (result != null && result['data'] != null) {
-      return Loan.fromJson(result['data']);
+      return UnitLoan.fromJson(result['data']);
     }
     return null;
   }
