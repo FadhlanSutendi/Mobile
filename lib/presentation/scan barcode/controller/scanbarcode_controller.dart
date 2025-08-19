@@ -1,5 +1,4 @@
 import '../../../core/api/app_api.dart';
-import '../../cek_item/models/cek_item_models.dart' as cek_item;
 import '../../pengembalian/models/pengembalian_models.dart';
 
 class ScanBarcodeController {
@@ -23,11 +22,11 @@ class ScanBarcodeController {
       // If data contains 'unit_item', it's a loan object
       if (data is Map<String, dynamic> && data.containsKey('unit_item')) {
         final loan = UnitLoan.fromJson(data);
-        return {'loan': loan, 'unitItem': loan.unitItem};
+        return {'loan': loan, 'unitItem': loan.unitItem}; // Both are from pengembalian_models.dart
       }
       // If data contains 'code_unit', it's a unit item object
       if (data is Map<String, dynamic> && data.containsKey('code_unit')) {
-        final unitItem = cek_item.UnitItem.fromJson(data);
+        final unitItem = UnitItem.fromJson(data);
         return {'unitItem': unitItem};
       }
     }
