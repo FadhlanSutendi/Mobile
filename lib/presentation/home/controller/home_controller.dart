@@ -12,30 +12,32 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchCardData();
-    fetchLatestActivity();
-    fetchLoanReport(from: '2024', to: '2025');
+    // You must provide the token from your auth/session management
+    final token = ''; // TODO: Replace with actual token
+    fetchCardData(token: token);
+    fetchLatestActivity(token: token);
+    fetchLoanReport(from: '2024', to: '2025', token: token);
   }
 
-  Future<void> fetchCardData() async {
+  Future<void> fetchCardData({required String token}) async {
     isLoadingCard.value = true;
-    final result = await AppApi.fetchDashboardCard();
+    final result = await AppApi.fetchDashboardCard(token: token);
     print('fetchCardData result: $result');
     cardData.value = result?['data'] ?? {};
     isLoadingCard.value = false;
   }
 
-  Future<void> fetchLatestActivity() async {
+  Future<void> fetchLatestActivity({required String token}) async {
     isLoadingActivity.value = true;
-    final result = await AppApi.fetchDashboardLatestActivity();
+    final result = await AppApi.fetchDashboardLatestActivity(token: token);
     print('fetchLatestActivity result: $result');
     activityList.value = result?['data'] ?? [];
     isLoadingActivity.value = false;
   }
- //sss
-  Future<void> fetchLoanReport({required String from, required String to}) async {
+
+  Future<void> fetchLoanReport({required String from, required String to, required String token}) async {
     isLoadingLoanReport.value = true;
-    final result = await AppApi.fetchLoanReport(from: from, to: to);
+    final result = await AppApi.fetchLoanReport(from: from, to: to, token: token);
     print('fetchLoanReport result: $result');
     loanReportData.value = Map<String, int>.from(result?['data'] ?? {});
     isLoadingLoanReport.value = false;
