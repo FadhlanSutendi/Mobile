@@ -104,6 +104,22 @@ class SuccessCustomPage extends StatelessWidget {
                   ),
                 ),
 
+                if (showDashboardButton)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      },
+                      child: const Text("back to dashboard", 
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                    ),),
+                    ),
+                  ),
+
                 const SizedBox(height: 16),
 
                 // ✅ Footer pakai logo image
