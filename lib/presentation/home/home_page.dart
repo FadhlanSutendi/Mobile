@@ -3,11 +3,15 @@ import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart'; // ✅ untuk chart
 import '../navbar_bottom/navbar_bottom_page.dart';
 import '../navbar_bottom/controller/navbar_bottom_controller.dart';
+import '../home/controller/home_controller.dart';
+import '../home/binding/home_binding.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(NavbarBottomController());
+    // Inject HomeController via binding (optional, jika pakai route binding)
+    final controller = Get.put(HomeController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,45 +77,67 @@ class HomePage extends StatelessWidget {
             ),
 
             // 🔹 Spacer biar Chart turun
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: Offset(0, 2))
-                ],
-              ),
-              child: const Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      _SummaryItem(
-                          icon: Icons.refresh, label: "Reuse", value: "300"),
-                      _SummaryItem(
-                          icon: Icons.check_circle, label: "Used", value: "65"),
-                      _SummaryItem(
-                          icon: Icons.thumb_up, label: "Good", value: "80"),
-                      _SummaryItem(
-                          icon: Icons.thumb_down, label: "Down", value: "20"),
-                    ],
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      _SummaryData(label: "Monthly Data", value: "120"),
-                      _SummaryData(label: "Daily Data", value: "12"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            Obx(() {
+              if (controller.isLoadingCard.value) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final card = controller.cardData;
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _SummaryItem(
+                            icon: Icons.refresh,
+                            label: "Reuse",
+                            value: "${card['reuse'] ?? 0}"),
+                        _SummaryItem(
+                            icon: Icons.check_circle,
+                            label: "Used",
+                            value: "${card['used'] ?? 0}"),
+                        _SummaryItem(
+                            icon: Icons.thumb_up,
+                            label: "Good",
+                            value: "${card['good'] ?? 0}"),
+                        _SummaryItem(
+                            icon: Icons.thumb_down,
+                            label: "Down",
+                            value: "${card['down'] ?? 0}"),
+                      ],
+                    ),
+                    const Divider(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _SummaryData(
+                            label: "Monthly Data",
+                            value: "${card['monthly_data'] ?? 0}"),
+                        _SummaryData(
+                            label: "Daily Data",
+                            value: "${card['daily_data'] ?? 0}"),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
 
             // 🔹 Chart Section
             Container(
@@ -188,55 +214,55 @@ class HomePage extends StatelessWidget {
             ),
 
             // 🔹 Latest Activity
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: Offset(0, 2))
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text("Latest Activity",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text("See All",
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const _ActivityItem(
-                    name: "Andiko Sartio Nurcahyo",
-                    date: "21 July 2023 - 08:23 AM",
-                  ),
-                  const _ActivityItem(
-                    name: "Nayla Qoriza Afifa",
-                    date: "21 July 2023 - 08:20 AM",
-                  ),
-                  const _ActivityItem(
-                    name: "Muhammad Rizqy Al Sultana Putra",
-                    date: "21 July 2023 - 08:15 AM",
-                  ),
-                  const _ActivityItem(
-                    name: "Muhammad Rafif",
-                    date: "21 July 2023 - 08:05 AM",
-                  ),
-                ],
-              ),
-            ),
+            Obx(() {
+              if (controller.isLoadingActivity.value) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final activities = controller.activityList;
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text("Latest Activity",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text("See All",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...activities.map<Widget>((item) {
+                      return _ActivityItem(
+                        name: item['name'] ?? '',
+                        date: item['date'] ?? '',
+                      );
+                    }).toList(),
+                  ],
+                ),
+              );
+            }),
 
             const SizedBox(height: 80), // biar tidak ketutup navbar
           ],

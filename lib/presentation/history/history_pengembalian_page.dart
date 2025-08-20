@@ -5,6 +5,7 @@ import 'models/history_models.dart';
 import 'detail_history_page.dart'; // Import the detail page
 import '../../routes/app_routes.dart'; // Tambahkan import ini
 import 'package:get/get.dart'; // Tambahkan import ini
+import '../navbar_bottom/navbar_bottom_page.dart'; // Add this import
 
 class HistoryPengembalianPage extends StatelessWidget {
   final String token;
@@ -81,31 +82,7 @@ class HistoryPengembalianPage extends StatelessWidget {
             );
           },
         ),
-        // Bottom Navigation Bar (reuse from home if needed)
-        bottomNavigationBar: Container(
-          height: 70,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8,
-                offset: Offset(0, -2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, 'Home'),
-              _buildNavItem(Icons.inventory_2, 'Invent'),
-              _buildQRScannerButton(context),
-              _buildNavItem(Icons.history, 'History', active: true),
-              _buildNavItem(Icons.bar_chart, 'Reports'),
-            ],
-          ),
-        ),
+        bottomNavigationBar: NavbarBottom(selectedIndex: 2), // Use NavbarBottom
       ),
     );
   }
@@ -227,3 +204,21 @@ class HistoryPengembalianPage extends StatelessWidget {
     );
   }
 }
+
+  Widget _buildQRScannerButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigasi ke halaman scan barcode
+        Get.toNamed(AppRoutes.scanBarcode);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF1565C0),
+          shape: BoxShape.circle,
+        ),
+        padding: EdgeInsets.all(12),
+        child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
+      ),
+    );
+  }
+
