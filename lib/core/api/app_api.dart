@@ -268,6 +268,7 @@ class AppApi {
     final url = Uri.parse('https://4d83ce779a5b.ngrok-free.app/api/dashboard/mobile/card');
     try {
       final response = await http.get(url);
+      print('fetchDashboardCard response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -285,6 +286,7 @@ class AppApi {
     final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/mobile/latest-activity');
     try {
       final response = await http.get(url);
+      print('fetchDashboardLatestActivity response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -302,6 +304,7 @@ class AppApi {
     final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
     try {
       final response = await http.get(url);
+      print('fetchLoanReport response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
