@@ -40,3 +40,41 @@ class ActivityItemModel {
     );
   }
 }
+
+class LoanReportModel {
+  final Map<String, int> monthlyData;
+  LoanReportModel({required this.monthlyData});
+
+  factory LoanReportModel.fromJson(Map<String, dynamic> json) {
+    // expects: { "Jan": 1, "Feb": 0, ... }
+    return LoanReportModel(
+      monthlyData: Map<String, int>.from(json),
+    );
+  }
+}
+
+class LatestActivityModel {
+  final String id;
+  final String item;
+  final String subItem;
+  final String borrowedAt;
+  final String borrowerName;
+
+  LatestActivityModel({
+    required this.id,
+    required this.item,
+    required this.subItem,
+    required this.borrowedAt,
+    required this.borrowerName,
+  });
+
+  factory LatestActivityModel.fromJson(Map<String, dynamic> json) {
+    return LatestActivityModel(
+      id: json['id'] ?? '',
+      item: json['item'] ?? '',
+      subItem: json['sub_item'] ?? '',
+      borrowedAt: json['borrowed_at'] ?? '',
+      borrowerName: json['borrower_name'] ?? '',
+    );
+  }
+}

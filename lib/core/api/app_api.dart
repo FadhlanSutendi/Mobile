@@ -296,4 +296,21 @@ class AppApi {
       return null;
     }
   }
+
+  /// FETCH DASHBOARD LOAN REPORT (for chart)
+  static Future<Map<String, dynamic>?> fetchLoanReport({required String from, required String to}) async {
+    final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchLoanReport ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchLoanReport Exception: $e");
+      return null;
+    }
+  }
 }

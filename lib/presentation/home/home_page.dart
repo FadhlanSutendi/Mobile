@@ -140,78 +140,83 @@ class HomePage extends StatelessWidget {
             }),
 
             // 🔹 Chart Section
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: Offset(0, 2))
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Overview Statistics",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 200,
-                    child: BarChart(
-                      BarChartData(
-                        alignment: BarChartAlignment.spaceAround,
-                        maxY: 10,
-                        barTouchData: BarTouchData(enabled: false),
-                        titlesData: FlTitlesData(
-                          leftTitles: const AxisTitles(
-                            sideTitles:
-                                SideTitles(showTitles: true, reservedSize: 28),
-                          ),
-                          rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (value, meta) {
-                                const days = [
-                                  "Mon",
-                                  "Tue",
-                                  "Wed",
-                                  "Thu",
-                                  "Fri",
-                                  "Sat"
-                                ];
-                                return Text(days[value.toInt()],
-                                    style: const TextStyle(fontSize: 12));
-                              },
+            Obx(() {
+              if (controller.isLoadingLoanReport.value) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final report = controller.loanReportData;
+              final months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+              ];
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Overview Statistics",
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 200,
+                      child: BarChart(
+                        BarChartData(
+                          alignment: BarChartAlignment.spaceAround,
+                          maxY: (report.values.isNotEmpty ? (report.values.reduce((a, b) => a > b ? a : b) + 2) : 10).toDouble(),
+                          barTouchData: BarTouchData(enabled: false),
+                          titlesData: FlTitlesData(
+                            leftTitles: const AxisTitles(
+                              sideTitles:
+                                  SideTitles(showTitles: true, reservedSize: 28),
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  if (value.toInt() >= 0 && value.toInt() < months.length) {
+                                    return Text(months[value.toInt()],
+                                        style: const TextStyle(fontSize: 12));
+                                  }
+                                  return const SizedBox.shrink();
+                                },
+                              ),
                             ),
                           ),
+                          gridData: const FlGridData(show: false),
+                          borderData: FlBorderData(show: false),
+                          barGroups: List.generate(months.length, (i) {
+                            final y = report[months[i]]?.toDouble() ?? 0.0;
+                            return _makeGroupData(i, y);
+                          }),
                         ),
-                        gridData: const FlGridData(show: false),
-                        borderData: FlBorderData(show: false),
-                        barGroups: [
-                          _makeGroupData(0, 5.5),
-                          _makeGroupData(1, 3.7),
-                          _makeGroupData(2, 7.8),
-                          _makeGroupData(3, 6.2),
-                          _makeGroupData(4, 6.0),
-                          _makeGroupData(5, 2.9),
-                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            }),
 
             // 🔹 Latest Activity
             Obx(() {
@@ -254,9 +259,12 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     ...activities.map<Widget>((item) {
+                      // item: {id, item, sub_item, borrowed_at, borrower_name}
+                      final name = "${item['borrower_name'] ?? ''} - ${item['item'] ?? ''} ${item['sub_item'] ?? ''}";
+                      final date = item['borrowed_at'] ?? '';
                       return _ActivityItem(
-                        name: item['name'] ?? '',
-                        date: item['date'] ?? '',
+                        name: name,
+                        date: date,
                       );
                     }).toList(),
                   ],
