@@ -17,7 +17,7 @@ class HistoryPengembalianPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('Borrowed Page', style: TextStyle(color: Colors.black)),
+          title: Text('History Page', style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_prapw/core/api/app_api.dart';
+import 'package:project_prapw/theme/succespengembalian_custome_page.dart';
 import 'dart:io';
 import 'controller/pengembalian_controller.dart';
 // gunakan alias untuk model
@@ -313,6 +314,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
                       children: [
                         Checkbox(
                           value: isChecked,
+                          activeColor: Colors.blue,
+                          checkColor: Colors.white,
                           onChanged: (val) {
                             setState(() {
                               isChecked = val ?? false;
@@ -348,7 +351,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => SuccessCustomPage(
+                                      builder: (_) =>
+                                          SuccespengembalianCustomePage(
                                         onShowReceipt: null,
                                         receiptData: null,
                                         showDashboardButton: true,
