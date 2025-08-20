@@ -264,10 +264,16 @@ class AppApi {
   }
 
   /// FETCH DASHBOARD CARD DATA
-  static Future<Map<String, dynamic>?> fetchDashboardCard() async {
+  static Future<Map<String, dynamic>?> fetchDashboardCard({required String token}) async {
     final url = Uri.parse('https://4d83ce779a5b.ngrok-free.app/api/dashboard/mobile/card');
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
       print('fetchDashboardCard response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -282,10 +288,16 @@ class AppApi {
   }
 
   /// FETCH DASHBOARD LATEST ACTIVITY
-  static Future<Map<String, dynamic>?> fetchDashboardLatestActivity() async {
+  static Future<Map<String, dynamic>?> fetchDashboardLatestActivity({required String token}) async {
     final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/mobile/latest-activity');
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
       print('fetchDashboardLatestActivity response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -300,10 +312,16 @@ class AppApi {
   }
 
   /// FETCH DASHBOARD LOAN REPORT (for chart)
-  static Future<Map<String, dynamic>?> fetchLoanReport({required String from, required String to}) async {
+  static Future<Map<String, dynamic>?> fetchLoanReport({required String from, required String to, required String token}) async {
     final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
       print('fetchLoanReport response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
