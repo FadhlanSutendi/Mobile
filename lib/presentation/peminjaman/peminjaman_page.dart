@@ -819,7 +819,7 @@ class StepperWidget extends StatelessWidget {
             SizedBox(width: 60, child: Text("Collateral", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
           ],
         ),
-        SizedBox(height: 24),
+        SizedBox(height: 20),
         Expanded(child: child),
       ],
     );

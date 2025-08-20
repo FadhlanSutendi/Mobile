@@ -111,7 +111,7 @@ class SuccessCustomPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).popUntil((route) => route.isFirst);
                       },
-                      child: const Text("Kembali ke Dashboard"),
+                      child: const Text("back to dashboard"),
                     ),
                   ),
 

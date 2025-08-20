@@ -134,7 +134,7 @@ class StruckCustomPage extends StatelessWidget {
                   },
                   child: const Text(
                     "Go to Dashboard",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
                   ),
                 ),
               ),
