@@ -32,7 +32,7 @@ class HomeController extends GetxController {
     activityList.value = result?['data'] ?? [];
     isLoadingActivity.value = false;
   }
-
+ //sss
   Future<void> fetchLoanReport({required String from, required String to}) async {
     isLoadingLoanReport.value = true;
     final result = await AppApi.fetchLoanReport(from: from, to: to);
