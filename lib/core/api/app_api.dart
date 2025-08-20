@@ -262,4 +262,38 @@ class AppApi {
       return null;
     }
   }
+
+  /// FETCH DASHBOARD CARD DATA
+  static Future<Map<String, dynamic>?> fetchDashboardCard() async {
+    final url = Uri.parse('https://4d83ce779a5b.ngrok-free.app/api/dashboard/mobile/card');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchDashboardCard ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchDashboardCard Exception: $e");
+      return null;
+    }
+  }
+
+  /// FETCH DASHBOARD LATEST ACTIVITY
+  static Future<Map<String, dynamic>?> fetchDashboardLatestActivity() async {
+    final url = Uri.parse('https://d029679d0eb8.ngrok-free.app/api/dashboard/mobile/latest-activity');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchDashboardLatestActivity ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchDashboardLatestActivity Exception: $e");
+      return null;
+    }
+  }
 }
