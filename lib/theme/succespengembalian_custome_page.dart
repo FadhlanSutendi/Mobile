@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'app_struckcostom.dart';
 
-class SuccessCustomPage extends StatelessWidget {
+class SuccespengembalianCustomePage extends StatelessWidget {
   final Map<String, dynamic>? receiptData;
 
-  const SuccessCustomPage({
+  const SuccespengembalianCustomePage({
     Key? key,
     this.onShowReceipt,
     this.receiptData,
@@ -58,7 +59,7 @@ class SuccessCustomPage extends StatelessWidget {
 
                 // ✅ Subtext
                 const Text(
-                  "Borrowing item created successfully!",
+                  "Return item successfully!",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black87,
@@ -71,31 +72,33 @@ class SuccessCustomPage extends StatelessWidget {
                 // ✅ Show receipt button
                 TextButton(
                   onPressed: () {
-                    if (receiptData != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => StruckCustomPage(
-                            date: receiptData!['date'] ?? "-",
-                            time: receiptData!['time'] ?? "-",
-                            nis: receiptData!['nis'],
-                            name: receiptData!['name'],
-                            major: receiptData!['major'],
-                            description: receiptData!['description'],
-                            room: receiptData!['room'],
-                            warranty: receiptData!['warranty'],
-                            unitCode: receiptData!['unitCode'],
-                            merk: receiptData!['merk'],
-                            author: receiptData!['author'],
-                          ),
-                        ),
-                      );
-                    } else if (onShowReceipt != null) {
-                      onShowReceipt!();
-                    }
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+
+                    // if (receiptData != null) {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (_) => StruckCustomPage(
+                    //         date: receiptData!['date'] ?? "-",
+                    //         time: receiptData!['time'] ?? "-",
+                    //         nis: receiptData!['nis'],
+                    //         name: receiptData!['name'],
+                    //         major: receiptData!['major'],
+                    //         description: receiptData!['description'],
+                    //         room: receiptData!['room'],
+                    //         warranty: receiptData!['warranty'],
+                    //         unitCode: receiptData!['unitCode'],
+                    //         merk: receiptData!['merk'],
+                    //         author: receiptData!['author'],
+                    //       ),
+                    //     ),
+                    //   );
+                    // } else if (onShowReceipt != null) {
+                    //   onShowReceipt!();
+                    // }
                   },
                   child: const Text(
-                    "show receipt",
+                    "Back to dashboard",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
@@ -103,7 +106,6 @@ class SuccessCustomPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
 
                 // ✅ Footer pakai logo image

@@ -159,9 +159,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: "NIS",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               onChanged: (val) {
                 controller.fetchStudent(val, widget.token);
@@ -174,9 +176,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               controller: nameController,
               decoration: InputDecoration(
                 labelText: "Name",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
             ),
             SizedBox(height: 8),
@@ -185,9 +189,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               controller: rayonController,
               decoration: InputDecoration(
                 labelText: "Rayon",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
             ),
             SizedBox(height: 8),
@@ -196,9 +202,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               controller: majorController,
               decoration: InputDecoration(
                 labelText: "Major",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
             ),
             // Tambahkan indikator loading dan pesan error
@@ -219,16 +227,22 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                   ),
                 );
               }
-              if (widget.borrowerType == 'student' && controller.student.value == null && nisController.text.isNotEmpty) {
+              if (widget.borrowerType == 'student' &&
+                  controller.student.value == null &&
+                  nisController.text.isNotEmpty) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("Student not found", style: TextStyle(color: Colors.red, fontSize: 12)),
+                  child: Text("Student not found",
+                      style: TextStyle(color: Colors.red, fontSize: 12)),
                 );
               }
-              if (widget.borrowerType == 'teacher' && controller.teacher.value == null && nisController.text.isNotEmpty) {
+              if (widget.borrowerType == 'teacher' &&
+                  controller.teacher.value == null &&
+                  nisController.text.isNotEmpty) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("Teacher not found", style: TextStyle(color: Colors.red, fontSize: 12)),
+                  child: Text("Teacher not found",
+                      style: TextStyle(color: Colors.red, fontSize: 12)),
                 );
               }
               return SizedBox.shrink();
@@ -244,7 +258,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
                     title: Text('BKP', style: TextStyle(fontSize: 14)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
                         guarantee = val!;
@@ -259,8 +274,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     groupValue: guarantee,
                     contentPadding: EdgeInsets.zero,
                     activeColor: Colors.blue,
-                    title: Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    title:
+                        Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                     onChanged: (val) {
                       setState(() {
                         guarantee = val!;
@@ -274,7 +291,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             // Upload Warranty
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Upload Warranty", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("Upload Warranty",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
             SizedBox(height: 8),
             // Hanya bagian gambar yang pakai Obx
@@ -341,9 +359,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               decoration: InputDecoration(
                 labelText: "Description",
                 hintText: "Pinjam Laptop untuk Mapel Prod",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               maxLines: 2,
             ),
@@ -353,9 +373,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               decoration: InputDecoration(
                 labelText: "Lender's Name",
                 hintText: "Nama peminjam",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
             ),
             SizedBox(height: 16),
@@ -364,10 +386,12 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               readOnly: true,
               decoration: InputDecoration(
                 labelText: "Date - Pick Up Time",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 prefixIcon: Icon(Icons.calendar_today),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               onTap: () async {
                 FocusScope.of(context).requestFocus(FocusNode());
@@ -405,13 +429,17 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               children: [
                 Checkbox(
                   value: isChecked,
+                  activeColor: Colors.blue,
+                  checkColor: Colors.white,
                   onChanged: (val) {
                     setState(() {
                       isChecked = val ?? false;
                     });
                   },
                 ),
-                Flexible(child: Text("Make sure the data is correct", overflow: TextOverflow.ellipsis)),
+                Flexible(
+                    child: Text("Make sure the data is correct",
+                        overflow: TextOverflow.ellipsis)),
               ],
             ),
             SizedBox(height: 16),
@@ -430,7 +458,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         ? () async {
                             String? imagePathCompressed;
                             if (controller.imagePath.value.isNotEmpty) {
-                              final compressedFile = await FlutterImageCompress.compressAndGetFile(
+                              final compressedFile =
+                                  await FlutterImageCompress.compressAndGetFile(
                                 controller.imagePath.value,
                                 controller.imagePath.value + "_compressed.jpg",
                                 quality: 75,
@@ -448,24 +477,34 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   : null,
                               unitItemId: widget.unitItem?.id ?? "",
                               borrowedBy: lenderController.text,
-                              borrowedAt: serverDate ?? '', // gunakan format server
+                              borrowedAt:
+                                  serverDate ?? '', // gunakan format server
                               purpose: descriptionController.text,
                               room: 0,
                               imagePath: imagePathCompressed,
                               guarantee: guarantee, // sudah pakai format benar
                             );
-                            final result = await controller.submitLoan(req, widget.token);
+                            final result =
+                                await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
-                              Get.snackbar("Success", "Loan submitted successfully");
+                              Get.snackbar(
+                                  "Success", "Loan submitted successfully");
                               // Buat data struk dari input dan unitItem
                               final receiptData = {
                                 'date': dateController.text.split(' - ').first,
-                                'time': dateController.text.split(' - ').length > 1 ? dateController.text.split(' - ')[1] : "-",
-                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
+                                'time':
+                                    dateController.text.split(' - ').length > 1
+                                        ? dateController.text.split(' - ')[1]
+                                        : "-",
+                                'nis': widget.borrowerType == 'student'
+                                    ? nisController.text
+                                    : null,
                                 'name': nameController.text,
                                 'major': majorController.text,
                                 'description': descriptionController.text,
-                                'room': roomController.text.isNotEmpty ? roomController.text : null,
+                                'room': roomController.text.isNotEmpty
+                                    ? roomController.text
+                                    : null,
                                 'warranty': guarantee,
                                 'unitCode': widget.unitItem?.codeUnit,
                                 'merk': widget.unitItem?.subItem.merk,
@@ -482,9 +521,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             } else {
                               // Tampilkan pesan error backend ke user
                               Get.snackbar(
-                                "Error",
-                                result?['message'] ?? "Failed to submit loan"
-                              );
+                                  "Error",
+                                  result?['message'] ??
+                                      "Failed to submit loan");
                             }
                           }
                         : null,
@@ -510,17 +549,21 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Select Guarantee", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text("Select Guarantee",
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: guarantee == 'BKP' ? Colors.blue : Colors.white,
-                      foregroundColor: guarantee == 'BKP' ? Colors.white : Colors.black,
+                      backgroundColor:
+                          guarantee == 'BKP' ? Colors.blue : Colors.white,
+                      foregroundColor:
+                          guarantee == 'BKP' ? Colors.white : Colors.black,
                       side: BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                     onPressed: () {
                       setState(() {
@@ -534,10 +577,15 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 Expanded(
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      backgroundColor: guarantee == 'kartu pelajar' ? Colors.blue : Colors.white,
-                      foregroundColor: guarantee == 'kartu pelajar' ? Colors.white : Colors.black,
+                      backgroundColor: guarantee == 'kartu pelajar'
+                          ? Colors.blue
+                          : Colors.white,
+                      foregroundColor: guarantee == 'kartu pelajar'
+                          ? Colors.white
+                          : Colors.black,
                       side: BorderSide(color: Colors.blue),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                     onPressed: () {
                       setState(() {
@@ -550,7 +598,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ],
             ),
             SizedBox(height: 16),
-            Text("Upload Warranty", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text("Upload Warranty",
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             // Hanya bagian gambar yang pakai Obx
             Obx(() => controller.imagePath.value.isEmpty
@@ -616,9 +665,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               decoration: InputDecoration(
                 labelText: "Description",
                 hintText: "Pinjam Laptop untuk Mapel Prod",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               maxLines: 2,
             ),
@@ -628,9 +679,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               decoration: InputDecoration(
                 labelText: "Lender's Name",
                 hintText: "Nama peminjam",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
             ),
             SizedBox(height: 16),
@@ -639,10 +692,12 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               readOnly: true,
               decoration: InputDecoration(
                 labelText: "Date - Pick Up Time",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 prefixIcon: Icon(Icons.calendar_today),
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               onTap: () async {
                 FocusScope.of(context).requestFocus(FocusNode());
@@ -684,7 +739,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     });
                   },
                 ),
-                Flexible(child: Text("Make sure the data is correct", overflow: TextOverflow.ellipsis)),
+                Flexible(
+                    child: Text("Make sure the data is correct",
+                        overflow: TextOverflow.ellipsis)),
               ],
             ),
             SizedBox(height: 16),
@@ -704,7 +761,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         ? () async {
                             String? imagePathCompressed;
                             if (controller.imagePath.value.isNotEmpty) {
-                              final compressedFile = await FlutterImageCompress.compressAndGetFile(
+                              final compressedFile =
+                                  await FlutterImageCompress.compressAndGetFile(
                                 controller.imagePath.value,
                                 controller.imagePath.value + "_compressed.jpg",
                                 quality: 75,
@@ -728,18 +786,27 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                               imagePath: imagePathCompressed,
                               guarantee: guarantee,
                             );
-                            final result = await controller.submitLoan(req, widget.token);
+                            final result =
+                                await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
-                              Get.snackbar("Success", "Loan submitted successfully");
+                              Get.snackbar(
+                                  "Success", "Loan submitted successfully");
                               // Buat data struk dari input dan unitItem
                               final receiptData = {
                                 'date': dateController.text.split(' - ').first,
-                                'time': dateController.text.split(' - ').length > 1 ? dateController.text.split(' - ')[1] : "-",
-                                'nis': widget.borrowerType == 'student' ? nisController.text : null,
+                                'time':
+                                    dateController.text.split(' - ').length > 1
+                                        ? dateController.text.split(' - ')[1]
+                                        : "-",
+                                'nis': widget.borrowerType == 'student'
+                                    ? nisController.text
+                                    : null,
                                 'name': nameController.text,
                                 'major': majorController.text,
                                 'description': descriptionController.text,
-                                'room': roomController.text.isNotEmpty ? roomController.text : null,
+                                'room': roomController.text.isNotEmpty
+                                    ? roomController.text
+                                    : null,
                                 'warranty': guarantee,
                                 'unitCode': widget.unitItem?.codeUnit,
                                 'merk': widget.unitItem?.subItem.merk,
@@ -756,9 +823,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             } else {
                               // Tampilkan pesan error backend ke user
                               Get.snackbar(
-                                "Error",
-                                result?['message'] ?? "Failed to submit loan"
-                              );
+                                  "Error",
+                                  result?['message'] ??
+                                      "Failed to submit loan");
                             }
                           }
                         : null,
@@ -777,8 +844,19 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
 
   String _monthName(int month) {
     const months = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return months[month];
   }
@@ -799,43 +877,71 @@ class StepperWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
+      padding: EdgeInsets.zero,
       children: [
-        Row(
-          children: [
-            _stepCircle(1, step >= 0),
-            _stepLine(),
-            _stepCircle(2, step >= 1),
-            _stepLine(),
-            _stepCircle(3, step >= 2),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          child: Row(
+            children: [
+              _stepCircle(Icons.check, true),
+              _stepLine(),
+              _stepCircle(Icons.check, true),
+              _stepLine(),
+              _stepCircle(Icons.check, false, number: "3"),
+            ],
+          ),
         ),
         SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 60, child: Text("Check Item", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 80, child: Text("Borrower Info", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-            SizedBox(width: 60, child: Text("Collateral", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-          ],
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                  width: 60,
+                  child: Text("Check Item",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12))),
+              SizedBox(
+                  width: 80,
+                  child: Text("Borrower Info",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12))),
+              SizedBox(
+                  width: 60,
+                  child: Text("Collateral",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12))),
+            ],
+          ),
         ),
         SizedBox(height: 20),
-        Expanded(child: child),
+
+        // ✅ child ikut jadi bagian scroll
+        child,
       ],
     );
   }
 
-  Widget _stepCircle(int number, bool active) {
+  Widget _stepCircle(IconData icon, bool active, {String? number}) {
     return CircleAvatar(
       radius: 16,
-      backgroundColor: active ? Colors.blue : Colors.grey[300],
-      child: Text(
-        "$number",
-        style: TextStyle(
-          color: active ? Colors.white : Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      backgroundColor: active ? Colors.green : Colors.blue,
+      child: active
+          ? Icon(
+              icon,
+              color: Colors.white,
+              size: 18,
+            )
+          : Text(
+              number ?? "",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
     );
   }
 
