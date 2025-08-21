@@ -70,7 +70,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
     ever(controller.teacher, (teacher) {
       if (widget.borrowerType == 'teacher' && teacher != null) {
         nameController.text = teacher.name ?? '';
-        rayonController.text = teacher.telephone ?? ''; // <-- update nomor telepon
+        rayonController.text =
+            teacher.telephone ?? ''; // <-- update nomor telepon
         majorController.text = '';
       }
     });
@@ -308,7 +309,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                       groupValue: guarantee,
                       contentPadding: EdgeInsets.zero,
                       activeColor: Colors.blue,
-                      title: Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
+                      title:
+                          Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       onChanged: (val) {
@@ -341,7 +343,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.camera_alt, size: 32, color: Colors.grey),
+                            Icon(Icons.camera_alt,
+                                size: 32, color: Colors.grey),
                             SizedBox(height: 8),
                             Text.rich(
                               TextSpan(
@@ -523,7 +526,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     isChecked &&
                     (widget.borrowerType == 'teacher'
                         ? roomController.text.isNotEmpty
-                        : roomController.text.isNotEmpty); // student juga wajib isi room
+                        : roomController
+                            .text.isNotEmpty); // student juga wajib isi room
                 return SizedBox(
                   width: double.infinity,
                   child: AppButtonCustom(
@@ -590,7 +594,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                 'major': widget.borrowerType == 'student'
                                     ? majorController.text
                                     : null,
-                                'room': roomController.text, // <-- selalu kirim room
+                                'room': roomController
+                                    .text, // <-- selalu kirim room
                                 'telephone': widget.borrowerType == 'teacher'
                                     ? rayonController.text
                                     : null,
@@ -614,7 +619,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                               // Tampilkan pesan error backend ke user
                               Get.snackbar(
                                   "Error",
-                                  result?['message'] ?? "Failed to submit loan");
+                                  result?['message'] ??
+                                      "Failed to submit loan");
                             }
                           }
                         : null,

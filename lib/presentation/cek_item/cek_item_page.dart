@@ -176,13 +176,6 @@ class _CekItemPageState extends State<CekItemPage> {
                             const SizedBox(height: 16),
                             _inputField("Brand", brandController),
                             const SizedBox(height: 16),
-                            _inputField("Description", descriptionController),
-                            const SizedBox(height: 16),
-                            _inputField(
-                                "Procurement Date", procurementDateController),
-                            const SizedBox(height: 16),
-                            _inputField("Status", statusController),
-                            const SizedBox(height: 16),
                             _inputField("Condition", conditionController),
                           ],
                         ),
@@ -280,7 +273,6 @@ class _CekItemPageState extends State<CekItemPage> {
             fillColor: Colors.grey[200],
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
             ),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 8, horizontal: 12),

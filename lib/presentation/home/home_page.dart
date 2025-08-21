@@ -80,14 +80,16 @@ class HomePage extends StatelessWidget {
             Obx(() {
               if (controller.isLoadingCard.value) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   padding: const EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
               final card = controller.cardData;
               return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -143,15 +145,26 @@ class HomePage extends StatelessWidget {
             Obx(() {
               if (controller.isLoadingLoanReport.value) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   padding: const EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
               final report = controller.loanReportData;
               final months = [
-                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
               ];
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -170,20 +183,25 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Overview Statistics",
-                        style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 12),
                     SizedBox(
                       height: 200,
                       child: BarChart(
                         BarChartData(
                           alignment: BarChartAlignment.spaceAround,
-                          maxY: (report.values.isNotEmpty ? (report.values.reduce((a, b) => a > b ? a : b) + 2) : 10).toDouble(),
+                          maxY: (report.values.isNotEmpty
+                                  ? (report.values
+                                          .reduce((a, b) => a > b ? a : b) +
+                                      2)
+                                  : 500)
+                              .toDouble(),
                           barTouchData: BarTouchData(enabled: false),
                           titlesData: FlTitlesData(
                             leftTitles: const AxisTitles(
-                              sideTitles:
-                                  SideTitles(showTitles: true, reservedSize: 28),
+                              sideTitles: SideTitles(
+                                  showTitles: true, reservedSize: 30),
                             ),
                             rightTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
@@ -195,7 +213,8 @@ class HomePage extends StatelessWidget {
                               sideTitles: SideTitles(
                                 showTitles: true,
                                 getTitlesWidget: (value, meta) {
-                                  if (value.toInt() >= 0 && value.toInt() < months.length) {
+                                  if (value.toInt() >= 0 &&
+                                      value.toInt() < months.length) {
                                     return Text(months[value.toInt()],
                                         style: const TextStyle(fontSize: 12));
                                   }
@@ -222,7 +241,8 @@ class HomePage extends StatelessWidget {
             Obx(() {
               if (controller.isLoadingActivity.value) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   padding: const EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
                 );
@@ -260,7 +280,8 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 12),
                     ...activities.map<Widget>((item) {
                       // item: {id, item, sub_item, borrowed_at, borrower_name}
-                      final name = "${item['borrower_name'] ?? ''} - ${item['item'] ?? ''} ${item['sub_item'] ?? ''}";
+                      final name =
+                          "${item['borrower_name'] ?? ''} - ${item['item'] ?? ''} ${item['sub_item'] ?? ''}";
                       final date = item['borrowed_at'] ?? '';
                       return _ActivityItem(
                         name: name,
