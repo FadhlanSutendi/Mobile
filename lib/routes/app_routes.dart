@@ -8,5 +8,6 @@ class AppRoutes {
   static const cekItem = '/cek-item'; // route baru
   static const history = '/history'; // untuk pengembalian
   static const historyPeminjaman = '/history-peminjaman'; // untuk peminjaman
+  static const report = '/reports'; // tambahkan ini
   // ...tambahkan route lain jika diperlukan...
 }

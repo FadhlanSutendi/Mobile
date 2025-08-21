@@ -9,6 +9,8 @@ import 'presentation/scan barcode/scanbarcode_page.dart';
 import 'presentation/cek_item/cek_item_page.dart';
 import 'presentation/history/history_pengembalian_page.dart';
 import 'presentation/history/history_peminjaman_page.dart';
+import 'presentation/report/report_page.dart';
+import 'presentation/report/binding/report_binding.dart';
 import 'routes/app_routes.dart';
 import 'theme/error_page.dart';
 
@@ -50,6 +52,10 @@ class MyApp extends StatelessWidget {
         AppRoutes.historyPeminjaman: (context) {
           final token = ModalRoute.of(context)?.settings.arguments as String? ?? '';
           return HistoryPeminjamanPage(token: token);
+        },
+        AppRoutes.report: (context) {
+          ReportBinding().dependencies();
+          return ReportPage();
         },
       },
     );
