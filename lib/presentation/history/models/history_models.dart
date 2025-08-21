@@ -42,7 +42,7 @@ class HistoryItem {
       returnedAt: json['returned_at'],
       purpose: json['purpose'] ?? '',
       room: json['room'] ?? 0,
-      status: json['status'] ?? false,
+      status: json['status'] == "returned" ? true : false,
       guarantee: json['guarantee'] ?? '',
       image: json['image'],
       studentName: json['student']?['name'],
