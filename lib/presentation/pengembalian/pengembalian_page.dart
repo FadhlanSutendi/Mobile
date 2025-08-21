@@ -61,6 +61,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
   @override
   Widget build(BuildContext context) {
     final student = widget.loan.student;
+    final teacher = widget.loan.teacher;
     return Scaffold(
       appBar: AppBar(
         title: Text("Return"),
@@ -120,76 +121,168 @@ class _PengembalianPageState extends State<PengembalianPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // NIS & Name
-                    Row(
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            initialValue: safeString(student?['nis']),
-                            decoration: InputDecoration(
-                              labelText: "NIS",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
+                    // Tampilkan data student jika ada
+                    if (student != null) ...[
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(student['nis']),
+                              decoration: InputDecoration(
+                                labelText: "NIS",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            initialValue: safeString(student?['name']),
-                            decoration: InputDecoration(
-                              labelText: "Name",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(student['name']),
+                              decoration: InputDecoration(
+                                labelText: "Name",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12),
-                    // Rayon & Major
-                    Row(
-                      children: [
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            initialValue: safeString(student?['rayon']),
-                            decoration: InputDecoration(
-                              labelText: "Rayon",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(student['rayon']),
+                              decoration: InputDecoration(
+                                labelText: "Rayon",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            initialValue: safeString(student?['major']),
-                            decoration: InputDecoration(
-                              labelText: "Major",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(student['major']),
+                              decoration: InputDecoration(
+                                labelText: "Major",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 12),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      // Tambahkan Room untuk student
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(widget.loan.room),
+                              decoration: InputDecoration(
+                                labelText: "Room",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                    ],
+                    // Tampilkan data teacher jika ada
+                    if (teacher != null) ...[
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(teacher['nip']),
+                              decoration: InputDecoration(
+                                labelText: "NIP",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(teacher['name']),
+                              decoration: InputDecoration(
+                                labelText: "Name",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(teacher['telephone']),
+                              decoration: InputDecoration(
+                                labelText: "Nomor Telepon",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(widget.loan.room),
+                              decoration: InputDecoration(
+                                labelText: "Room",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12),
+                    ],
                     // Warranty radio
                     Row(
                       children: [
@@ -259,20 +352,59 @@ class _PengembalianPageState extends State<PengembalianPage> {
                       maxLines: 2,
                     ),
                     SizedBox(height: 12),
-                    // Lender's Name
-                    TextFormField(
-                      enabled: false,
-                      controller: lenderController,
-                      decoration: InputDecoration(
-                        labelText: "Lender's Name",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    // Lender's Name & Room (student)
+                    if (student != null) ...[
+                      Row(
+                        children: [
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              controller: lenderController,
+                              decoration: InputDecoration(
+                                labelText: "Lender's Name",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: TextFormField(
+                              enabled: false,
+                              initialValue: safeString(widget.loan.room),
+                              decoration: InputDecoration(
+                                labelText: "Room",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 12),
+                      SizedBox(height: 12),
+                    ],
+                    // Lender's Name (teacher)
+                    if (teacher != null) ...[
+                      TextFormField(
+                        enabled: false,
+                        controller: lenderController,
+                        decoration: InputDecoration(
+                          labelText: "Lender's Name",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                    ],
                     // Pick Up Time & Return Time
                     Row(
                       children: [
@@ -348,13 +480,43 @@ class _PengembalianPageState extends State<PengembalianPage> {
                                 if (result != null && result['status'] == 200) {
                                   Get.snackbar(
                                       "Success", "Item returned successfully");
+                                  // Buat data struk dari loan
+                                  final receiptData = {
+                                    'date': widget.loan.borrowedAt.split(' ').first,
+                                    'time': widget.loan.borrowedAt.split(' ').length > 1
+                                        ? widget.loan.borrowedAt.split(' ')[1]
+                                        : "-",
+                                    'nis': widget.loan.student != null
+                                        ? safeString(widget.loan.student?['nis'])
+                                        : null,
+                                    'nip': widget.loan.teacher != null
+                                        ? safeString(widget.loan.teacher?['nip'])
+                                        : null,
+                                    'name': widget.loan.student != null
+                                        ? safeString(widget.loan.student?['name'])
+                                        : widget.loan.teacher != null
+                                            ? safeString(widget.loan.teacher?['name'])
+                                            : null,
+                                    'major': widget.loan.student != null
+                                        ? safeString(widget.loan.student?['major'])
+                                        : null,
+                                    'room': safeString(widget.loan.room), // <-- selalu kirim room
+                                    'telephone': widget.loan.teacher != null
+                                        ? safeString(widget.loan.teacher?['telephone'])
+                                        : null,
+                                    'description': widget.loan.purpose,
+                                    'warranty': widget.loan.guarantee,
+                                    'unitCode': widget.unitItem.codeUnit,
+                                    'merk': widget.unitItem.subItem.merk,
+                                    'author': "Iqbal Fajar Syahbana",
+                                  };
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) =>
                                           SuccespengembalianCustomePage(
                                         onShowReceipt: null,
-                                        receiptData: null,
+                                        receiptData: receiptData,
                                         showDashboardButton: true,
                                       ),
                                     ),

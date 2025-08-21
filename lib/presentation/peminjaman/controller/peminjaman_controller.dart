@@ -76,15 +76,8 @@ class PeminjamanController extends GetxController {
 
   Future<Map<String, dynamic>?> submitLoan(LoanRequest req, String token) async {
     isLoading.value = true;
-    if (unitItem != null) {
-      req.unitItemId = unitItem!.id;
-    }
-    // Only set the correct ID based on borrowerType
-    if (borrowerType == 'student') {
-      req.teacherId = null;
-    } else if (borrowerType == 'teacher') {
-      req.studentId = null;
-    }
+    // req.unitItemId sudah di-set dari page
+    // Map sudah diolah di page, langsung kirim
     final result = await AppApi.postUnitLoan(req.toMap(), token: token);
     isLoading.value = false;
     return result;
@@ -105,4 +98,3 @@ class PeminjamanController extends GetxController {
     if (step.value > 0) step.value--;
   }
 }
-

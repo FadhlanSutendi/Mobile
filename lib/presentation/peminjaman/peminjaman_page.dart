@@ -70,7 +70,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
     ever(controller.teacher, (teacher) {
       if (widget.borrowerType == 'teacher' && teacher != null) {
         nameController.text = teacher.name ?? '';
-        rayonController.text = '';
+        rayonController.text = teacher.telephone ?? ''; // <-- update nomor telepon
         majorController.text = '';
       }
     });
@@ -153,12 +153,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // NIS input, trigger fetchStudent on change
+            // NIS/NIP input, trigger fetchStudent/fetchTeacher on change
             TextFormField(
               controller: nisController,
-              keyboardType: TextInputType.number,
+              keyboardType: widget.borrowerType == 'teacher'
+                  ? TextInputType.text
+                  : TextInputType.number,
               decoration: InputDecoration(
-                labelText: "NIS",
+                labelText: widget.borrowerType == 'teacher' ? "NIP" : "NIS",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
@@ -166,11 +168,15 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               ),
               onChanged: (val) {
-                controller.fetchStudent(val, widget.token);
+                if (widget.borrowerType == 'teacher') {
+                  controller.fetchTeacher(val, widget.token);
+                } else {
+                  controller.fetchStudent(val, widget.token);
+                }
               },
             ),
             SizedBox(height: 12),
-            // Nama, Rayon, Major otomatis terisi jika student ditemukan
+            // Nama otomatis terisi jika student/teacher ditemukan
             TextFormField(
               enabled: false,
               controller: nameController,
@@ -184,31 +190,58 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ),
             ),
             SizedBox(height: 8),
-            TextFormField(
-              enabled: false,
-              controller: rayonController,
-              decoration: InputDecoration(
-                labelText: "Rayon",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              ),
-            ),
+            // Rayon/Telepon
+            widget.borrowerType == 'teacher'
+                ? TextFormField(
+                    enabled: false,
+                    controller: rayonController,
+                    decoration: InputDecoration(
+                      labelText: "Nomor Telepon",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      isDense: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    ),
+                  )
+                : TextFormField(
+                    enabled: false,
+                    controller: rayonController,
+                    decoration: InputDecoration(
+                      labelText: "Rayon",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      isDense: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    ),
+                  ),
             SizedBox(height: 8),
-            TextFormField(
-              enabled: false,
-              controller: majorController,
-              decoration: InputDecoration(
-                labelText: "Major",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              ),
-            ),
+            // Major/Room
+            widget.borrowerType == 'teacher'
+                ? TextFormField(
+                    controller: roomController,
+                    decoration: InputDecoration(
+                      labelText: "Room",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      isDense: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    ),
+                  )
+                : TextFormField(
+                    enabled: false,
+                    controller: majorController,
+                    decoration: InputDecoration(
+                      labelText: "Major",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      isDense: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    ),
+                  ),
             // Tambahkan indikator loading dan pesan error
             Obx(() {
               if (controller.isLoading.value) {
@@ -248,112 +281,111 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               return SizedBox.shrink();
             }),
             SizedBox(height: 16),
-            // Warranty radio style
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<String>(
-                    value: 'BKP', // value dikirim ke API
-                    groupValue: guarantee,
-                    contentPadding: EdgeInsets.zero,
-                    activeColor: Colors.blue,
-                    title: Text('BKP', style: TextStyle(fontSize: 14)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    onChanged: (val) {
-                      setState(() {
-                        guarantee = val!;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: RadioListTile<String>(
-                    value: 'kartu pelajar', // value dikirim ke API
-                    groupValue: guarantee,
-                    contentPadding: EdgeInsets.zero,
-                    activeColor: Colors.blue,
-                    title:
-                        Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    onChanged: (val) {
-                      setState(() {
-                        guarantee = val!;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            // Upload Warranty
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Upload Warranty",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(height: 8),
-            // Hanya bagian gambar yang pakai Obx
-            Obx(() => controller.imagePath.value.isEmpty
-                ? GestureDetector(
-                    onTap: () => controller.pickImage(),
-                    child: Container(
-                      width: double.infinity,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey[100],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt, size: 32, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text.rich(
-                            TextSpan(
-                              text: "Click ",
-                              children: [
-                                TextSpan(
-                                  text: "here",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                TextSpan(text: " to take a photo"),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+            // Warranty & Upload hanya untuk student
+            if (widget.borrowerType == 'student') ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      value: 'BKP',
+                      groupValue: guarantee,
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: Colors.blue,
+                      title: Text('BKP', style: TextStyle(fontSize: 14)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onChanged: (val) {
+                        setState(() {
+                          guarantee = val!;
+                        });
+                      },
                     ),
-                  )
-                : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.file(
-                          File(controller.imagePath.value),
-                          width: double.infinity,
-                          height: 120,
-                          fit: BoxFit.cover,
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      value: 'kartu pelajar',
+                      groupValue: guarantee,
+                      contentPadding: EdgeInsets.zero,
+                      activeColor: Colors.blue,
+                      title: Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onChanged: (val) {
+                        setState(() {
+                          guarantee = val!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Upload Warranty",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+              SizedBox(height: 8),
+              Obx(() => controller.imagePath.value.isEmpty
+                  ? GestureDetector(
+                      onTap: () => controller.pickImage(),
+                      child: Container(
+                        width: double.infinity,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey[100],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt, size: 32, color: Colors.grey),
+                            SizedBox(height: 8),
+                            Text.rich(
+                              TextSpan(
+                                text: "Click ",
+                                children: [
+                                  TextSpan(
+                                    text: "here",
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  TextSpan(text: " to take a photo"),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: IconButton(
-                          icon: Icon(Icons.close, color: Colors.red),
-                          onPressed: () => controller.imagePath.value = '',
+                    )
+                  : Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(
+                            File(controller.imagePath.value),
+                            width: double.infinity,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
-            SizedBox(height: 16),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: IconButton(
+                            icon: Icon(Icons.close, color: Colors.red),
+                            onPressed: () => controller.imagePath.value = '',
+                          ),
+                        ),
+                      ],
+                    )),
+              SizedBox(height: 16),
+            ],
             TextFormField(
               controller: descriptionController,
               decoration: InputDecoration(
@@ -368,19 +400,59 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               maxLines: 2,
             ),
             SizedBox(height: 16),
-            TextFormField(
-              controller: lenderController,
-              decoration: InputDecoration(
-                labelText: "Lender's Name",
-                hintText: "Nama peminjam",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            // Lender's Name & Room (student)
+            if (widget.borrowerType == 'student') ...[
+              Row(
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                      controller: lenderController,
+                      decoration: InputDecoration(
+                        labelText: "Lender's Name",
+                        hintText: "Nama peminjam",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        isDense: true,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Flexible(
+                    child: TextFormField(
+                      controller: roomController,
+                      decoration: InputDecoration(
+                        labelText: "Room",
+                        hintText: "Room",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        isDense: true,
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 16),
+              SizedBox(height: 16),
+            ],
+            // Lender's Name (teacher)
+            if (widget.borrowerType == 'teacher') ...[
+              TextFormField(
+                controller: lenderController,
+                decoration: InputDecoration(
+                  labelText: "Lender's Name",
+                  hintText: "Nama peminjam",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  isDense: true,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                ),
+              ),
+              SizedBox(height: 16),
+            ],
             TextFormField(
               controller: dateController,
               readOnly: true,
@@ -448,7 +520,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                 final isFilled = descriptionController.text.isNotEmpty &&
                     lenderController.text.isNotEmpty &&
                     dateController.text.isNotEmpty &&
-                    isChecked;
+                    isChecked &&
+                    (widget.borrowerType == 'teacher'
+                        ? roomController.text.isNotEmpty
+                        : roomController.text.isNotEmpty); // student juga wajib isi room
                 return SizedBox(
                   width: double.infinity,
                   child: AppButtonCustom(
@@ -457,7 +532,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     onPressed: isFilled
                         ? () async {
                             String? imagePathCompressed;
-                            if (controller.imagePath.value.isNotEmpty) {
+                            if (widget.borrowerType == 'student' &&
+                                controller.imagePath.value.isNotEmpty) {
                               final compressedFile =
                                   await FlutterImageCompress.compressAndGetFile(
                                 controller.imagePath.value,
@@ -477,13 +553,21 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   : null,
                               unitItemId: widget.unitItem?.id ?? "",
                               borrowedBy: lenderController.text,
-                              borrowedAt:
-                                  serverDate ?? '', // gunakan format server
+                              borrowedAt: serverDate ?? '',
                               purpose: descriptionController.text,
-                              room: 0,
+                              room: int.tryParse(roomController.text) ?? 0,
                               imagePath: imagePathCompressed,
-                              guarantee: guarantee, // sudah pakai format benar
+                              guarantee: widget.borrowerType == 'student'
+                                  ? guarantee
+                                  : '',
                             );
+                            // Pastikan hanya satu id yang dikirim
+                            final map = req.toMap();
+                            if (widget.borrowerType == 'student') {
+                              map.remove('teacher_id');
+                            } else if (widget.borrowerType == 'teacher') {
+                              map.remove('student_id');
+                            }
                             final result =
                                 await controller.submitLoan(req, widget.token);
                             if (result != null && result['status'] == 200) {
@@ -499,13 +583,21 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                 'nis': widget.borrowerType == 'student'
                                     ? nisController.text
                                     : null,
-                                'name': nameController.text,
-                                'major': majorController.text,
-                                'description': descriptionController.text,
-                                'room': roomController.text.isNotEmpty
-                                    ? roomController.text
+                                'nip': widget.borrowerType == 'teacher'
+                                    ? nisController.text
                                     : null,
-                                'warranty': guarantee,
+                                'name': nameController.text,
+                                'major': widget.borrowerType == 'student'
+                                    ? majorController.text
+                                    : null,
+                                'room': roomController.text, // <-- selalu kirim room
+                                'telephone': widget.borrowerType == 'teacher'
+                                    ? rayonController.text
+                                    : null,
+                                'description': descriptionController.text,
+                                'warranty': widget.borrowerType == 'student'
+                                    ? guarantee
+                                    : null,
                                 'unitCode': widget.unitItem?.codeUnit,
                                 'merk': widget.unitItem?.subItem.merk,
                                 'author': "Iqbal Fajar Syahbana",
@@ -522,8 +614,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                               // Tampilkan pesan error backend ke user
                               Get.snackbar(
                                   "Error",
-                                  result?['message'] ??
-                                      "Failed to submit loan");
+                                  result?['message'] ?? "Failed to submit loan");
                             }
                           }
                         : null,
