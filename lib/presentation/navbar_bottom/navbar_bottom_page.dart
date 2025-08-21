@@ -88,7 +88,7 @@ class NavbarBottom extends StatelessWidget {
             Navigator.pushReplacementNamed(context, AppRoutes.home);
             break;
           case 'Reports':
-            Navigator.pushReplacementNamed(context, '/reports');
+            Navigator.pushReplacementNamed(context, AppRoutes.report);
             break;
           case 'History':
             // Tampilkan popup pilihan history
