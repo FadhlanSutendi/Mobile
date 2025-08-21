@@ -8,6 +8,8 @@ class AppApi {
   static final Dio _dio = Dio();
   static String imagePath = 'https://522042472fc1.ngrok-free.app/storage/';
 
+  
+
   /// LOGIN METHOD
   static Future<Map<String, dynamic>?> login(
       String username, String password) async {

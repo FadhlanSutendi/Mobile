@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:project_prapw/presentation/login/controller/login_controller.dart';
 import '../../../core/api/app_api.dart';
 import '../models/history_models.dart';
 
 class HistoryController extends ChangeNotifier {
   List<HistoryItem> items = [];
   bool isLoading = false;
+   final loginController = Get.find<LoginController>();
   String selectedCategory = 'All';
   final String token; // token wajib diisi lewat konstruktor
 
@@ -23,7 +27,7 @@ class HistoryController extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final result = await AppApi.fetchUnitLoanHistory(
-      token: token,
+      token: loginController.token.value,
       data: data,
       sortByType: sortByType,
       sortByTime: sortByTime,
