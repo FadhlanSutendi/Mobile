@@ -356,4 +356,54 @@ class AppApi {
       return null;
     }
   }
+
+  /// FETCH PIE CHART DATA
+  static Future<Map<String, dynamic>?> fetchPieChart({required String token}) async {
+    final url = Uri.parse('https://522042472fc1.ngrok-free.app/api/dashboard/admin-user/item-count-percentage');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      );
+      print('fetchPieChart response: ${response.body}');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchPieChart ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchPieChart Exception: $e");
+      return null;
+    }
+  }
+
+  /// FETCH LEGEND DATA
+  static Future<Map<String, dynamic>?> fetchLegend({required String token}) async {
+    final url = Uri.parse('https://522042472fc1.ngrok-free.app/api/dashboard/admin-user/item-count');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      );
+      print('fetchLegend response: ${response.body}');
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        print("fetchLegend ERROR: ${response.statusCode} - ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print("fetchLegend Exception: $e");
+      return null;
+    }
+  }
 }
