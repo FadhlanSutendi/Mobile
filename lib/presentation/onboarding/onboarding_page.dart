@@ -13,7 +13,7 @@ class OnboardingPage extends StatelessWidget {
             ClipPath(
               clipper: _BottomCurveClipper(),
               child: Container(
-                height: 250,
+                height: 300,
                 color: Color(0xFF0A3D91), // warna biru
                 child: Center(
                   child: SizedBox(), // kosong, hanya background
