@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'models/history_models.dart';
+import '../../core/api/app_api.dart';
 
 class DetailHistoryPage extends StatelessWidget {
   final HistoryItem item;
@@ -10,12 +11,15 @@ class DetailHistoryPage extends StatelessWidget {
     final unitItem = item.unitItem;
     final subItem = unitItem?['sub_item'] ?? {};
     final itemType = subItem['item'] ?? {};
-    final major = subItem['major'] ?? {};
-    final student = unitItem?['student'] ?? {};
-    final nis = student['nis'] ?? '';
+    final student = item.student ?? {};
+    final teacher = item.teacher ?? {}; // Ambil dari root HistoryItem jika ada
+    final nis = student['nis']?.toString() ?? '';
     final rayon = student['rayon'] ?? '';
-    final jurusan = major['name'] ?? '';
-    final qrcodeUrl = unitItem?['qrcode'] ?? '';
+    final jurusan = student['major']?['name'] ?? '';
+    final qrcodeUrl = (unitItem?['qrcode'] ?? '').replaceFirst(
+      'http://localhost:8000',
+      AppApi.imagePath.replaceFirst('/storage/', ''),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +35,7 @@ class DetailHistoryPage extends StatelessWidget {
             if (item.image != null)
               Center(
                 child: Image.network(
-                  'https://55d0909b17e1.ngrok-free.app/storage/${item.image}',
+                  '${AppApi.imagePath}${item.image}',
                   height: 180,
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Icon(Icons.image, size: 80),
@@ -57,12 +61,12 @@ class DetailHistoryPage extends StatelessWidget {
             SizedBox(height: 8),
             Text('Returned At: ${item.returnedAt ?? '-'}'),
             SizedBox(height: 8),
-            Text('Status: ${item.status ? "Returned" : "Borrowed"}'),
+            Text('Status: ${item.status == "returned" ? "Returned" : "Borrowed"}'),
             SizedBox(height: 16),
-            if (item.studentName != null)
+            if (student.isNotEmpty)
               Card(
                 child: ListTile(
-                  title: Text('Student: ${item.studentName}'),
+                  title: Text('Student: ${student['name'] ?? '-'}'),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -73,11 +77,18 @@ class DetailHistoryPage extends StatelessWidget {
                   ),
                 ),
               ),
-            if (item.teacherName != null)
+            if (teacher.isNotEmpty)
               Card(
                 child: ListTile(
-                  title: Text('Teacher: ${item.teacherName}'),
-                  // Add more teacher fields if needed
+                  title: Text('Teacher: ${teacher['name'] ?? '-'}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (teacher['nip'] != null) Text('NIP: ${teacher['nip']}'),
+                      if (teacher['subject'] != null) Text('Subject: ${teacher['subject']}'),
+                      // Tambahkan field lain sesuai struktur API teacher
+                    ],
+                  ),
                 ),
               ),
             SizedBox(height: 8),
@@ -85,7 +96,7 @@ class DetailHistoryPage extends StatelessWidget {
             SizedBox(height: 8),
             Text('Item Type: ${itemType['name'] ?? '-'}'),
             SizedBox(height: 8),
-            if (qrcodeUrl != '')
+            if (qrcodeUrl.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,7 +104,7 @@ class DetailHistoryPage extends StatelessWidget {
                   SizedBox(height: 8),
                   Center(
                     child: Image.network(
-                      qrcodeUrl.replaceFirst('http://localhost:8000', 'https://55d0909b17e1.ngrok-free.app'),
+                      qrcodeUrl,
                       height: 120,
                       errorBuilder: (_, __, ___) => Icon(Icons.qr_code, size: 80),
                     ),
