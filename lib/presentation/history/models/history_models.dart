@@ -14,6 +14,8 @@ class HistoryItem {
   final String itemType;
   final String merk;
   final Map<String, dynamic>? unitItem; // Add this field
+  final Map<String, dynamic>? student; // Tambahkan field student
+  final Map<String, dynamic>? teacher; // Tambahkan field teacher
 
   HistoryItem({
     required this.id,
@@ -31,6 +33,8 @@ class HistoryItem {
     required this.itemType,
     required this.merk,
     this.unitItem,
+    this.student, // Tambahkan di konstruktor
+    this.teacher, // Tambahkan di konstruktor
   });
 
   factory HistoryItem.fromJson(Map<String, dynamic> json) {
@@ -53,6 +57,8 @@ class HistoryItem {
       itemType: item['name'] ?? '',
       merk: subItem['merk'] ?? '',
       unitItem: unitItem, // Store the full unit_item map
+      student: json['student'], // Ambil dari root objek
+      teacher: json['teacher'], // Ambil dari root objek
     );
   }
 }
