@@ -92,86 +92,140 @@ class NavbarBottom extends StatelessWidget {
             break;
           case 'History':
             // Tampilkan popup pilihan history
-            final selected = await showDialog<String>(
-              context: context,
-              builder: (ctx) {
-                String choice = 'history'; // default
-                return StatefulBuilder(
-                  builder: (context, setState) => Dialog(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                    insetPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
+            final selected = await showModalBottomSheet<String>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent, // biar bisa kasih rounded di dalam
+            builder: (ctx) {
+              String choice = 'history'; // default
+
+              return StatefulBuilder(
+                builder: (context, setState) => Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      /// Indicator bar atas
+                      Container(
+                        width: 48,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 24),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+
+                      /// Icon
+                      Image.asset(
+                        'assets/select_page.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 20),
+
+                      /// Title
+                      const Text(
+                        'Select Page',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Choose which kind of page\nyou want to show',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      /// Radio pilihan
+                      Column(
                         children: [
-                          SizedBox(height: 8),
                           Container(
-                            width: 48,
-                            height: 4,
                             decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: choice == 'borrow'
+                                    ? const Color(0xFF1565C0)
+                                    : Colors.grey.shade300,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: RadioListTile<String>(
+                              value: 'borrow',
+                              groupValue: choice,
+                              title: const Text('Borrowed Page'),
+                              activeColor: const Color(0xFF1565C0),
+                              onChanged: (val) {
+                                setState(() {
+                                  choice = val!;
+                                });
+                              },
                             ),
                           ),
-                          SizedBox(height: 16),
-                          CircleAvatar(
-                            radius: 32,
-                            backgroundColor: Colors.blue[50],
-                            child: Icon(Icons.history, color: Color(0xFF1565C0), size: 36),
-                          ),
-                          SizedBox(height: 16),
-                          Text('Select Page', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                          SizedBox(height: 8),
-                          Text('Choose which kind of page you want to show', textAlign: TextAlign.center, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                          SizedBox(height: 24),
-                          Column(
-                            children: [
-                              RadioListTile<String>(
-                                value: 'borrow',
-                                groupValue: choice,
-                                title: Text('Borrowed Page'),
-                                activeColor: Color(0xFF1565C0),
-                                onChanged: (val) {
-                                  setState(() {
-                                    choice = val!;
-                                  });
-                                },
+                          const SizedBox(height: 12),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: choice == 'history'
+                                    ? const Color(0xFF1565C0)
+                                    : Colors.grey.shade300,
+                                width: 1.5,
                               ),
-                              RadioListTile<String>(
-                                value: 'history',
-                                groupValue: choice,
-                                title: Text('History Page'),
-                                activeColor: Color(0xFF1565C0),
-                                onChanged: (val) {
-                                  setState(() {
-                                    choice = val!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF1565C0),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                padding: EdgeInsets.symmetric(vertical: 14),
-                              ),
-                              child: Text('Continue', style: TextStyle(fontSize: 16, color: Colors.white)),
-                              onPressed: () => Navigator.of(ctx).pop(choice),
+                            ),
+                            child: RadioListTile<String>(
+                              value: 'history',
+                              groupValue: choice,
+                              title: const Text('History Page'),
+                              activeColor: const Color(0xFF1565C0),
+                              onChanged: (val) {
+                                setState(() {
+                                  choice = val!;
+                                });
+                              },
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 28),
+
+                      /// Tombol Continue
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0D47A1), // biru gelap
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text(
+                            'Continue',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          onPressed: () => Navigator.of(ctx).pop(choice),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            );
-            if (selected == 'borrow') {
+                ),
+              );
+            },
+            );          
+            if(selected == 'borrow') {
               Get.toNamed(AppRoutes.historyPeminjaman, arguments: token);
             } else if (selected == 'history') {
               Get.toNamed(AppRoutes.history, arguments: token);
@@ -180,22 +234,93 @@ class NavbarBottom extends StatelessWidget {
           case 'log Out':
             final result = await showDialog<bool>(
               context: context,
-              builder: (ctx) => AlertDialog(
-                title: Text('Konfirmasi'),
-                content: Text('Apakah Anda yakin ingin keluar?'),
-                actions: [
-                  TextButton(
-                    child: Text('Tidak'),
-                    onPressed: () => Navigator.of(ctx).pop(false),
+              builder: (BuildContext context) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // border bulet
                   ),
-                  TextButton(
-                    child: Text('Ya'),
-                    onPressed: () => Navigator.of(ctx).pop(true),
-                  ),
-                ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Bagian atas abu-abu
+                      Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300], // abu-abu background
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(10),
+                          ),
               ),
-            );
-            if (result == true && navbarController != null) {
+              child: const Center(
+                child: Text(
+                  "Are you sure want to\nlog out?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+
+            // Bagian tombol
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.grey, width: 0.5),
+                          right: BorderSide(color: Colors.grey, width: 0.5),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      // aksi confirm logout
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.grey, width: 0.5),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    },
+  );if (result == true && navbarController != null) {
               await navbarController.logout(token ?? '');
               if (navbarController.logoutResponse.value != null &&
                   navbarController.logoutResponse.value!.status == 200) {

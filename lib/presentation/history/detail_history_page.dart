@@ -35,7 +35,7 @@ class DetailHistoryPage extends StatelessWidget {
                   if (d.image != null)
                     Center(
                       child: Image.network(
-                        'https://bccdebd2a24a.ngrok-free.app/storage/${d.image}',
+                        'https://55d0909b17e1.ngrok-free.app/storage/${d.image}',
                         height: 180,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Icon(Icons.image, size: 80),

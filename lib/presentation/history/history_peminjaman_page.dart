@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_prapw/presentation/login/controller/login_controller.dart';
 import 'package:provider/provider.dart';
 import 'controller/history_controller.dart';
 import 'models/history_models.dart';
@@ -9,6 +10,9 @@ import '../navbar_bottom/navbar_bottom_page.dart'; // Add this import
 
 class HistoryPeminjamanPage extends StatelessWidget {
   final String token;
+ final loginController = Get.find<LoginController>();
+
+
   HistoryPeminjamanPage({required this.token});
 
   @override
@@ -18,7 +22,7 @@ class HistoryPeminjamanPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('History Page', style: TextStyle(color: Colors.black)),
+          title: Text('Borrowed Page', style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -74,7 +78,7 @@ class HistoryPeminjamanPage extends StatelessWidget {
                             itemCount: borrowedItems.length,
                             itemBuilder: (context, idx) {
                               final item = borrowedItems[idx];
-                              return _HistoryCard(context: context, item: item, token: token);
+                              return _HistoryCard(context: context, item: item, token: loginController.token.value ?? '');
                             },
                           ),
                 ),

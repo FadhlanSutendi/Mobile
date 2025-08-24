@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:project_prapw/presentation/onboarding/onboarding_page.dart';
 import 'presentation/splash/screen_page.dart';
@@ -14,7 +15,15 @@ import 'presentation/report/binding/report_binding.dart';
 import 'routes/app_routes.dart';
 import 'theme/error_page.dart';
 
-void main() {
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // Lock orientation ke portrait
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
   Get.put(LoginController());
   runApp(MyApp());
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'controller/login_controller.dart';
 
 class LoginPage extends StatelessWidget {
@@ -15,77 +16,119 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo
-                  SizedBox(height: 40),
-                  Image.asset('assets/logo1.png',
-                      height: 80), // Replace with your logo asset
-                  SizedBox(height: 40),
-                  Text('Welcome Back!',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  Text('Please enter your details',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 32),
+                  const SizedBox(height: 60),
+                  Image.asset('assets/logo1.png', height: 80),
+                  const SizedBox(height: 40),
+                  Text(
+                    'Welcome Back!',
+                    style: GoogleFonts.poppins(
+                        fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Please enter your details',
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 70),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Username',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'Username',
+                      style: GoogleFonts.poppins(
+                          fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: c.usernameController,
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color.fromARGB(255, 244, 244, 244),
                       hintText: 'Enter your username',
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                      ),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24)),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide:
+                            const BorderSide(color: Colors.grey, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide:
+                            const BorderSide(color: Colors.grey, width: 2),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 0),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Password',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      'Password',
+                      style: GoogleFonts.poppins(
+                          fontSize: 13, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Obx(() => TextField(
                         controller: c.passwordController,
                         obscureText: c.isPasswordHidden.value,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromARGB(255, 244, 244, 244),
                           hintText: 'Enter your password',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 14,
+                          ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: const BorderSide(
+                                color: Colors.grey, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: const BorderSide(
+                                color: Colors.grey, width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 0),
                           suffixIcon: IconButton(
                             icon: Icon(
                               c.isPasswordHidden.value
                                   ? Icons.visibility_off
                                   : Icons.visibility,
+                              color: Colors.grey,
                             ),
                             onPressed: c.togglePasswordVisibility,
                           ),
                         ),
                       )),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Obx(() => c.errorMessage.value.isNotEmpty
-                      ? Text(c.errorMessage.value,
-                          style: TextStyle(color: Colors.red))
-                      : SizedBox.shrink()),
-                  SizedBox(height: 8),
+                      ? Text(
+                          c.errorMessage.value,
+                          style: GoogleFonts.poppins(color: Colors.red),
+                        )
+                      : const SizedBox.shrink()),
+                  const SizedBox(height: 30),
                   Obx(() => SizedBox(
                         width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF003087),
+                            backgroundColor: const Color(0xFF003087),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24)),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
                           ),
                           onPressed: c.isLoading.value
                               ? null
@@ -93,31 +136,33 @@ class LoginPage extends StatelessWidget {
                                   await c.login();
                                   if (c.token.value != null &&
                                       c.token.value!.isNotEmpty) {
-                                    // Ganti dengan navigasi ke halaman berikutnya, misal HomePage
-                                    // dan kirim tokennya
-                                    // Contoh:
-                                    // Get.offAll(() => HomePage(token: c.token.value!));
+                                    // Navigasi ke halaman berikutnya
                                   }
                                 },
                           child: c.isLoading.value
-                              ? CircularProgressIndicator(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255))
-                              : const Text('LOGIN',
-                                  style: TextStyle(
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  'LOGIN',
+                                  style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white)),
+                                      color: Colors.white),
+                                ),
                         ),
                       )),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   const Padding(
                     padding: EdgeInsets.only(top: 100),
                     child: Center(
-                      child: Text('© PPLG XII-V 2025. All Rights Reserved. ',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black)),
+                      child: Text(
+                        '© PPLG XII-V 2025. All Rights Reserved. ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   )
                 ],

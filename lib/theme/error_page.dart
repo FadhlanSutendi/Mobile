@@ -16,77 +16,78 @@ class ErrorPage extends StatelessWidget {
         title = 'Bad Request';
         description =
             'Request tidak valid, misal format JSON salah atau field kurang';
-        imagePath = 'assets/images/error_400.png';
+        imagePath = 'assets/error.png';
         break;
       case 401:
         title = 'Unauthorized';
-        description = 'Belum login atau token salah/kadaluarsa';
-        imagePath = 'assets/images/error_401.png';
+        description = 'Something has gone on the site’s server';
+        imagePath = 'assets/error_401.png';
         break;
       case 403:
         title = 'Forbidden';
         description = 'Tidak memiliki akses walau sudah login';
-        imagePath = 'assets/images/error_403.png';
+        imagePath = 'assets/error.png';
         break;
       case 404:
-        title = 'Not Found';
-        description = 'URL tidak ditemukan di server';
-        imagePath = 'assets/images/error_404.png';
+        title = 'Something went wrong';
+        description = 'Sorry we were unable to find that page';
+        imagePath = 'assets/error_404 .png';
         break;
       case 405:
         title = 'Method Not Allowed';
         description = 'Method tidak diizinkan (misalnya POST ke endpoint GET)';
-        imagePath = 'assets/images/error_405.png';
+        imagePath = 'assets/error.png';
         break;
       case 408:
         title = 'Request Timeout';
         description = 'Request terlalu lama, client timeout';
-        imagePath = 'assets/images/error_408.png';
+        imagePath = 'assets/error.png';
         break;
       case 409:
         title = 'Conflict';
         description = 'Konflik data, seperti mendaftar email yang sudah ada';
-        imagePath = 'assets/images/error_409.png';
+        imagePath = 'assets/error.png';
         break;
       case 422:
         title = 'Unprocessable Entity';
         description = 'Data valid tapi gagal diproses (biasanya validasi)';
-        imagePath = 'assets/images/error_422.png';
+        imagePath = 'assets/error.png';
         break;
       case 429:
         title = 'Too Many Requests';
         description = 'Terlalu sering request dalam waktu pendek';
-        imagePath = 'assets/images/error_429.png';
+        imagePath = 'assets/error.png';
         break;
       case 500:
         title = 'Internal Server Error';
         description = 'Kesalahan di server, biasanya bug pada backend';
-        imagePath = 'assets/images/error_500.png';
+        imagePath = 'assets/error.png';
         break;
       case 502:
         title = 'Bad Gateway';
         description = 'Server proxy menerima respon error dari backend';
-        imagePath = 'assets/images/error_502.png';
+        imagePath = 'assets/error.png';
         break;
       case 503:
         title = 'Service Unavailable';
         description = 'Server sedang tidak bisa digunakan';
-        imagePath = 'assets/images/error_503.png';
+        imagePath = 'assets/error.png';
         break;
       case 504:
         title = 'Gateway Timeout';
         description = 'Server tidak membalas tepat waktu';
-        imagePath = 'assets/images/error_504.png';
+        imagePath = 'assets/error.png';
         break;
       default:
         title = 'Error';
         description = 'Terjadi kesalahan';
-        imagePath = 'assets/images/error_default.png';
+        imagePath = 'assets/error.png';
     }
 
     return Scaffold(
       body: Center(
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
