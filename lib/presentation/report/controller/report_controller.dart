@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import '../../../core/api/app_api.dart';
 import '../models/report_models.dart';
+import '../../login/controller/login_controller.dart';
 
 class ReportController extends GetxController {
   var token = ''.obs;
@@ -27,9 +28,9 @@ class ReportController extends GetxController {
   }
 
   void fetchToken() async {
-    // Simulasi ambil token dari storage/session
-    // Ganti dengan cara ambil token dari login yang kamu pakai
-    token.value = Get.arguments?['token'] ?? '';
+    // Ambil token dari LoginController
+    final loginController = Get.find<LoginController>();
+    token.value = loginController.token.value;
     print('ReportController token: ${token.value}');
   }
 
