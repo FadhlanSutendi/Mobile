@@ -300,25 +300,23 @@ class _CekItemPageState extends State<CekItemPage> {
                               ],
                             ),
                         
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 120),
                         
                             // Tombol Back & Next
                             Row(
                               children: [
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () => Get.back(),
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      side: const BorderSide(color: Color(0xFF023A8F), width: 1.5),
-                                      foregroundColor: const Color(0xFF023A8F),
+                                OutlinedButton.icon(
+                                  onPressed: () => Get.back(),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    icon: const Icon(Icons.arrow_back),
-                                    label: const Text("Back"),
+                                    side: const BorderSide(color: Colors.grey, width: 1.5),
+                                    foregroundColor: Colors.grey,
                                   ),
+                                  icon: const Icon(Icons.arrow_back),
+                                  label: const Text(""),
                                 ),
                                 const SizedBox(width: 16),
                                 Expanded(
