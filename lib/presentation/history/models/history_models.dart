@@ -13,6 +13,7 @@ class HistoryItem {
   final String codeUnit;
   final String itemType;
   final String merk;
+  final Map<String, dynamic>? unitItem; // Add this field
 
   HistoryItem({
     required this.id,
@@ -29,6 +30,7 @@ class HistoryItem {
     required this.codeUnit,
     required this.itemType,
     required this.merk,
+    this.unitItem,
   });
 
   factory HistoryItem.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class HistoryItem {
       codeUnit: unitItem['code_unit'] ?? '',
       itemType: item['name'] ?? '',
       merk: subItem['merk'] ?? '',
+      unitItem: unitItem, // Store the full unit_item map
     );
   }
 }

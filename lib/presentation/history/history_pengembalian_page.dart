@@ -93,7 +93,7 @@ class HistoryPengembalianPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailHistoryPage(id: item.id, token: token),
+            builder: (_) => DetailHistoryPage(item: item), // Pass HistoryItem
           ),
         );
       },
