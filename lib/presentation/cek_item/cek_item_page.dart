@@ -109,45 +109,63 @@ class _CekItemPageState extends State<CekItemPage> {
                 const SizedBox(height: 16),
 
                 // ✅ Step Indicator
-                Row(
-                  children: [
-                    _stepCircle(1, true),
-                    _stepLine(),
-                    _stepCircle(2, false),
-                    _stepLine(),
-                    _stepCircle(3, false),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      _stepCircle(1, true),
+                      const SizedBox(width: 5),
+                      _stepLine(const Color.fromARGB(255, 0, 0, 0)),
+                      const SizedBox(width: 5),
+                      _stepCircle(2, false),
+                      const SizedBox(width: 5),
+                      _stepLine(const Color.fromARGB(255, 174, 175, 176)),
+                      const SizedBox(width: 5),
+                      _stepCircle(3, false),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 4),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: Column(
-                        children: [
-                          Text("Check",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12)),
-                          Text("Item",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 12)),
-                        ],
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Column(
+                          children: [
+                            Text("Check",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12)),
+                            Text("Item",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12)),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      child: Text("Borrower Info",
-                          style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    ),
-                    SizedBox(
-                      width: 60,
-                      child: Text("Collateral",
-                          style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    ),
-                  ],
+                      SizedBox(
+                        width: 80,
+                        child: Column(
+                          children: [
+                            Text("Borrower",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey)),
+                            Text("Info",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 60,
+                        child: Text("Collateral",
+                            style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 10),
 
                 // ✅ Konten pakai Obx biar reactive
                 Obx(() {
@@ -180,52 +198,157 @@ class _CekItemPageState extends State<CekItemPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Borrower",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
                               ),
-                              onPressed: () async {
-                                setState(() {
-                                  borrowerType = 'student';
-                                });
-                                await Get.to(() => PeminjamanPage(
-                                      unitItem: unitItem,
-                                      initialStep: 1,
-                                      token: loginController.token.value,
-                                      borrowerType: 'student',
-                                    ));
-                              },
-                              child: const Text("Student"),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
-                              ),
-                              onPressed: () async {
-                                setState(() {
-                                  borrowerType = 'teacher';
-                                });
-                                await Get.to(() => PeminjamanPage(
-                                      unitItem: unitItem,
-                                      initialStep: 1,
-                                      token: loginController.token.value,
-                                      borrowerType: 'teacher',
-                                    ));
-                              },
-                              child: const Text("Teacher"),
+                            const SizedBox(height: 8),
+                        
+                            // Pilihan Student / Teacher
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() => borrowerType = 'student');
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: borrowerType == 'student'
+                                              ? const Color(0xFF023A8F)
+                                              : Colors.grey.shade300,
+                                          width: 1.5,
+                                        ),
+                                        color: borrowerType == 'student'
+                                            ? const Color(0xFF023A8F).withOpacity(0.05)
+                                            : Colors.white,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            borrowerType == 'student'
+                                                ? Icons.radio_button_checked
+                                                : Icons.radio_button_off,
+                                            color: borrowerType == 'student'
+                                                ? const Color(0xFF023A8F)
+                                                : Colors.grey,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 7),
+                                          const Text(
+                                            "Student",
+                                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() => borrowerType = 'teacher');
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: borrowerType == 'teacher'
+                                              ? const Color(0xFF023A8F)
+                                              : Colors.grey.shade300,
+                                          width: 1.5,
+                                        ),
+                                        color: borrowerType == 'teacher'
+                                            ? const Color(0xFF023A8F).withOpacity(0.05)
+                                            : Colors.white,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            borrowerType == 'teacher'
+                                                ? Icons.radio_button_checked
+                                                : Icons.radio_button_off,
+                                            color: borrowerType == 'teacher'
+                                                ? const Color(0xFF023A8F)
+                                                : Colors.grey,
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 7),
+                                          const Text(
+                                            "Teacher",
+                                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
+                        
+                            const SizedBox(height: 120),
+                        
+                            // Tombol Back & Next
+                            Row(
+                              children: [
+                                OutlinedButton.icon(
+                                  onPressed: () => Get.back(),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    side: const BorderSide(color: Colors.grey, width: 1.5),
+                                    foregroundColor: Colors.grey,
+                                  ),
+                                  icon: const Icon(Icons.arrow_back),
+                                  label: const Text(""),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: borrowerType == null
+                                        ? null
+                                        : () {
+                                            Get.to(() => PeminjamanPage(
+                                                  unitItem: widget.unitItem,
+                                                  initialStep: 1,
+                                                  token: loginController.token.value,
+                                                  borrowerType: borrowerType!,
+                                                ));
+                                          },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF023A8F),
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    icon: const Text("Next"),
+                                    label: const Icon(Icons.arrow_forward),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+
                     ],
                   );
                 }),
@@ -240,7 +363,7 @@ class _CekItemPageState extends State<CekItemPage> {
   Widget _stepCircle(int number, bool active) {
     return CircleAvatar(
       radius: 16,
-      backgroundColor: active ? Colors.blue : Colors.grey[300],
+      backgroundColor: active ? Color(0xFF023A8F) : Colors.grey[300],
       child: Text(
         "$number",
         style: TextStyle(
@@ -251,11 +374,11 @@ class _CekItemPageState extends State<CekItemPage> {
     );
   }
 
-  Widget _stepLine() {
+  Widget _stepLine(Color color) {
     return Expanded(
       child: Container(
         height: 2,
-        color: Colors.grey[300],
+        color: color,
       ),
     );
   }
@@ -264,18 +387,39 @@ class _CekItemPageState extends State<CekItemPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
         const SizedBox(height: 4),
         TextFormField(
           controller: controller,
+          readOnly: true,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold), // font input lebih kecil
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.grey[200],
-            border: OutlineInputBorder(
+            fillColor: const Color(0xFFEAEAEA),
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.grey, // warna saat belum fokus
+                width: 1.5,
+              ),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.blue, // warna saat fokus
+                width: 2,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 4,
+              horizontal: 10,
+            ),
           ),
         ),
       ],

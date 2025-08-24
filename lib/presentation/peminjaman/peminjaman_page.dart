@@ -152,177 +152,186 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // NIS/NIP input, trigger fetchStudent/fetchTeacher on change
-            TextFormField(
-              controller: nisController,
-              keyboardType: widget.borrowerType == 'teacher'
-                  ? TextInputType.text
-                  : TextInputType.number,
-              decoration: InputDecoration(
-                labelText: widget.borrowerType == 'teacher' ? "NIP" : "NIS",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+           Row(
+      children: [
+        buildInputField(
+          label: widget.borrowerType == 'teacher' ? "NIP" : "NIS",
+          controller: nisController,
+          inputType: widget.borrowerType == 'teacher'
+              ? TextInputType.text
+              : TextInputType.number,
+          onChanged: (val) {
+            if (widget.borrowerType == 'teacher') {
+              controller.fetchTeacher(val, widget.token);
+            } else {
+              controller.fetchStudent(val, widget.token);
+            }
+          },
+        ),
+        const SizedBox(width: 12),
+        buildInputField(
+          label: "Name",
+          controller: nameController,
+          enabled: false,
+        ),
+      ],
+    ),
+    const SizedBox(height: 12),
+
+    // Row kedua: Rayon/Telepon & Major/Room
+    Row(
+      children: [
+        buildInputField(
+          label: widget.borrowerType == 'teacher' ? "Nomor Telepon" : "Rayon",
+          controller: rayonController,
+          enabled: false,
+        ),
+        const SizedBox(width: 12),
+        buildInputField(
+          label: widget.borrowerType == 'teacher' ? "Room" : "Major",
+          controller: widget.borrowerType == 'teacher'
+              ? roomController
+              : majorController,
+          enabled: widget.borrowerType != 'teacher' ? false : true,
+        ),
+      ],
+    ),
+
+    // indikator loading & error message (logic tetap sama)
+    Obx(() {
+      if (controller.isLoading.value) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
-              onChanged: (val) {
-                if (widget.borrowerType == 'teacher') {
-                  controller.fetchTeacher(val, widget.token);
-                } else {
-                  controller.fetchStudent(val, widget.token);
-                }
-              },
-            ),
-            SizedBox(height: 12),
-            // Nama otomatis terisi jika student/teacher ditemukan
-            TextFormField(
-              enabled: false,
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: "Name",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                isDense: true,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              ),
-            ),
-            SizedBox(height: 8),
-            // Rayon/Telepon
-            widget.borrowerType == 'teacher'
-                ? TextFormField(
-                    enabled: false,
-                    controller: rayonController,
-                    decoration: InputDecoration(
-                      labelText: "Nomor Telepon",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  )
-                : TextFormField(
-                    enabled: false,
-                    controller: rayonController,
-                    decoration: InputDecoration(
-                      labelText: "Rayon",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ),
-            SizedBox(height: 8),
-            // Major/Room
-            widget.borrowerType == 'teacher'
-                ? TextFormField(
-                    controller: roomController,
-                    decoration: InputDecoration(
-                      labelText: "Room",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  )
-                : TextFormField(
-                    enabled: false,
-                    controller: majorController,
-                    decoration: InputDecoration(
-                      labelText: "Major",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                    ),
-                  ),
-            // Tambahkan indikator loading dan pesan error
-            Obx(() {
-              if (controller.isLoading.value) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      SizedBox(width: 8),
-                      Text("Searching...", style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                );
-              }
-              if (widget.borrowerType == 'student' &&
-                  controller.student.value == null &&
-                  nisController.text.isNotEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("Student not found",
-                      style: TextStyle(color: Colors.red, fontSize: 12)),
-                );
-              }
-              if (widget.borrowerType == 'teacher' &&
-                  controller.teacher.value == null &&
-                  nisController.text.isNotEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text("Teacher not found",
-                      style: TextStyle(color: Colors.red, fontSize: 12)),
-                );
-              }
-              return SizedBox.shrink();
-            }),
-            SizedBox(height: 16),
+              const SizedBox(width: 8),
+              const Text("Searching...", style: TextStyle(fontSize: 12)),
+            ],
+          ),
+        );
+      }
+      if (widget.borrowerType == 'student' &&
+          controller.student.value == null &&
+          nisController.text.isNotEmpty) {
+        return const Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: Text("Student not found",
+              style: TextStyle(color: Colors.red, fontSize: 12)),
+        );
+      }
+      if (widget.borrowerType == 'teacher' &&
+          controller.teacher.value == null &&
+          nisController.text.isNotEmpty) {
+        return const Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: Text("Teacher not found",
+              style: TextStyle(color: Colors.red, fontSize: 12)),
+        );
+      }
+      return const SizedBox.shrink();
+    }),
+
+    const SizedBox(height: 16),
+    const Text(
+         "Warranty",
+         style: TextStyle(
+           fontSize: 13,
+           fontWeight: FontWeight.w500,
+           color: Colors.black87,
+         ),
+         textAlign: TextAlign.start,
+       ),
+       const SizedBox(height: 6),
             // Warranty & Upload hanya untuk student
             if (widget.borrowerType == 'student') ...[
               Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<String>(
-                      value: 'BKP',
-                      groupValue: guarantee,
-                      contentPadding: EdgeInsets.zero,
-                      activeColor: Colors.blue,
-                      title: Text('BKP', style: TextStyle(fontSize: 14)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onChanged: (val) {
-                        setState(() {
-                          guarantee = val!;
-                        });
-                      },
-                    ),
+        children: [
+          
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => guarantee = 'BKP'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: guarantee == 'BKP'
+                        ? const Color(0xFF023A8F)
+                        : Colors.grey.shade300,
+                    width: 1.5,
                   ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: RadioListTile<String>(
-                      value: 'kartu pelajar',
-                      groupValue: guarantee,
-                      contentPadding: EdgeInsets.zero,
-                      activeColor: Colors.blue,
-                      title:
-                          Text('Kartu Pelajar', style: TextStyle(fontSize: 14)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onChanged: (val) {
-                        setState(() {
-                          guarantee = val!;
-                        });
-                      },
+                  color: guarantee == 'BKP'
+                      ? const Color(0xFF023A8F).withOpacity(0.05)
+                      : Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      guarantee == 'BKP'
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_off,
+                      color: guarantee == 'BKP'
+                          ? const Color(0xFF023A8F)
+                          : Colors.grey,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    const Text(
+                      "BKP",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 8),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => guarantee = 'kartu pelajar'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: guarantee == 'kartu pelajar'
+                        ? const Color(0xFF023A8F)
+                        : Colors.grey.shade300,
+                    width: 1.5,
+                  ),
+                  color: guarantee == 'kartu pelajar'
+                      ? const Color(0xFF023A8F).withOpacity(0.05)
+                      : Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      guarantee == 'kartu pelajar'
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_off,
+                      color: guarantee == 'kartu pelajar'
+                          ? const Color(0xFF023A8F)
+                          : Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      "Student Card",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+        ),
+              const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text("Upload Warranty",
@@ -343,7 +352,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.camera_alt,
+                            Icon(Icons.camera_alt_outlined,
                                 size: 32, color: Colors.grey),
                             SizedBox(height: 8),
                             Text.rich(
@@ -636,6 +645,56 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
       ),
     );
   }
+
+  Widget buildInputField({
+  required String label,
+  required TextEditingController controller,
+  bool enabled = true,
+  TextInputType inputType = TextInputType.text,
+  Function(String)? onChanged,
+}) {
+  return Expanded(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 6),
+        TextField(
+          controller: controller,
+          enabled: enabled,
+          keyboardType: inputType,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            isDense: true,
+            filled: true,
+            fillColor: enabled ? Colors.white : Colors.grey.shade200,
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFF023A8F), width: 1.5),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _stepCollateral(BuildContext context) {
     return SingleChildScrollView(
