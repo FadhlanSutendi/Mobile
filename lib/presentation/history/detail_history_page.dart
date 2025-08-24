@@ -10,6 +10,12 @@ class DetailHistoryPage extends StatelessWidget {
     final unitItem = item.unitItem;
     final subItem = unitItem?['sub_item'] ?? {};
     final itemType = subItem['item'] ?? {};
+    final major = subItem['major'] ?? {};
+    final student = unitItem?['student'] ?? {};
+    final nis = student['nis'] ?? '';
+    final rayon = student['rayon'] ?? '';
+    final jurusan = major['name'] ?? '';
+    final qrcodeUrl = unitItem?['qrcode'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +63,14 @@ class DetailHistoryPage extends StatelessWidget {
               Card(
                 child: ListTile(
                   title: Text('Student: ${item.studentName}'),
-                  // Add more student fields if needed
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('NIS: $nis'),
+                      Text('Rayon: $rayon'),
+                      Text('Jurusan: $jurusan'),
+                    ],
+                  ),
                 ),
               ),
             if (item.teacherName != null)
@@ -71,6 +84,22 @@ class DetailHistoryPage extends StatelessWidget {
             Text('Merk: ${subItem['merk'] ?? '-'}'),
             SizedBox(height: 8),
             Text('Item Type: ${itemType['name'] ?? '-'}'),
+            SizedBox(height: 8),
+            if (qrcodeUrl != '')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('QR Code:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  Center(
+                    child: Image.network(
+                      qrcodeUrl.replaceFirst('http://localhost:8000', 'https://55d0909b17e1.ngrok-free.app'),
+                      height: 120,
+                      errorBuilder: (_, __, ___) => Icon(Icons.qr_code, size: 80),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
