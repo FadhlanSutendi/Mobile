@@ -8,6 +8,7 @@ import 'presentation/login/controller/login_controller.dart';
 import 'presentation/home/home_page.dart';
 import 'presentation/scan barcode/scanbarcode_page.dart';
 import 'presentation/cek_item/cek_item_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'presentation/history/history_pengembalian_page.dart';
 import 'presentation/history/history_peminjaman_page.dart';
 import 'presentation/report/report_page.dart';
@@ -17,6 +18,7 @@ import 'theme/error_page.dart';
 
 void main() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await initializeDateFormatting('id_ID', null);
 
     // Lock orientation ke portrait
     await SystemChrome.setPreferredOrientations([
