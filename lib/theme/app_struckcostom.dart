@@ -30,111 +30,128 @@ class StruckCustomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
+  return Scaffold(
+    backgroundColor: Colors.white,
+    body: SafeArea(
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
+        child: Stack(
           children: [
-            // Header blue with logo
-            Container(
-              width: double.infinity,
-              color: Color(0xFF0A3576),
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              child: Column(
-                children: [
-                  Icon(Icons.inventory_2, size: 48, color: Colors.white),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "WiKVENTORY",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      letterSpacing: 1.5,
+            // Header biru dengan U-shape
+            ClipPath(
+              clipper: UShapeClipper(),
+              child: Container(
+                width: double.infinity,
+                height: 300,
+                color: const Color(0xFF0A3576),
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Column(
+                  children: [
+                    SizedBox(height: 60),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Image.asset(
+                        "assets/logo_putih.png",
+                        height: 32,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    "Smart inventory for smart school",
-                    style: TextStyle(fontSize: 12, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            // Struk card
-            Expanded(
-              child: Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Date & Time
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(date, style: TextStyle(fontWeight: FontWeight.w500)),
-                          Text(time, style: TextStyle(fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                      const Divider(height: 24, thickness: 1),
-                      // Info
-                      _infoRow("NIS", nis),
-                      _infoRow("NAME", name),
-                      _infoRow("MAJOR", major),
-                      _infoRow("DESCRIPTION", description),
-                      _infoRow("ROOM", room),
-                      _infoRow("WARRANTY", warranty),
-                      const SizedBox(height: 12),
-                      Divider(thickness: 1),
-                      // Unit info
-                      _infoRow("Unit Code", unitCode),
-                      _infoRow("Type", merk),   // gunakan merk untuk type
-                      _infoRow("Brand", merk),  // gunakan merk untuk brand
-                      Divider(thickness: 1),
-                      const SizedBox(height: 16),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          author ?? "",
-                          style: TextStyle(fontSize: 12, color: Colors.black87),
-                        ),
-                      ),
-                    ],
-                  ),
+                    const SizedBox(height: 6),
+                  ],
                 ),
               ),
             ),
-            // Go to Dashboard button
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24.0),
-              child: SizedBox(
-                width: 220,
-                height: 44,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF0A3576),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+        
+            // Card struk ditempatkan dengan Positioned
+            Positioned(
+              top: 180, // atur sesuai kedalaman U-shape
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  },
-                  child: const Text(
-                    "Go to Dashboard",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Date & Time
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(date,
+                            style: const TextStyle(fontWeight: FontWeight.w500)),
+                        Text(time,
+                            style: const TextStyle(fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                    const Divider(height: 24, thickness: 1),
+        
+                    _infoRow("NIS", nis),
+                    _infoRow("NAME", name),
+                    _infoRow("MAJOR", major),
+                    _infoRow("DESCRIPTION", description),
+                    _infoRow("ROOM", room),
+                    _infoRow("WARRANTY", warranty),
+        
+                    const SizedBox(height: 12),
+                    const Divider(thickness: 1),
+        
+                    _infoRow("Unit Code", unitCode),
+                    _infoRow("Type", merk),
+                    _infoRow("Brand", merk),
+        
+                    const Divider(thickness: 1),
+                    const SizedBox(height: 16),
+        
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        author ?? "",
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black87),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        
+            // Tombol Dashboard (posisi paling bawah)
+            Positioned(
+              bottom: 55,
+              left: 195,
+              right: 0,
+              child: Center(
+                child: SizedBox(
+                  width: 148,
+                  height: 38,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0A3576),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    },
+                    child: const Text(
+                      "Go to Dashboard",
+                      style: TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -142,23 +159,28 @@ class StruckCustomPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _infoRow(String label, String? value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
           Expanded(
             flex: 2,
-            child: Text(label, style: TextStyle(fontSize: 13, color: Colors.black87)),
+            child: Text(label,
+                style: const TextStyle(fontSize: 13, color: Colors.black87)),
           ),
           Expanded(
             flex: 3,
             child: Text(
               value ?? "-",
-              style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
               textAlign: TextAlign.right,
             ),
           ),
@@ -166,4 +188,27 @@ class StruckCustomPage extends StatelessWidget {
       ),
     );
   }
+
+  
+}
+
+class UShapeClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 60);
+
+    // Lengkungan ke bawah
+    path.quadraticBezierTo(
+      size.width / 2, size.height + 60, // titik lengkung
+      size.width, size.height - 60,
+    );
+
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

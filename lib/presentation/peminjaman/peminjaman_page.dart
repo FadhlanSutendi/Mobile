@@ -362,7 +362,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   TextSpan(
                                     text: "here",
                                     style: TextStyle(
-                                      color: Colors.blue,
+                                      color: Colors.black,
                                       decoration: TextDecoration.underline,
                                     ),
                                   ),
@@ -398,10 +398,16 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     )),
               SizedBox(height: 16),
             ],
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Description",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            SizedBox(height: 8),
             TextFormField(
               controller: descriptionController,
               decoration: InputDecoration(
-                labelText: "Description",
+                labelText: "Pinjam Laptop untuk Mapel Prod",
                 hintText: "Pinjam Laptop untuk Mapel Prod",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -416,39 +422,69 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             if (widget.borrowerType == 'student') ...[
               Row(
                 children: [
-                  Flexible(
-                    child: TextFormField(
-                      controller: lenderController,
-                      decoration: InputDecoration(
-                        labelText: "Lender's Name",
-                        hintText: "Nama peminjam",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                      ),
+                  // Lender's Name
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Lender's Name",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: lenderController,
+                          decoration: InputDecoration(
+                            hintText: "Lender's Name",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            isDense: true,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Flexible(
-                    child: TextFormField(
-                      controller: roomController,
-                      decoration: InputDecoration(
-                        labelText: "Room",
-                        hintText: "Room",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                      ),
+                  const SizedBox(width: 12),
+
+                  // Room
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Room",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: roomController,
+                          decoration: InputDecoration(
+                            hintText: "203",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            isDense: true,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
+
             // Lender's Name (teacher)
             if (widget.borrowerType == 'teacher') ...[
               TextFormField(
@@ -465,6 +501,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ),
               SizedBox(height: 16),
             ],
+            const Text(
+              "Date - Pick Up Time",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 6),
             TextFormField(
               controller: dateController,
               readOnly: true,
@@ -537,106 +581,130 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         ? roomController.text.isNotEmpty
                         : roomController
                             .text.isNotEmpty); // student juga wajib isi room
-                return SizedBox(
-                  width: double.infinity,
-                  child: AppButtonCustom(
-                    label: "Submit",
-                    color: isFilled ? Colors.blue : Colors.grey,
-                    onPressed: isFilled
-                        ? () async {
-                            String? imagePathCompressed;
-                            if (widget.borrowerType == 'student' &&
-                                controller.imagePath.value.isNotEmpty) {
-                              final compressedFile =
-                                  await FlutterImageCompress.compressAndGetFile(
-                                controller.imagePath.value,
-                                controller.imagePath.value + "_compressed.jpg",
-                                quality: 75,
-                                minWidth: 800,
-                                minHeight: 800,
-                              );
-                              imagePathCompressed = compressedFile?.path;
-                            }
-                            final req = LoanRequest(
-                              studentId: widget.borrowerType == 'student'
-                                  ? controller.student.value?.id
-                                  : null,
-                              teacherId: widget.borrowerType == 'teacher'
-                                  ? controller.teacher.value?.id
-                                  : null,
-                              unitItemId: widget.unitItem?.id ?? "",
-                              borrowedBy: lenderController.text,
-                              borrowedAt: serverDate ?? '',
-                              purpose: descriptionController.text,
-                              room: int.tryParse(roomController.text) ?? 0,
-                              imagePath: imagePathCompressed,
-                              guarantee: widget.borrowerType == 'student'
-                                  ? guarantee
-                                  : '',
-                            );
-                            // Pastikan hanya satu id yang dikirim
-                            final map = req.toMap();
-                            if (widget.borrowerType == 'student') {
-                              map.remove('teacher_id');
-                            } else if (widget.borrowerType == 'teacher') {
-                              map.remove('student_id');
-                            }
-                            final result =
-                                await controller.submitLoan(req, widget.token);
-                            if (result != null && result['status'] == 200) {
-                              Get.snackbar(
-                                  "Success", "Loan submitted successfully");
-                              // Buat data struk dari input dan unitItem
-                              final receiptData = {
-                                'date': dateController.text.split(' - ').first,
-                                'time':
-                                    dateController.text.split(' - ').length > 1
+                return Row(
+                  children: [
+                    // Tombol Back
+                    OutlinedButton.icon(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        side: const BorderSide(color: Colors.grey, width: 1.5),
+                        foregroundColor: Colors.grey,
+                      ),
+                      icon: const Icon(Icons.arrow_back),
+                      label: const Text(" "),
+                    ),
+
+                    const SizedBox(width: 16),
+
+                    // Tombol Submit (Expand biar full ke kanan)
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: isFilled
+                            ? () async {
+                                String? imagePathCompressed;
+                                if (widget.borrowerType == 'student' &&
+                                    controller.imagePath.value.isNotEmpty) {
+                                  final compressedFile =
+                                      await FlutterImageCompress.compressAndGetFile(
+                                    controller.imagePath.value,
+                                    controller.imagePath.value + "_compressed.jpg",
+                                    quality: 75,
+                                    minWidth: 800,
+                                    minHeight: 800,
+                                  );
+                                  imagePathCompressed = compressedFile?.path;
+                                }
+
+                                final req = LoanRequest(
+                                  studentId: widget.borrowerType == 'student'
+                                      ? controller.student.value?.id
+                                      : null,
+                                  teacherId: widget.borrowerType == 'teacher'
+                                      ? controller.teacher.value?.id
+                                      : null,
+                                  unitItemId: widget.unitItem?.id ?? "",
+                                  borrowedBy: lenderController.text,
+                                  borrowedAt: serverDate ?? '',
+                                  purpose: descriptionController.text,
+                                  room: int.tryParse(roomController.text) ?? 0,
+                                  imagePath: imagePathCompressed,
+                                  guarantee: widget.borrowerType == 'student'
+                                      ? guarantee
+                                      : '',
+                                );
+
+                                final map = req.toMap();
+                                if (widget.borrowerType == 'student') {
+                                  map.remove('teacher_id');
+                                } else if (widget.borrowerType == 'teacher') {
+                                  map.remove('student_id');
+                                }
+
+                                final result = await controller.submitLoan(req, widget.token);
+                                if (result != null && result['status'] == 200) {
+                                  Get.snackbar("Success", "Loan submitted successfully");
+
+                                  final receiptData = {
+                                    'date': dateController.text.split(' - ').first,
+                                    'time': dateController.text.split(' - ').length > 1
                                         ? dateController.text.split(' - ')[1]
                                         : "-",
-                                'nis': widget.borrowerType == 'student'
-                                    ? nisController.text
-                                    : null,
-                                'nip': widget.borrowerType == 'teacher'
-                                    ? nisController.text
-                                    : null,
-                                'name': nameController.text,
-                                'major': widget.borrowerType == 'student'
-                                    ? majorController.text
-                                    : null,
-                                'room': roomController
-                                    .text, // <-- selalu kirim room
-                                'telephone': widget.borrowerType == 'teacher'
-                                    ? rayonController.text
-                                    : null,
-                                'description': descriptionController.text,
-                                'warranty': widget.borrowerType == 'student'
-                                    ? guarantee
-                                    : null,
-                                'unitCode': widget.unitItem?.codeUnit,
-                                'merk': widget.unitItem?.subItem.merk,
-                                'author': "Iqbal Fajar Syahbana",
-                              };
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => SuccessCustomPage(
-                                    receiptData: receiptData,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              // Tampilkan pesan error backend ke user
-                              Get.snackbar(
-                                  "Error",
-                                  result?['message'] ??
-                                      "Failed to submit loan");
-                            }
-                          }
-                        : null,
-                    loading: false,
-                    borderRadius: 8,
-                  ),
+                                    'nis': widget.borrowerType == 'student'
+                                        ? nisController.text
+                                        : null,
+                                    'nip': widget.borrowerType == 'teacher'
+                                        ? nisController.text
+                                        : null,
+                                    'name': nameController.text,
+                                    'major': widget.borrowerType == 'student'
+                                        ? majorController.text
+                                        : null,
+                                    'room': roomController.text,
+                                    'telephone': widget.borrowerType == 'teacher'
+                                        ? rayonController.text
+                                        : null,
+                                    'description': descriptionController.text,
+                                    'warranty': widget.borrowerType == 'student'
+                                        ? guarantee
+                                        : null,
+                                    'unitCode': widget.unitItem?.codeUnit,
+                                    'merk': widget.unitItem?.subItem.merk,
+                                    'author': "Iqbal Fajar Syahbana",
+                                  };
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => SuccessCustomPage(
+                                        receiptData: receiptData,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  Get.snackbar("Error",
+                                      result?['message'] ?? "Failed to submit loan");
+                                }
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF023A8F),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        icon: const Text("Submit"),
+                        label: const Icon(Icons.arrow_forward),
+                      ),
+                    ),
+                  ],
                 );
+
               },
             ),
             SizedBox(height: 16),
@@ -843,6 +911,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ),
             ),
             SizedBox(height: 16),
+            const Text(
+              "Date - Pick Up Time",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 6),
             TextFormField(
               controller: dateController,
               readOnly: true,
@@ -1036,41 +1112,70 @@ class StepperWidget extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
+        const SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           child: Row(
             children: [
-              _stepCircle(Icons.check, true),
-              _stepLine(),
-              _stepCircle(Icons.check, true),
-              _stepLine(),
-              _stepCircle(Icons.check, false, number: "3"),
+              _stepCircle(1, isCheck: true, color: const Color(0xFF099B46)), // ✅ hijau ceklis
+              const SizedBox(width: 5),
+              _stepLine(const Color.fromARGB(255, 0, 0, 0)),
+              const SizedBox(width: 5),
+              _stepCircle(2, isCheck: false, color: Color(0xFF023A8F)), // 🔵 biru angka 2
+              const SizedBox(width: 5),
+              _stepLine(const Color.fromARGB(255, 174, 175, 176)),
+              const SizedBox(width: 5),
+              _stepCircle(3, isCheck: false, color: Colors.grey[300]), // ⚪ abu angka 3
             ],
           ),
+
         ),
-        SizedBox(height: 4),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                  width: 60,
-                  child: Text("Check Item",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 12))),
-              SizedBox(
-                  width: 80,
-                  child: Text("Borrower Info",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 12))),
-              SizedBox(
-                  width: 60,
-                  child: Text("Collateral",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 12))),
-            ],
-          ),
+         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: 60,
+              child: Text(
+                "Check Item",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                maxLines: 2, // otomatis kebagi dua baris kalau kepanjangan
+              ),
+            ),
+            SizedBox(
+              width: 60,
+              child: Text(
+                "Borrower Info",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                maxLines: 2,
+              ),
+            ),
+            SizedBox(
+              width: 60,
+              child: Text(
+                "Collateral",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+                softWrap: true,
+                maxLines: 2,
+              ),
+            ),
+          ],
+        ),
         ),
         SizedBox(height: 20),
 
@@ -1080,33 +1185,37 @@ class StepperWidget extends StatelessWidget {
     );
   }
 
-  Widget _stepCircle(IconData icon, bool active, {String? number}) {
+  Widget _stepCircle(
+    int number, {
+    bool isCheck = false,
+    Color? color,
+  }) {
     return CircleAvatar(
       radius: 16,
-      backgroundColor: active ? Colors.green : Colors.blue,
-      child: active
-          ? Icon(
-              icon,
+      backgroundColor: color ?? Colors.grey[300],
+      child: isCheck
+          ? const Icon(
+              Icons.check,
               color: Colors.white,
               size: 18,
             )
           : Text(
-              number ?? "",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+              "$number",
+              style: TextStyle(
+                color: Colors.white, // angka putih biar kontras
                 fontWeight: FontWeight.bold,
               ),
             ),
     );
   }
 
-  Widget _stepLine() {
+ Widget _stepLine(Color color) {
     return Expanded(
       child: Container(
         height: 2,
-        color: Colors.grey[300],
+        color: color,
       ),
     );
   }
+
 }
