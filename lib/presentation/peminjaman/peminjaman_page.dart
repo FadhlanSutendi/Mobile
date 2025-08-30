@@ -154,183 +154,187 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Row(
-      children: [
-        buildInputField(
-          label: widget.borrowerType == 'teacher' ? "NIP" : "NIS",
-          controller: nisController,
-          inputType: widget.borrowerType == 'teacher'
-              ? TextInputType.text
-              : TextInputType.number,
-          onChanged: (val) {
-            if (widget.borrowerType == 'teacher') {
-              controller.fetchTeacher(val, widget.token);
-            } else {
-              controller.fetchStudent(val, widget.token);
-            }
-          },
-        ),
-        const SizedBox(width: 12),
-        buildInputField(
-          label: "Name",
-          controller: nameController,
-          enabled: false,
-        ),
-      ],
-    ),
-    const SizedBox(height: 12),
+            Row(
+              children: [
+                buildInputField(
+                  label: widget.borrowerType == 'teacher' ? "NIP" : "NIS",
+                  controller: nisController,
+                  inputType: widget.borrowerType == 'teacher'
+                      ? TextInputType.text
+                      : TextInputType.number,
+                  onChanged: (val) {
+                    if (widget.borrowerType == 'teacher') {
+                      controller.fetchTeacher(val, widget.token);
+                    } else {
+                      controller.fetchStudent(val, widget.token);
+                    }
+                  },
+                ),
+                const SizedBox(width: 12),
+                buildInputField(
+                  label: "Name",
+                  controller: nameController,
+                  enabled: false,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
-    // Row kedua: Rayon/Telepon & Major/Room
-    Row(
-      children: [
-        buildInputField(
-          label: widget.borrowerType == 'teacher' ? "Nomor Telepon" : "Rayon",
-          controller: rayonController,
-          enabled: false,
-        ),
-        const SizedBox(width: 12),
-        buildInputField(
-          label: widget.borrowerType == 'teacher' ? "Room" : "Major",
-          controller: widget.borrowerType == 'teacher'
-              ? roomController
-              : majorController,
-          enabled: widget.borrowerType != 'teacher' ? false : true,
-        ),
-      ],
-    ),
+            // Row kedua: Rayon/Telepon & Major/Room
+            Row(
+              children: [
+                buildInputField(
+                  label: widget.borrowerType == 'teacher'
+                      ? "Nomor Telepon"
+                      : "Rayon",
+                  controller: rayonController,
+                  enabled: false,
+                ),
+                const SizedBox(width: 12),
+                buildInputField(
+                  label: widget.borrowerType == 'teacher' ? "Room" : "Major",
+                  controller: widget.borrowerType == 'teacher'
+                      ? roomController
+                      : majorController,
+                  enabled: widget.borrowerType != 'teacher' ? false : true,
+                ),
+              ],
+            ),
 
-    // indikator loading & error message (logic tetap sama)
-    Obx(() {
-      if (controller.isLoading.value) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
+            // indikator loading & error message (logic tetap sama)
+            Obx(() {
+              if (controller.isLoading.value) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text("Searching...",
+                          style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
+                );
+              }
+              if (widget.borrowerType == 'student' &&
+                  controller.student.value == null &&
+                  nisController.text.isNotEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text("Student not found",
+                      style: TextStyle(color: Colors.red, fontSize: 12)),
+                );
+              }
+              if (widget.borrowerType == 'teacher' &&
+                  controller.teacher.value == null &&
+                  nisController.text.isNotEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text("Teacher not found",
+                      style: TextStyle(color: Colors.red, fontSize: 12)),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+
+            const SizedBox(height: 16),
+            const Text(
+              "Warranty",
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
               ),
-              const SizedBox(width: 8),
-              const Text("Searching...", style: TextStyle(fontSize: 12)),
-            ],
-          ),
-        );
-      }
-      if (widget.borrowerType == 'student' &&
-          controller.student.value == null &&
-          nisController.text.isNotEmpty) {
-        return const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text("Student not found",
-              style: TextStyle(color: Colors.red, fontSize: 12)),
-        );
-      }
-      if (widget.borrowerType == 'teacher' &&
-          controller.teacher.value == null &&
-          nisController.text.isNotEmpty) {
-        return const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text("Teacher not found",
-              style: TextStyle(color: Colors.red, fontSize: 12)),
-        );
-      }
-      return const SizedBox.shrink();
-    }),
-
-    const SizedBox(height: 16),
-    const Text(
-         "Warranty",
-         style: TextStyle(
-           fontSize: 13,
-           fontWeight: FontWeight.w500,
-           color: Colors.black87,
-         ),
-         textAlign: TextAlign.start,
-       ),
-       const SizedBox(height: 6),
+              textAlign: TextAlign.start,
+            ),
+            const SizedBox(height: 6),
             // Warranty & Upload hanya untuk student
             if (widget.borrowerType == 'student') ...[
               Row(
-        children: [
-          
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => guarantee = 'BKP'),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: guarantee == 'BKP'
-                        ? const Color(0xFF023A8F)
-                        : Colors.grey.shade300,
-                    width: 1.5,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => guarantee = 'BKP'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: guarantee == 'BKP'
+                                ? const Color(0xFF023A8F)
+                                : Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          color: guarantee == 'BKP'
+                              ? const Color(0xFF023A8F).withOpacity(0.05)
+                              : Colors.white,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              guarantee == 'BKP'
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_off,
+                              color: guarantee == 'BKP'
+                                  ? const Color(0xFF023A8F)
+                                  : Colors.grey,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "BKP",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  color: guarantee == 'BKP'
-                      ? const Color(0xFF023A8F).withOpacity(0.05)
-                      : Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      guarantee == 'BKP'
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_off,
-                      color: guarantee == 'BKP'
-                          ? const Color(0xFF023A8F)
-                          : Colors.grey,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => guarantee = 'kartu pelajar'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: guarantee == 'kartu pelajar'
+                                ? const Color(0xFF023A8F)
+                                : Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          color: guarantee == 'kartu pelajar'
+                              ? const Color(0xFF023A8F).withOpacity(0.05)
+                              : Colors.white,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              guarantee == 'kartu pelajar'
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_off,
+                              color: guarantee == 'kartu pelajar'
+                                  ? const Color(0xFF023A8F)
+                                  : Colors.grey,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Student Card",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      "BKP",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => guarantee = 'kartu pelajar'),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: guarantee == 'kartu pelajar'
-                        ? const Color(0xFF023A8F)
-                        : Colors.grey.shade300,
-                    width: 1.5,
                   ),
-                  color: guarantee == 'kartu pelajar'
-                      ? const Color(0xFF023A8F).withOpacity(0.05)
-                      : Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      guarantee == 'kartu pelajar'
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_off,
-                      color: guarantee == 'kartu pelajar'
-                          ? const Color(0xFF023A8F)
-                          : Colors.grey,
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      "Student Card",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
+                ],
               ),
-            ),
-          ),
-        ],
-        ),
               const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
@@ -338,77 +342,97 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
               SizedBox(height: 8),
-              Obx(() => controller.imagePath.value.isEmpty
-                  ? GestureDetector(
-                      onTap: () => controller.pickImage(),
-                      child: Container(
+              Obx(
+                () => controller.imagePath.value.isEmpty
+                    ? GestureDetector(
+                        onTap: () => controller.pickImage(),
+                        child: Container(
+                          width: double.infinity,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.grey[100],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.camera_alt_outlined,
+                                  size: 32, color: Colors.grey),
+                              SizedBox(height: 8),
+                              Text.rich(
+                                TextSpan(
+                                  text: "Click ",
+                                  children: [
+                                    TextSpan(
+                                      text: "here",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                    TextSpan(text: " to take a photo"),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(
                         width: double.infinity,
-                        height: 120,
+                        height: 200, // container utama tetap
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(12),
                           color: Colors.grey[100],
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Stack(
                           children: [
-                            Icon(Icons.camera_alt_outlined,
-                                size: 32, color: Colors.grey),
-                            SizedBox(height: 8),
-                            Text.rich(
-                              TextSpan(
-                                text: "Click ",
-                                children: [
-                                  TextSpan(
-                                    text: "here",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                  TextSpan(text: " to take a photo"),
-                                ],
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  File(controller.imagePath.value),
+                                  fit: BoxFit.contain,
+                                  // batasi ukuran supaya tidak kebesaran
+                                  height: 150,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
+                            ),
+                            Positioned(
+                              right: 8,
+                              top: 8,
+                              child: CircleAvatar(
+                                radius: 16,
+                                backgroundColor: Colors.white.withOpacity(0.8),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: Icon(Icons.close,
+                                      color: Colors.red, size: 18),
+                                  onPressed: () =>
+                                      controller.imagePath.value = '',
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    )
-                  : Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.file(
-                            File(controller.imagePath.value),
-                            width: double.infinity,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: IconButton(
-                            icon: Icon(Icons.close, color: Colors.red),
-                            onPressed: () => controller.imagePath.value = '',
-                          ),
-                        ),
-                      ],
-                    )),
+              ),
               SizedBox(height: 16),
             ],
             Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Description",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
+              alignment: Alignment.centerLeft,
+              child: Text("Description",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
             SizedBox(height: 8),
             TextFormField(
               controller: descriptionController,
               decoration: InputDecoration(
-                labelText: "Pinjam Laptop untuk Mapel Prod",
-                hintText: "Pinjam Laptop untuk Mapel Prod",
+                labelText: "Description Detail",
+                hintText: "Description Detail",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
@@ -443,8 +467,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             isDense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 12),
                           ),
                         ),
                       ],
@@ -468,13 +492,13 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         TextFormField(
                           controller: roomController,
                           decoration: InputDecoration(
-                            hintText: "203",
+                            hintText: "Room Name",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                             isDense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 12),
                           ),
                         ),
                       ],
@@ -587,7 +611,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     OutlinedButton.icon(
                       onPressed: () => Get.back(),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -609,9 +634,11 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                 if (widget.borrowerType == 'student' &&
                                     controller.imagePath.value.isNotEmpty) {
                                   final compressedFile =
-                                      await FlutterImageCompress.compressAndGetFile(
+                                      await FlutterImageCompress
+                                          .compressAndGetFile(
                                     controller.imagePath.value,
-                                    controller.imagePath.value + "_compressed.jpg",
+                                    controller.imagePath.value +
+                                        "_compressed.jpg",
                                     quality: 75,
                                     minWidth: 800,
                                     minHeight: 800,
@@ -644,13 +671,19 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   map.remove('student_id');
                                 }
 
-                                final result = await controller.submitLoan(req, widget.token);
+                                final result = await controller.submitLoan(
+                                    req, widget.token);
                                 if (result != null && result['status'] == 200) {
-                                  Get.snackbar("Success", "Loan submitted successfully");
+                                  Get.snackbar(
+                                      "Success", "Loan submitted successfully");
 
                                   final receiptData = {
-                                    'date': dateController.text.split(' - ').first,
-                                    'time': dateController.text.split(' - ').length > 1
+                                    'date':
+                                        dateController.text.split(' - ').first,
+                                    'time': dateController.text
+                                                .split(' - ')
+                                                .length >
+                                            1
                                         ? dateController.text.split(' - ')[1]
                                         : "-",
                                     'nis': widget.borrowerType == 'student'
@@ -664,9 +697,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                         ? majorController.text
                                         : null,
                                     'room': roomController.text,
-                                    'telephone': widget.borrowerType == 'teacher'
-                                        ? rayonController.text
-                                        : null,
+                                    'telephone':
+                                        widget.borrowerType == 'teacher'
+                                            ? rayonController.text
+                                            : null,
                                     'description': descriptionController.text,
                                     'warranty': widget.borrowerType == 'student'
                                         ? guarantee
@@ -685,8 +719,10 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                     ),
                                   );
                                 } else {
-                                  Get.snackbar("Error",
-                                      result?['message'] ?? "Failed to submit loan");
+                                  Get.snackbar(
+                                      "Error",
+                                      result?['message'] ??
+                                          "Failed to submit loan");
                                 }
                               }
                             : null,
@@ -704,7 +740,6 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     ),
                   ],
                 );
-
               },
             ),
             SizedBox(height: 16),
@@ -715,54 +750,55 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
   }
 
   Widget buildInputField({
-  required String label,
-  required TextEditingController controller,
-  bool enabled = true,
-  TextInputType inputType = TextInputType.text,
-  Function(String)? onChanged,
-}) {
-  return Expanded(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          enabled: enabled,
-          keyboardType: inputType,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            isDense: true,
-            filled: true,
-            fillColor: enabled ? Colors.white : Colors.grey.shade200,
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFF023A8F), width: 1.5),
+    required String label,
+    required TextEditingController controller,
+    bool enabled = true,
+    TextInputType inputType = TextInputType.text,
+    Function(String)? onChanged,
+  }) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 6),
+          TextField(
+            controller: controller,
+            enabled: enabled,
+            keyboardType: inputType,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor: enabled ? Colors.white : Colors.grey.shade200,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFF023A8F), width: 1.5),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _stepCollateral(BuildContext context) {
     return SingleChildScrollView(
@@ -888,7 +924,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               controller: descriptionController,
               decoration: InputDecoration(
                 labelText: "Description",
-                hintText: "Pinjam Laptop untuk Mapel Prod",
+                hintText: "Description Detail",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 isDense: true,
@@ -1117,65 +1153,68 @@ class StepperWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           child: Row(
             children: [
-              _stepCircle(1, isCheck: true, color: const Color(0xFF099B46)), // ✅ hijau ceklis
+              _stepCircle(1,
+                  isCheck: true,
+                  color: const Color(0xFF099B46)), // ✅ hijau ceklis
               const SizedBox(width: 5),
               _stepLine(const Color.fromARGB(255, 0, 0, 0)),
               const SizedBox(width: 5),
-              _stepCircle(2, isCheck: false, color: Color(0xFF023A8F)), // 🔵 biru angka 2
+              _stepCircle(2,
+                  isCheck: false, color: Color(0xFF023A8F)), // 🔵 biru angka 2
               const SizedBox(width: 5),
               _stepLine(const Color.fromARGB(255, 174, 175, 176)),
               const SizedBox(width: 5),
-              _stepCircle(3, isCheck: false, color: Colors.grey[300]), // ⚪ abu angka 3
+              _stepCircle(3,
+                  isCheck: false, color: Colors.grey[300]), // ⚪ abu angka 3
             ],
           ),
-
         ),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: 60,
-              child: Text(
-                "Check Item",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 60,
+                child: Text(
+                  "Check Item",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 2, // otomatis kebagi dua baris kalau kepanjangan
                 ),
-                textAlign: TextAlign.center,
-                softWrap: true,
-                maxLines: 2, // otomatis kebagi dua baris kalau kepanjangan
               ),
-            ),
-            SizedBox(
-              width: 60,
-              child: Text(
-                "Borrower Info",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+              SizedBox(
+                width: 60,
+                child: Text(
+                  "Borrower Info",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.center,
-                softWrap: true,
-                maxLines: 2,
               ),
-            ),
-            SizedBox(
-              width: 60,
-              child: Text(
-                "Collateral",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+              SizedBox(
+                width: 60,
+                child: Text(
+                  "Collateral",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.center,
-                softWrap: true,
-                maxLines: 2,
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
         SizedBox(height: 20),
 
@@ -1209,7 +1248,7 @@ class StepperWidget extends StatelessWidget {
     );
   }
 
- Widget _stepLine(Color color) {
+  Widget _stepLine(Color color) {
     return Expanded(
       child: Container(
         height: 2,
@@ -1217,5 +1256,4 @@ class StepperWidget extends StatelessWidget {
       ),
     );
   }
-
 }
