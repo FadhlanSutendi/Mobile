@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:project_prapw/presentation/home/models/home_models.dart';
 import 'package:project_prapw/routes/app_routes.dart';
 import 'controller/report_controller.dart';
 import 'models/report_models.dart';
@@ -19,10 +20,8 @@ class ReportPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.toNamed(AppRoutes.home),
         ),
-        title: const Text(
-          'Reports',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Reports',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -62,10 +61,8 @@ class ReportPage extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      const Text(
-                        'Most of Borrowing',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      const Text('Most of Borrowing',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       SizedBox(
                         height: 160,
@@ -103,10 +100,8 @@ class ReportPage extends StatelessWidget {
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  mainItem.name,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
+                                Text(mainItem.name,
+                                    style: const TextStyle(fontSize: 14)),
                               ],
                             ),
                           ],
@@ -131,11 +126,8 @@ class ReportPage extends StatelessWidget {
                               Colors.grey[600],
                               Colors.black,
                             ];
-                            return _legendItem(
-                              colors[idx % colors.length],
-                              e.name,
-                              e.totalBorrowed.toString(),
-                            );
+                            return _legendItem(colors[idx % colors.length],
+                                e.name, e.totalBorrowed.toString());
                           }).toList(),
                         );
                       }),
@@ -149,147 +141,180 @@ class ReportPage extends StatelessWidget {
             // --- Activity Statistics Card ---
             Obx(() {
               if (controller.isLoadingLoanReport.value) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  child: const Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
-              final report = controller.loanReportData;
 
-              return Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: const [
-                          Text(
-                            'Activity Statistics',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                          Text('Weekly', style: TextStyle(color: Colors.grey)),
-                          Icon(Icons.keyboard_arrow_down,
-                              color: Colors.grey, size: 18),
-                        ],
+              // Gunakan model LoanReportModel
+              final reportModel = LoanReportModel(
+                status: 200,
+                monthlyData: Map<String, int>.from(controller.loanReportData),
+              );
+
+              final months = [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec"
+              ];
+
+              final maxY = (reportModel.monthlyData.values.isNotEmpty
+                      ? (reportModel.monthlyData.values
+                              .reduce((a, b) => a > b ? a : b) +
+                          2)
+                      : 10)
+                  .toDouble();
+
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    )
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Overview Statistics",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 250,
-                        child: Stack(
-                          children: [
-                            BarChart(
-                              BarChartData(
-                                alignment: BarChartAlignment.spaceAround,
-                                maxY: (report.values.isNotEmpty
-                                        ? (report.values.reduce(
-                                                (a, b) => a > b ? a : b) +
-                                            2)
-                                        : 10)
-                                    .toDouble(),
-                                barTouchData: BarTouchData(enabled: false),
-                                titlesData: FlTitlesData(
-                                  leftTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  rightTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  topTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      getTitlesWidget: (value, meta) {
-                                        if (value.toInt() >= 0 &&
-                                            value.toInt() < days.length) {
-                                          return Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 4),
-                                            child: Text(
-                                              days[value.toInt()],
-                                              style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Color(0xFF898989)),
-                                            ),
-                                          );
-                                        }
-                                        return const SizedBox.shrink();
-                                      },
-                                    ),
-                                  ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 🔹 Chart
+                    SizedBox(
+                      height: 250,
+                      child: Stack(
+                        children: [
+                          // Chart
+                          BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              maxY: maxY,
+                              barTouchData: BarTouchData(enabled: false),
+                              titlesData: FlTitlesData(
+                                leftTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
                                 ),
-                                gridData: const FlGridData(show: false),
-                                borderData: FlBorderData(show: false),
-                                barGroups: List.generate(days.length, (i) {
-                                  final y = report[days[i]]?.toDouble() ?? 0.0;
-                                  return BarChartGroupData(
-                                    x: i,
-                                    barRods: [
-                                      BarChartRodData(
-                                        toY: y,
-                                        width: 28,
-                                        borderRadius: BorderRadius.circular(6),
-                                        color: const Color(0xFFD9D9D9),
-                                      ),
-                                    ],
-                                  );
-                                }),
-                              ),
-                            ),
-                            // angka biru di atas bar
-                            Positioned.fill(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: List.generate(days.length, (i) {
-                                      final y =
-                                          report[days[i]]?.toDouble() ?? 0.0;
-                                      return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 3),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF043D94),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Text(
-                                              y.toInt().toString(),
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
+                                rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, meta) {
+                                      if (value.toInt() >= 0 &&
+                                          value.toInt() < months.length) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 4),
+                                          child: Text(
+                                            months[value.toInt()],
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              color: Color(0xFF898989),
                                             ),
                                           ),
-                                          SizedBox(
-                                              height: (y * 4).clamp(10, 200)),
-                                        ],
-                                      );
-                                    }),
-                                  );
-                                },
+                                        );
+                                      }
+                                      return const SizedBox.shrink();
+                                    },
+                                  ),
+                                ),
                               ),
+                              gridData: const FlGridData(show: false),
+                              borderData: FlBorderData(show: false),
+                              barGroups: List.generate(months.length, (i) {
+                                final y = reportModel.monthlyData[months[i]]
+                                        ?.toDouble() ??
+                                    0.0;
+                                return BarChartGroupData(
+                                  x: i,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: y,
+                                      width: 28,
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: const Color(0xFFD9D9D9),
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
-                          ],
-                        ),
+                          ),
+
+                          // 🔹 Badge angka di atas bar
+                          Positioned.fill(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final chartHeight = constraints.maxHeight;
+                                final chartWidth = constraints.maxWidth;
+                                final itemWidth = chartWidth /
+                                    months.length; // lebar slot per bulan
+
+                                return Stack(
+                                  children: List.generate(months.length, (i) {
+                                    final y = reportModel.monthlyData[months[i]]
+                                            ?.toDouble() ??
+                                        0.0;
+                                    if (y <= 0) return const SizedBox.shrink();
+
+                                    // hitung tinggi bar
+                                    final barHeight = (y / maxY) * chartHeight;
+
+                                    return Positioned(
+                                      left: itemWidth * i +
+                                          itemWidth / 2 -
+                                          15, // geser ke tengah bar
+                                      bottom:
+                                          barHeight + 30, // selalu di atas bar
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 13, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF043D94),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Text(
+                                          y.toInt().toString(),
+                                          style: const TextStyle(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             }),
@@ -299,33 +324,16 @@ class ReportPage extends StatelessWidget {
     );
   }
 
-  // legend item kecil & rapi
   static Widget _legendItem(Color? color, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-          ),
+          Icon(Icons.circle, color: color, size: 10),
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 14),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
+          Text(label, style: const TextStyle(fontSize: 14)),
+          const Spacer(),
+          Text(value, style: const TextStyle(fontSize: 14)),
         ],
       ),
     );

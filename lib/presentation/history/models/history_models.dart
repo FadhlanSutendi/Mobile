@@ -41,6 +41,15 @@ class HistoryItem {
     final unitItem = json['unit_item'] ?? {};
     final subItem = unitItem['sub_item'] ?? {};
     final item = subItem['item'] ?? {};
+    // Debug print status dari API
+    print("DEBUG status dari API: ${json['status']}");
+    // Parsing status lebih fleksibel
+    final statusRaw = json['status'];
+    final status = statusRaw == "returned" ||
+                   statusRaw == "completed" ||
+                   statusRaw == "return" ||
+                   statusRaw == 1 ||
+                   statusRaw == true;
     return HistoryItem(
       id: json['id'] ?? '',
       borrowedBy: json['borrowed_by'] ?? '',
@@ -48,7 +57,7 @@ class HistoryItem {
       returnedAt: json['returned_at'],
       purpose: json['purpose'] ?? '',
       room: json['room'] ?? 0,
-      status: json['status'] == "returned" ? true : false,
+      status: status,
       guarantee: json['guarantee'] ?? '',
       image: json['image'],
       studentName: json['student']?['name'],

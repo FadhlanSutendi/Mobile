@@ -42,18 +42,21 @@ class ActivityItemModel {
 }
 
 class LoanReportModel {
+  final int status;
   final Map<String, int> monthlyData;
-  LoanReportModel({required this.monthlyData});
+
+  LoanReportModel({required this.status, required this.monthlyData});
 
   factory LoanReportModel.fromJson(Map<String, dynamic> json) {
-    // expects: { "Jan": 1, "Feb": 0, ... }
     return LoanReportModel(
-      monthlyData: Map<String, int>.from(json),
+      status: json['status'] ?? 0,
+      monthlyData: Map<String, int>.from(json['data'] ?? {}),
     );
   }
 }
 
 class LatestActivityModel {
+  // NOTE: Assumes flat JSON structure. If nested, adjust parsing accordingly.
   final String id;
   final String item;
   final String subItem;
@@ -75,6 +78,32 @@ class LatestActivityModel {
       subItem: json['sub_item'] ?? '',
       borrowedAt: json['borrowed_at'] ?? '',
       borrowerName: json['borrower_name'] ?? '',
+    );
+  }
+}
+
+class UserModel {
+  final String id;
+  final String name;
+  final String username;
+  final String role;
+  final int majorId;
+
+  UserModel({
+    required this.id,
+    required this.name,
+    required this.username,
+    required this.role,
+    required this.majorId,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      username: json['username'] ?? '',
+      role: json['role'] ?? '',
+      majorId: json['major_id'] ?? 0,
     );
   }
 }

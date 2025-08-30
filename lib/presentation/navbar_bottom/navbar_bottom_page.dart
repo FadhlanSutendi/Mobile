@@ -39,7 +39,8 @@ class NavbarBottom extends StatelessWidget {
                 _navItem(context, Icons.bar_chart, 'Reports', 1),
                 SizedBox(width: 64),
                 _navItem(context, Icons.history, 'History', 2),
-                _navItem(context, Icons.logout, 'log Out', 3, token: token, navbarController: navbarController),
+                _navItem(context, Icons.logout, 'log Out', 3,
+                    token: token, navbarController: navbarController),
               ],
             ),
           ),
@@ -66,7 +67,8 @@ class NavbarBottom extends StatelessWidget {
                   ],
                 ),
                 child: Center(
-                  child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 32),
+                  child: Icon(Icons.qr_code_scanner,
+                      color: Colors.white, size: 32),
                 ),
               ),
             ),
@@ -76,7 +78,8 @@ class NavbarBottom extends StatelessWidget {
     );
   }
 
-  Widget _navItem(BuildContext context, IconData icon, String label, int index, {String? token, NavbarBottomController? navbarController}) {
+  Widget _navItem(BuildContext context, IconData icon, String label, int index,
+      {String? token, NavbarBottomController? navbarController}) {
     Color iconColor = Colors.grey[500]!;
     if (label == 'log Out') iconColor = Colors.black;
     bool isSelected = selectedIndex == index;
@@ -93,139 +96,144 @@ class NavbarBottom extends StatelessWidget {
           case 'History':
             // Tampilkan popup pilihan history
             final selected = await showModalBottomSheet<String>(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent, // biar bisa kasih rounded di dalam
-            builder: (ctx) {
-              String choice = 'history'; // default
+              context: context,
+              isScrollControlled: true,
+              backgroundColor:
+                  Colors.transparent, // biar bisa kasih rounded di dalam
+              builder: (ctx) {
+                String choice = 'history'; // default
 
-              return StatefulBuilder(
-                builder: (context, setState) => Container(
-                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      /// Indicator bar atas
-                      Container(
-                        width: 48,
-                        height: 4,
-                        margin: const EdgeInsets.only(bottom: 24),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(2),
+                return StatefulBuilder(
+                  builder: (context, setState) => Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 20),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(24)),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        /// Indicator bar atas
+                        Container(
+                          width: 48,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      ),
 
-                      /// Icon
-                      Image.asset(
-                        'assets/select_page.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(height: 20),
-
-                      /// Title
-                      const Text(
-                        'Select Page',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        /// Icon
+                        Image.asset(
+                          'assets/select_page.png',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.contain,
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Choose which kind of page\nyou want to show',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 28),
+                        const SizedBox(height: 20),
 
-                      /// Radio pilihan
-                      Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: choice == 'borrow'
-                                    ? const Color(0xFF1565C0)
-                                    : Colors.grey.shade300,
-                                width: 1.5,
+                        /// Title
+                        const Text(
+                          'Select Page',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Choose which kind of page\nyou want to show',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+
+                        /// Radio pilihan
+                        Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: choice == 'borrow'
+                                      ? const Color(0xFF1565C0)
+                                      : Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: RadioListTile<String>(
+                                value: 'borrow',
+                                groupValue: choice,
+                                title: const Text('Borrowed Page'),
+                                activeColor: const Color(0xFF1565C0),
+                                onChanged: (val) {
+                                  setState(() {
+                                    choice = val!;
+                                  });
+                                },
                               ),
                             ),
-                            child: RadioListTile<String>(
-                              value: 'borrow',
-                              groupValue: choice,
-                              title: const Text('Borrowed Page'),
-                              activeColor: const Color(0xFF1565C0),
-                              onChanged: (val) {
-                                setState(() {
-                                  choice = val!;
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: choice == 'history'
-                                    ? const Color(0xFF1565C0)
-                                    : Colors.grey.shade300,
-                                width: 1.5,
+                            const SizedBox(height: 12),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: choice == 'history'
+                                      ? const Color(0xFF1565C0)
+                                      : Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: RadioListTile<String>(
+                                value: 'history',
+                                groupValue: choice,
+                                title: const Text('History Page'),
+                                activeColor: const Color(0xFF1565C0),
+                                onChanged: (val) {
+                                  setState(() {
+                                    choice = val!;
+                                  });
+                                },
                               ),
                             ),
-                            child: RadioListTile<String>(
-                              value: 'history',
-                              groupValue: choice,
-                              title: const Text('History Page'),
-                              activeColor: const Color(0xFF1565C0),
-                              onChanged: (val) {
-                                setState(() {
-                                  choice = val!;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 28),
-
-                      /// Tombol Continue
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0D47A1), // biru gelap
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: const Text(
-                            'Continue',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                          onPressed: () => Navigator.of(ctx).pop(choice),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 28),
+
+                        /// Tombol Continue
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color(0xFF0D47A1), // biru gelap
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: const Text(
+                              'Continue',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            onPressed: () => Navigator.of(ctx).pop(choice),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            );          
-            if(selected == 'borrow') {
+                );
+              },
+            );
+            if (selected == 'borrow') {
               Get.toNamed(AppRoutes.historyPeminjaman, arguments: token);
             } else if (selected == 'history') {
               Get.toNamed(AppRoutes.history, arguments: token);
@@ -250,77 +258,81 @@ class NavbarBottom extends StatelessWidget {
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(10),
                           ),
-              ),
-              child: const Center(
-                child: Text(
-                  "Are you sure want to\nlog out?",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Are you sure want to\nlog out?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
 
-            // Bagian tombol
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: Colors.grey, width: 0.5),
-                          right: BorderSide(color: Colors.grey, width: 0.5),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                      // Bagian tombol
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey, width: 0.5),
+                                    right: BorderSide(
+                                        color: Colors.grey, width: 0.5),
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      // aksi confirm logout
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: Colors.grey, width: 0.5),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Confirm",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                // aksi confirm logout
+                                Get.toNamed(AppRoutes.login);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                        color: Colors.grey, width: 0.5),
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    "Confirm",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );if (result == true && navbarController != null) {
+                );
+              },
+            );
+            if (result == true && navbarController != null) {
               await navbarController.logout(token ?? '');
               if (navbarController.logoutResponse.value != null &&
                   navbarController.logoutResponse.value!.status == 200) {
@@ -330,7 +342,8 @@ class NavbarBottom extends StatelessWidget {
                 loginController.usernameController.clear();
                 loginController.passwordController.clear();
                 // ...jika ada data lain yang perlu dibersihkan, tambahkan di sini...
-                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (route) => false);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Logout gagal')),
@@ -343,14 +356,15 @@ class NavbarBottom extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: isSelected ? Color(0xFF1565C0) : iconColor, size: 28),
+          Icon(icon,
+              color: isSelected ? Color(0xFF1565C0) : iconColor, size: 28),
           SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 13, color: isSelected ? Color(0xFF1565C0) : iconColor)),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 13,
+                  color: isSelected ? Color(0xFF1565C0) : iconColor)),
         ],
       ),
     );
   }
 }
-
-
-

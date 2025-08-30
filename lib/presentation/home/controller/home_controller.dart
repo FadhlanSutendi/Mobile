@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:project_prapw/core/api/app_api.dart';
+import '../../login/controller/login_controller.dart';
 
 class HomeController extends GetxController {
   var cardData = {}.obs;
@@ -8,15 +9,18 @@ class HomeController extends GetxController {
   var isLoadingActivity = false.obs;
   var loanReportData = <String, int>{}.obs;
   var isLoadingLoanReport = false.obs;
+  var userName = ''.obs; // Tambahkan ini
 
   @override
   void onInit() {
     super.onInit();
-    // You must provide the token from your auth/session management
-    final token = ''; // TODO: Replace with actual token
+    // Ambil token dari LoginController
+    final loginController = Get.find<LoginController>();
+    final token = loginController.token.value;
     fetchCardData(token: token);
     fetchLatestActivity(token: token);
     fetchLoanReport(from: '2024', to: '2025', token: token);
+    fetchUserName(token: token); // Tambahkan ini
   }
 
   Future<void> fetchCardData({required String token}) async {
@@ -35,12 +39,19 @@ class HomeController extends GetxController {
     isLoadingActivity.value = false;
   }
 
-  Future<void> fetchLoanReport({required String from, required String to, required String token}) async {
+  Future<void> fetchLoanReport(
+      {required String from, required String to, required String token}) async {
     isLoadingLoanReport.value = true;
-    final result = await AppApi.fetchLoanReport(from: from, to: to, token: token);
+    final result =
+        await AppApi.fetchLoanReport(from: from, to: to, token: token);
     print('fetchLoanReport result: $result');
     loanReportData.value = Map<String, int>.from(result?['data'] ?? {});
     isLoadingLoanReport.value = false;
   }
-}
 
+  Future<void> fetchUserName({required String token}) async {
+    final result = await AppApi.fetchUser(token: token);
+    print('fetchUserName response: $result'); // Print response API user
+    userName.value = result?['data']?['name'] ?? '';
+  }
+}
