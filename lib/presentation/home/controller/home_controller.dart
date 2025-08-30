@@ -17,6 +17,10 @@ class HomeController extends GetxController {
     // Ambil token dari LoginController
     final loginController = Get.find<LoginController>();
     final token = loginController.token.value;
+    if (token.isEmpty) {
+      print('Token kosong, tidak bisa fetch data!');
+      return;
+    }
     fetchCardData(token: token);
     fetchLatestActivity(token: token);
     fetchLoanReport(from: '2024', to: '2025', token: token);
@@ -27,7 +31,12 @@ class HomeController extends GetxController {
     isLoadingCard.value = true;
     final result = await AppApi.fetchDashboardCard(token: token);
     print('fetchCardData result: $result');
-    cardData.value = result?['data'] ?? {};
+    if (result == null || result['data'] == null) {
+      print('Card data kosong!');
+      cardData.value = {};
+    } else {
+      cardData.value = result['data'];
+    }
     isLoadingCard.value = false;
   }
 
@@ -35,7 +44,12 @@ class HomeController extends GetxController {
     isLoadingActivity.value = true;
     final result = await AppApi.fetchDashboardLatestActivity(token: token);
     print('fetchLatestActivity result: $result');
-    activityList.value = result?['data'] ?? [];
+    if (result == null || result['data'] == null) {
+      print('Activity data kosong!');
+      activityList.value = [];
+    } else {
+      activityList.value = result['data'];
+    }
     isLoadingActivity.value = false;
   }
 
@@ -43,13 +57,18 @@ class HomeController extends GetxController {
     isLoadingLoanReport.value = true;
     final result = await AppApi.fetchLoanReport(from: from, to: to, token: token);
     print('fetchLoanReport result: $result');
-    loanReportData.value = Map<String, int>.from(result?['data'] ?? {});
+    if (result == null || result['data'] == null) {
+      print('Loan report data kosong!');
+      loanReportData.value = {};
+    } else {
+      loanReportData.value = Map<String, int>.from(result['data']);
+    }
     isLoadingLoanReport.value = false;
   }
 
   Future<void> fetchUserName({required String token}) async {
     final result = await AppApi.fetchUser(token: token);
-    print('fetchUserName response: $result'); // Print response API user
+    print('fetchUserName response: $result');
     userName.value = result?['data']?['name'] ?? '';
   }
 }

@@ -287,7 +287,7 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchDashboardCard response: ${response.body}');
+      print('fetchDashboardCard response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -315,7 +315,7 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchDashboardLatestActivity response: ${response.body}');
+      print('fetchDashboardLatestActivity response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -343,7 +343,7 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchLoanReport response: ${response.body}');
+      print('fetchLoanReport response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -419,7 +419,7 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchUser response: ${response.body}');
+      print('fetchUser response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
