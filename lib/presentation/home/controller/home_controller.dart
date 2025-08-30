@@ -39,11 +39,9 @@ class HomeController extends GetxController {
     isLoadingActivity.value = false;
   }
 
-  Future<void> fetchLoanReport(
-      {required String from, required String to, required String token}) async {
+  Future<void> fetchLoanReport({required String from, required String to, required String token}) async {
     isLoadingLoanReport.value = true;
-    final result =
-        await AppApi.fetchLoanReport(from: from, to: to, token: token);
+    final result = await AppApi.fetchLoanReport(from: from, to: to, token: token);
     print('fetchLoanReport result: $result');
     loanReportData.value = Map<String, int>.from(result?['data'] ?? {});
     isLoadingLoanReport.value = false;

@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(NavbarBottomController());
-    final controller = Get.find<HomeController>();
+    final controller = Get.put(HomeController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -182,6 +182,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 135),
 
             // 🔹 Chart Section
+            // 🔹 Chart Section
             Obx(() {
               if (controller.isLoadingLoanReport.value) {
                 return const Center(child: CircularProgressIndicator());
@@ -207,13 +208,6 @@ class HomePage extends StatelessWidget {
                 "Nov",
                 "Dec"
               ];
-
-              final maxY = (reportModel.monthlyData.values.isNotEmpty
-                      ? (reportModel.monthlyData.values
-                              .reduce((a, b) => a > b ? a : b) +
-                          2)
-                      : 10)
-                  .toDouble();
 
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -246,11 +240,15 @@ class HomePage extends StatelessWidget {
                       height: 250,
                       child: Stack(
                         children: [
-                          // Chart
                           BarChart(
                             BarChartData(
                               alignment: BarChartAlignment.spaceAround,
-                              maxY: maxY,
+                              maxY: (reportModel.monthlyData.values.isNotEmpty
+                                      ? (reportModel.monthlyData.values
+                                              .reduce((a, b) => a > b ? a : b) +
+                                          2)
+                                      : 10)
+                                  .toDouble(),
                               barTouchData: BarTouchData(enabled: false),
                               titlesData: FlTitlesData(
                                 leftTitles: const AxisTitles(
@@ -320,20 +318,36 @@ class HomePage extends StatelessWidget {
                                     final y = reportModel.monthlyData[months[i]]
                                             ?.toDouble() ??
                                         0.0;
+                                    final maxY = (reportModel
+                                                .monthlyData.values.isNotEmpty
+                                            ? (reportModel.monthlyData.values
+                                                    .reduce((a, b) =>
+                                                        a > b ? a : b) +
+                                                2)
+                                            : 10)
+                                        .toDouble();
+
                                     if (y <= 0) return const SizedBox.shrink();
 
-                                    // hitung tinggi bar
+                                    // Tinggi chart container
+                                    final chartHeight = constraints.maxHeight;
+
+                                    // Hitung tinggi bar berdasarkan nilai y dibanding maxY
                                     final barHeight = (y / maxY) * chartHeight;
+
+                                    // Lebar tiap item (biar badge pas di tengah bar)
+                                    final itemWidth =
+                                        constraints.maxWidth / months.length;
 
                                     return Positioned(
                                       left: itemWidth * i +
                                           itemWidth / 2 -
-                                          15, // geser ke tengah bar
-                                      bottom:
-                                          barHeight + 30, // selalu di atas bar
+                                          15, // center badge
+                                      bottom: barHeight +
+                                          30, // jarak konsisten di atas bar
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 4),
+                                            horizontal: 12, vertical: 4),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF043D94),
                                           borderRadius:
