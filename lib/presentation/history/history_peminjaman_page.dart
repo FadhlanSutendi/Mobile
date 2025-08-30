@@ -20,6 +20,10 @@ class HistoryPeminjamanPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            ),
             backgroundColor: Colors.white,
             elevation: 0,
             automaticallyImplyLeading: false,
@@ -52,7 +56,9 @@ class HistoryPeminjamanPage extends StatelessWidget {
           ),
           body: Consumer<HistoryController>(
             builder: (context, controller, _) {
-              final borrowedItems = controller.filteredItems.where((item) => item.status == false).toList();
+              final borrowedItems = controller.filteredItems
+                  .where((item) => item.status == false)
+                  .toList();
               if (controller.isLoading) {
                 return Center(child: CircularProgressIndicator());
               }
@@ -62,13 +68,32 @@ class HistoryPeminjamanPage extends StatelessWidget {
 
               return TabBarView(
                 children: [
-                  
                   _buildList(borrowedItems, context),
-                  _buildList(borrowedItems.where((e) => e.itemType == "Laptop").toList(), context),
-                  _buildList(borrowedItems.where((e) => e.itemType == "Mouse").toList(), context),
-                  _buildList(borrowedItems.where((e) => e.itemType == "Keyboard").toList(), context),
-                  _buildList(borrowedItems.where((e) => e.itemType == "Monitor").toList(), context),
-                  _buildList(borrowedItems.where((e) => e.itemType == "Terminal").toList(), context),
+                  _buildList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Laptop")
+                          .toList(),
+                      context),
+                  _buildList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Mouse")
+                          .toList(),
+                      context),
+                  _buildList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Keyboard")
+                          .toList(),
+                      context),
+                  _buildList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Monitor")
+                          .toList(),
+                      context),
+                  _buildList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Terminal")
+                          .toList(),
+                      context),
                 ],
               );
             },
@@ -80,8 +105,8 @@ class HistoryPeminjamanPage extends StatelessWidget {
   }
 
   Widget _buildList(List<HistoryItem> items, BuildContext context) {
-  // urutkan dari terbaru ke lama
-  items.sort((a, b) => b.borrowedAt.compareTo(a.borrowedAt));
+    // urutkan dari terbaru ke lama
+    items.sort((a, b) => b.borrowedAt.compareTo(a.borrowedAt));
 
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -189,7 +214,7 @@ class _HistoryCard extends StatelessWidget {
           ],
         ),
       ),
-      );
+    );
   }
 
   String _getTimeAgo(String dateTimeStr) {

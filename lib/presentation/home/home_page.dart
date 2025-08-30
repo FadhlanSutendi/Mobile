@@ -1,7 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart'; // ✅ untuk chart
 import 'package:intl/intl.dart';
+import 'package:project_prapw/routes/app_routes.dart';
 
 import '../navbar_bottom/navbar_bottom_page.dart';
 import '../navbar_bottom/controller/navbar_bottom_controller.dart';
@@ -13,6 +15,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(NavbarBottomController());
     final controller = Get.put(HomeController());
+
+    final List<String> bannerList = [
+      'assets/Banner-DKV.jpg',
+      'assets/Banner-HTL.jpg',
+      'assets/Banner-KULINER.jpg',
+      'assets/Banner-MPLB.jpg',
+      'assets/Banner-PMN.jpg',
+      'assets/Banner-TJKT.jpg',
+      'assets/Banner-Web.jpg',
+    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -32,9 +44,23 @@ class HomePage extends StatelessWidget {
                       bottomLeft: Radius.circular(32),
                       bottomRight: Radius.circular(32),
                     ),
-                    child: Image.asset(
-                      'assets/banner.jpg',
-                      fit: BoxFit.cover,
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        height: 250,
+                        viewportFraction: 1.0, // full width
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 2),
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 500),
+                        enlargeCenterPage: false,
+                      ),
+                      items: bannerList.map((item) {
+                        return Image.asset(
+                          item,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),
@@ -404,7 +430,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           "Latest Activity",
                           style: TextStyle(
@@ -412,14 +438,17 @@ class HomePage extends StatelessWidget {
                             fontSize: 16,
                           ),
                         ),
-                        Text(
-                          "See All",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                        GestureDetector(
+                          onTap: () => Get.toNamed(AppRoutes.historyPeminjaman),
+                          child: Text(
+                            "See All",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                     const SizedBox(height: 12),

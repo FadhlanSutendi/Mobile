@@ -31,6 +31,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
   final lenderController = TextEditingController();
   final pickUpController = TextEditingController();
   final returnController = TextEditingController();
+  String? guarantee;
+
   bool isChecked = false;
 
   @override
@@ -41,6 +43,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
     lenderController.text = widget.loan.borrowedBy;
     pickUpController.text = _formatDateTime(widget.loan.borrowedAt);
     returnController.text = _formatDateTime(DateTime.now().toString());
+    guarantee = widget.loan.guarantee;
   }
 
   String _formatDateTime(String dt) {
@@ -79,41 +82,77 @@ class _PengembalianPageState extends State<PengembalianPage> {
             SizedBox(height: 16),
             // Stepper
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: Row(
                 children: [
-                  _stepCircle(Icons.check, true),
-                  _stepLine(),
-                  _stepCircle(Icons.check, true),
-                  _stepLine(),
-                  _stepCircle(Icons.check, false, number: "3"),
+                  _stepCircle(1,
+                      isCheck: true,
+                      color: const Color(0xFF099B46)), // ✅ hijau ceklis
+                  const SizedBox(width: 5),
+                  _stepLine(const Color.fromARGB(255, 0, 0, 0)),
+                  const SizedBox(width: 5),
+                  _stepCircle(1,
+                      isCheck: true,
+                      color: const Color(0xFF099B46)), // 🔵 biru angka 2
+                  const SizedBox(width: 5),
+                  _stepLine(const Color.fromARGB(255, 0, 0, 0)),
+                  const SizedBox(width: 5),
+                  _stepCircle(3,
+                      isCheck: false,
+                      color: Color(0xFF023A8F)), // ⚪ abu angka 3
                 ],
               ),
             ),
             SizedBox(height: 4),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                      width: 60,
-                      child: Text("Check Item",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 12))),
+                    width: 60,
+                    child: Text(
+                      "Check Item",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines:
+                          2, // otomatis kebagi dua baris kalau kepanjangan
+                    ),
+                  ),
                   SizedBox(
-                      width: 80,
-                      child: Text("Borrower info",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 12))),
+                    width: 60,
+                    child: Text(
+                      "Borrower Info",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
+                  ),
                   SizedBox(
-                      width: 60,
-                      child: Text("Collateral",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 12))),
+                    width: 60,
+                    child: Text(
+                      "Collateral",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      maxLines: 2,
+                    ),
+                  ),
                 ],
               ),
             ),
+
             SizedBox(height: 16),
             Expanded(
               child: SingleChildScrollView(
@@ -125,322 +164,294 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     if (student != null) ...[
                       Row(
                         children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(student['nis']),
-                              decoration: InputDecoration(
-                                labelText: "NIS",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(student['name']),
-                              decoration: InputDecoration(
-                                labelText: "Name",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
+                          buildReadonlyField(
+                              label: "NIS", value: safeString(student['nis'])),
+                          const SizedBox(width: 8),
+                          buildReadonlyField(
+                              label: "Name",
+                              value: safeString(student['name'])),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(student['rayon']),
-                              decoration: InputDecoration(
-                                labelText: "Rayon",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(student['major']),
-                              decoration: InputDecoration(
-                                labelText: "Major",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
+                          buildReadonlyField(
+                              label: "Rayon",
+                              value: safeString(student['rayon'])),
+                          const SizedBox(width: 8),
+                          buildReadonlyField(
+                              label: "Major",
+                              value: safeString(student['major'])),
                         ],
                       ),
-                      SizedBox(height: 12),
-                      // Tambahkan Room untuk student
+                      const SizedBox(height: 12),
                       Row(
                         children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(widget.loan.room),
-                              decoration: InputDecoration(
-                                labelText: "Room",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
+                          buildReadonlyField(
+                              label: "Room",
+                              value: safeString(widget.loan.room)),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                     ],
-                    // Tampilkan data teacher jika ada
+
                     if (teacher != null) ...[
                       Row(
                         children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(teacher['nip']),
-                              decoration: InputDecoration(
-                                labelText: "NIP",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(teacher['name']),
-                              decoration: InputDecoration(
-                                labelText: "Name",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
+                          buildReadonlyField(
+                              label: "NIP", value: safeString(teacher['nip'])),
+                          const SizedBox(width: 8),
+                          buildReadonlyField(
+                              label: "Name",
+                              value: safeString(teacher['name'])),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(teacher['telephone']),
-                              decoration: InputDecoration(
-                                labelText: "Nomor Telepon",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(widget.loan.room),
-                              decoration: InputDecoration(
-                                labelText: "Room",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
+                          buildReadonlyField(
+                              label: "Nomor Telepon",
+                              value: safeString(teacher['telephone'])),
+                          const SizedBox(width: 8),
+                          buildReadonlyField(
+                              label: "Room",
+                              value: safeString(widget.loan.room)),
                         ],
                       ),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                     ],
-                    // Warranty radio
+                    const Text(
+                      "Warranty",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+
                     Row(
                       children: [
                         Expanded(
-                          child: RadioListTile<String>(
-                            value: 'BKP',
-                            groupValue: widget.loan.guarantee,
-                            contentPadding: EdgeInsets.zero,
-                            activeColor: Colors.blue,
-                            title: Text('BKP', style: TextStyle(fontSize: 14)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            onChanged: null,
+                          child: GestureDetector(
+                            onTap: () => setState(() => guarantee = 'BKP'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: widget.loan.guarantee == 'BKP'
+                                      ? const Color(0xFF023A8F)
+                                      : Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                                color: widget.loan.guarantee == 'BKP'
+                                    ? const Color(0xFF023A8F).withOpacity(0.05)
+                                    : Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    widget.loan.guarantee == 'BKP'
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_off,
+                                    color: widget.loan.guarantee == 'BKP'
+                                        ? const Color(0xFF023A8F)
+                                        : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "BKP",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 12),
                         Expanded(
-                          child: RadioListTile<String>(
-                            value: 'STUDENT_CARD',
-                            groupValue: widget.loan.guarantee,
-                            contentPadding: EdgeInsets.zero,
-                            activeColor: Colors.blue,
-                            title: Text('STUDENT CARD',
-                                style: TextStyle(fontSize: 14)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            onChanged: null,
+                          child: GestureDetector(
+                            onTap: () =>
+                                setState(() => guarantee = 'STUDENT_CARD'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: widget.loan.guarantee == 'STUDENT_CARD'
+                                      ? const Color(0xFF023A8F)
+                                      : Colors.grey.shade300,
+                                  width: 1.5,
+                                ),
+                                color: widget.loan.guarantee == 'STUDENT_CARD'
+                                    ? const Color(0xFF023A8F).withOpacity(0.05)
+                                    : Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    widget.loan.guarantee == 'STUDENT_CARD'
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_off,
+                                    color:
+                                        widget.loan.guarantee == 'STUDENT_CARD'
+                                            ? const Color(0xFF023A8F)
+                                            : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "Student Card",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    const Text(
+                      "Warranty Image",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
                     ),
                     SizedBox(height: 8),
                     // Warranty image
                     if (widget.loan.image != null &&
                         widget.loan.image!.isNotEmpty)
-                      Stack(
-                        children: [
-                          ClipRRect(
+                      Container(
+                        width: double.infinity,
+                        height: 200, // ukuran container tetap seragam
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey[100],
+                        ),
+                        child: Center(
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.network(
                               AppApi.imagePath + widget.loan.image!,
-                              width: double.infinity,
-                              height: 120,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain, // biar tidak ketarik aneh
+                              height: 180, // batasi biar rapi
                             ),
                           ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Icon(Icons.close, color: Colors.transparent),
-                          ),
-                        ],
+                        ),
                       ),
+
                     SizedBox(height: 8),
                     // Description
-                    TextFormField(
-                      enabled: false,
-                      controller: descriptionController,
-                      decoration: InputDecoration(
-                        labelText: "Description",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        isDense: true,
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                      ),
-                      maxLines: 2,
-                    ),
-                    SizedBox(height: 12),
-                    // Lender's Name & Room (student)
-                    if (student != null) ...[
-                      Row(
-                        children: [
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              controller: lenderController,
-                              decoration: InputDecoration(
-                                labelText: "Lender's Name",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Flexible(
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: safeString(widget.loan.room),
-                              decoration: InputDecoration(
-                                labelText: "Room",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                    ],
-                    // Lender's Name (teacher)
-                    if (teacher != null) ...[
-                      TextFormField(
-                        enabled: false,
-                        controller: lenderController,
-                        decoration: InputDecoration(
-                          labelText: "Lender's Name",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          isDense: true,
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                    ],
-                    // Pick Up Time & Return Time
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            controller: pickUpController,
-                            decoration: InputDecoration(
-                              labelText: "Pick Up Time",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              prefixIcon: Icon(Icons.calendar_today),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
-                            ),
+                        const Text(
+                          "Description",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Flexible(
-                          child: TextFormField(
-                            enabled: false,
-                            controller: returnController,
-                            decoration: InputDecoration(
-                              labelText: "Return Time",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              prefixIcon: Icon(Icons.calendar_today),
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
+                        const SizedBox(height: 6),
+                        TextFormField(
+                          enabled: false,
+                          controller: descriptionController,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            // ✅ teks hasil input selalu hitam
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.grey.shade200, // background abu
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 12,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300, width: 1.2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300, width: 1.2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                  color: Color(0xFF023A8F), width: 1.5),
+                            ),
+                            hintStyle: const TextStyle(
+                              // hint tetap abu-abu
+                              color: Colors.grey,
                             ),
                           ),
                         ),
                       ],
                     ),
+
+                    SizedBox(height: 12),
+                    // Lender's Name & Room (student)
+                    // Student section
+                    if (student != null) ...[
+                      Row(
+                        children: [
+                          buildReadonlyField(
+                            label: "Lender's Name",
+                            value: lenderController.text,
+                          ),
+                          const SizedBox(width: 8),
+                          buildReadonlyField(
+                            label: "Room",
+                            value: safeString(widget.loan.room),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+
+// Teacher section
+                    if (teacher != null) ...[
+                      Row(
+                        children: [
+                          buildReadonlyField(
+                            label: "Lender's Name",
+                            value: lenderController.text,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+
+// PickUp & Return
+                    Row(
+                      children: [
+                        buildReadonlyField(
+                          label: "Pick Up Time",
+                          value: pickUpController.text,
+                        ),
+                        const SizedBox(width: 8),
+                        buildReadonlyField(
+                          label: "Return Time",
+                          value: returnController.text,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     SizedBox(height: 8),
                     Row(
                       children: [
@@ -482,27 +493,38 @@ class _PengembalianPageState extends State<PengembalianPage> {
                                       "Success", "Item returned successfully");
                                   // Buat data struk dari loan
                                   final receiptData = {
-                                    'date': widget.loan.borrowedAt.split(' ').first,
-                                    'time': widget.loan.borrowedAt.split(' ').length > 1
+                                    'date':
+                                        widget.loan.borrowedAt.split(' ').first,
+                                    'time': widget.loan.borrowedAt
+                                                .split(' ')
+                                                .length >
+                                            1
                                         ? widget.loan.borrowedAt.split(' ')[1]
                                         : "-",
                                     'nis': widget.loan.student != null
-                                        ? safeString(widget.loan.student?['nis'])
+                                        ? safeString(
+                                            widget.loan.student?['nis'])
                                         : null,
                                     'nip': widget.loan.teacher != null
-                                        ? safeString(widget.loan.teacher?['nip'])
+                                        ? safeString(
+                                            widget.loan.teacher?['nip'])
                                         : null,
                                     'name': widget.loan.student != null
-                                        ? safeString(widget.loan.student?['name'])
+                                        ? safeString(
+                                            widget.loan.student?['name'])
                                         : widget.loan.teacher != null
-                                            ? safeString(widget.loan.teacher?['name'])
+                                            ? safeString(
+                                                widget.loan.teacher?['name'])
                                             : null,
                                     'major': widget.loan.student != null
-                                        ? safeString(widget.loan.student?['major'])
+                                        ? safeString(
+                                            widget.loan.student?['major'])
                                         : null,
-                                    'room': safeString(widget.loan.room), // <-- selalu kirim room
+                                    'room': safeString(widget
+                                        .loan.room), // <-- selalu kirim room
                                     'telephone': widget.loan.teacher != null
-                                        ? safeString(widget.loan.teacher?['telephone'])
+                                        ? safeString(
+                                            widget.loan.teacher?['telephone'])
                                         : null,
                                     'description': widget.loan.purpose,
                                     'warranty': widget.loan.guarantee,
@@ -543,32 +565,85 @@ class _PengembalianPageState extends State<PengembalianPage> {
     );
   }
 
-  Widget _stepCircle(IconData icon, bool active, {String? number}) {
+  Widget buildReadonlyField({
+    required String label,
+    required String value,
+  }) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Colors.black54,
+            ),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            enabled: false,
+            initialValue: value,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor: Colors.grey.shade200, // ❌ tidak bisa diedit
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    const BorderSide(color: Color(0xFF023A8F), width: 1.5),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _stepCircle(
+    int number, {
+    bool isCheck = false,
+    Color? color,
+  }) {
     return CircleAvatar(
       radius: 16,
-      backgroundColor: active ? Colors.green : Colors.blue,
-      child: active
-          ? Icon(
-              icon,
+      backgroundColor: color ?? Colors.grey[300],
+      child: isCheck
+          ? const Icon(
+              Icons.check,
               color: Colors.white,
               size: 18,
             )
           : Text(
-              number ?? "",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+              "$number",
+              style: TextStyle(
+                color: Colors.white, // angka putih biar kontras
                 fontWeight: FontWeight.bold,
               ),
             ),
     );
   }
 
-  Widget _stepLine() {
+  Widget _stepLine(Color color) {
     return Expanded(
       child: Container(
         height: 2,
-        color: Colors.grey[300],
+        color: color,
       ),
     );
   }

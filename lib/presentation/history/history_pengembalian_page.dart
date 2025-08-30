@@ -1,224 +1,346 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Add this import for ChangeNotifierProvider
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'controller/history_controller.dart';
 import 'models/history_models.dart';
-import 'detail_history_page.dart'; // Import the detail page
-import '../../routes/app_routes.dart'; // Tambahkan import ini
-import 'package:get/get.dart'; // Tambahkan import ini
-import '../navbar_bottom/navbar_bottom_page.dart'; // Add this import
+import 'detail_history_page.dart';
+import '../navbar_bottom/navbar_bottom_page.dart';
 
 class HistoryPengembalianPage extends StatelessWidget {
   final String token;
-  HistoryPengembalianPage({required this.token});
+  const HistoryPengembalianPage({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      // Ubah pemanggilan fetchHistory agar data: 'returning'
-      create: (_) => HistoryController(token: token)..fetchHistory(data: 'returning'),
+  return ChangeNotifierProvider(
+    create: (_) => HistoryController(token: token)..fetchHistory(data: 'returning'),
+    child: DefaultTabController(
+      length: 6,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('History Page', style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.white,
           elevation: 0,
-          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(
+            'History Page',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          bottom: TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            indicatorColor: Colors.black,
+            indicatorWeight: 2.5,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: GoogleFonts.poppins(),
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            tabs: const [
+              Tab(text: "All"),
+              Tab(text: "Laptop"),
+              Tab(text: "Mouse"),
+              Tab(text: "Keyboard"),
+              Tab(text: "Monitor"),
+              Tab(text: "Terminal"),
+            ],
+          ),
         ),
         body: Consumer<HistoryController>(
           builder: (context, controller, _) {
-            // Filter hanya data yang sudah dikembalikan (status == true)
-            final returnedItems = controller.filteredItems.where((item) => item.status == true).toList();
-            return Column(
-              children: [
-                // Category Tabs
-                Container(
-                  height: 48,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: controller.categories.length,
-                    separatorBuilder: (_, __) => SizedBox(width: 8),
-                    itemBuilder: (context, idx) {
-                      final cat = controller.categories[idx];
-                      final selected = cat == controller.selectedCategory;
-                      return GestureDetector(
-                        onTap: () {
-                          controller.setCategory(cat);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: selected ? Color(0xFF1565C0) : Colors.grey[100],
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            cat,
-                            style: TextStyle(
-                              color: selected ? Colors.white : Colors.black54,
-                              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 8),
-                // List
-                Expanded(
-                  child: controller.isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : returnedItems.isEmpty
-                        ? Center(child: Text('No returned items found'))
-                        : ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            itemCount: returnedItems.length,
-                            itemBuilder: (context, idx) {
-                              final item = returnedItems[idx];
-                              return _HistoryCard(context: context, item: item, token: token); // Pass context and token to _HistoryCard
-                            },
-                          ),
-                ),
-              ],
-            );
+            final returnedItems = controller.filteredItems
+                .where((item) => item.status == true)
+                .toList();
+
+            // Group items by date
+            final grouped = <String, List<HistoryItem>>{};
+            for (var item in returnedItems) {
+              final date = _formatDate(item.borrowedAt);
+              grouped.putIfAbsent(date, () => []).add(item);
+            }
+
+            final sortedDates = grouped.keys.toList()
+              ..sort((a, b) => _parseDate(b).compareTo(_parseDate(a)));
+
+            return controller.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : TabBarView(
+                    children: [
+                      _buildGroupedList(grouped, sortedDates), // All
+                      _buildGroupedList(
+                        _filterByType(grouped, sortedDates, 'Laptop'),
+                        sortedDates,
+                      ),
+                      _buildGroupedList(
+                        _filterByType(grouped, sortedDates, 'Mouse'),
+                        sortedDates,
+                      ),
+                      _buildGroupedList(
+                        _filterByType(grouped, sortedDates, 'Keyboard'),
+                        sortedDates,
+                      ),
+                      _buildGroupedList(
+                        _filterByType(grouped, sortedDates, 'Monitor'),
+                        sortedDates,
+                      ),
+                      _buildGroupedList(
+                        _filterByType(grouped, sortedDates, 'Terminal'),
+                        sortedDates,
+                      ),
+                    ],
+                  );
           },
         ),
-        bottomNavigationBar: NavbarBottom(selectedIndex: 2), // Use NavbarBottom
+        bottomNavigationBar: NavbarBottom(selectedIndex: 2),
+      ),
+    ),
+  );
+}
+
+// Helper untuk filter grouped items berdasarkan itemType
+Map<String, List<HistoryItem>> _filterByType(
+    Map<String, List<HistoryItem>> grouped, List<String> sortedDates, String type) {
+  final filtered = <String, List<HistoryItem>>{};
+  for (var date in sortedDates) {
+    final items = grouped[date]!.where((e) => e.itemType == type).toList();
+    if (items.isNotEmpty) filtered[date] = items;
+  }
+  return filtered;
+}
+
+Widget _buildGroupedList(Map<String, List<HistoryItem>> grouped, List<String> sortedDates) {
+  if (grouped.isEmpty) return const Center(child: Text("No returned items found"));
+
+  return ListView(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+    children: sortedDates.where((d) => grouped[d] != null).map((date) {
+      final items = grouped[date]!;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              date,
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          ...items.map((e) => _HistoryCard(item: e)),
+          const SizedBox(height: 16),
+        ],
+      );
+    }).toList(),
+  );
+}
+
+
+  // format ke label: Today, Yesterday, atau tanggal
+  static String _formatDate(String dateStr) {
+    try {
+      final dt = DateTime.parse(dateStr.replaceFirst(' ', 'T'));
+      final now = DateTime.now();
+      if (dt.year == now.year && dt.month == now.month && dt.day == now.day)
+        return "Today";
+      if (dt.year == now.year && dt.month == now.month && dt.day == now.day - 1)
+        return "Yesterday";
+      return "${_weekday(dt)}, ${dt.day} ${_month(dt.month)} ${dt.year}";
+    } catch (_) {
+      return dateStr;
+    }
+  }
+
+  static DateTime _parseDate(String dateStr) {
+    try {
+      return DateTime.parse(dateStr.replaceFirst(' ', 'T'));
+    } catch (_) {
+      return DateTime.now();
+    }
+  }
+
+  static String _weekday(DateTime dt) {
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
+    return days[dt.weekday - 1];
+  }
+
+  static String _month(int m) {
+    const months = [
+      "",
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    return months[m];
+  }
+}
+
+class _CategoryTabs extends StatelessWidget {
+  final HistoryController controller;
+  const _CategoryTabs({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: controller.categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 16),
+        itemBuilder: (context, idx) {
+          final cat = controller.categories[idx];
+          final selected = cat == controller.selectedCategory;
+          return GestureDetector(
+            onTap: () => controller.setCategory(cat),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  cat,
+                  style: TextStyle(
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
+                    color: selected ? Colors.black : Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 2,
+                  width: 24,
+                  color: selected ? Colors.black : Colors.transparent,
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
+}
 
-  Widget _HistoryCard({required BuildContext context, required HistoryItem item, required String token}) {
+class _HistoryCard extends StatelessWidget {
+  final HistoryItem item;
+  const _HistoryCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => DetailHistoryPage(item: item), // Pass HistoryItem
-          ),
-        );
-      },
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => DetailHistoryPage(item: item)),
+      ),
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey[50],
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey[200]!),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, 2),
+          border: const Border(
+            left: BorderSide(
+              color: Color(0xFF1565C0), // warna biru
+              width: 8, // tebal garis kiri
+            ),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header (dot + kode)
+            Row(
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  margin: EdgeInsets.only(right: 6),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF1565C0),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    '${item.itemType.toUpperCase()} | ${item.codeUnit}',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.black54,
+                      letterSpacing: 0.5,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  _getTimeAgo(item.borrowedAt),
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    color: Colors.black45,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 6),
+            // Purpose
+            Text(
+              item.purpose,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 2),
+            // Borrower
+            Text(
+              'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: Colors.black54,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
-        ),
-        child: ListTile(
-          leading: Container(
-            width: 8,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: Color(0xFF1565C0),
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(14)),
-            ),
-          ),
-          title: Text(
-            '${item.itemType.toUpperCase()} | ${item.codeUnit}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.purpose,
-                style: TextStyle(fontSize: 13),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 2),
-              Text(
-                'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
-                style: TextStyle(fontSize: 12, color: Colors.black54),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-          trailing: Text(
-            _getTimeAgo(item.borrowedAt),
-            style: TextStyle(fontSize: 11, color: Colors.black45),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         ),
       ),
     );
   }
 
   String _getTimeAgo(String dateTimeStr) {
-    // Simple time ago logic
     try {
       final dt = DateTime.parse(dateTimeStr.replaceFirst(' ', 'T'));
       final diff = DateTime.now().difference(dt);
       if (diff.inMinutes < 1) return 'now';
       if (diff.inMinutes < 60) return '${diff.inMinutes}m';
       if (diff.inHours < 24) return '${diff.inHours}h';
-      return '${diff.inDays}d';
+      return '${diff.inDays} days';
     } catch (_) {
       return '';
     }
   }
-
-  Widget _buildNavItem(IconData icon, String label, {bool active = false}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: active ? Colors.black54 : Colors.black26,
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: active ? Colors.black54 : Colors.black26,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQRScannerButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigasi ke halaman scan barcode
-        Get.toNamed(AppRoutes.scanBarcode);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF1565C0),
-          shape: BoxShape.circle,
-        ),
-        padding: EdgeInsets.all(12),
-        child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
-      ),
-    );
-  }
 }
-
-  Widget _buildQRScannerButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigasi ke halaman scan barcode
-        Get.toNamed(AppRoutes.scanBarcode);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF1565C0),
-          shape: BoxShape.circle,
-        ),
-        padding: EdgeInsets.all(12),
-        child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 28),
-      ),
-    );
-  }
