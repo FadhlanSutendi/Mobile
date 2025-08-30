@@ -277,7 +277,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchDashboardCard(
       {required String token}) async {
     final url = Uri.parse(
-        'https://4d83ce779a5b.ngrok-free.app/api/dashboard/mobile/card');
+        'https://2c89499abf2e.ngrok-free.app/api/dashboard/mobile/card');
     try {
       final response = await http.get(
         url,
