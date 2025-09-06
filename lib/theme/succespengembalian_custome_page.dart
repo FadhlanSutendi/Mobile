@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:project_prapw/routes/app_routes.dart';
 import 'app_struckcostom.dart';
 
 class SuccespengembalianCustomePage extends StatelessWidget {
@@ -72,7 +74,7 @@ class SuccespengembalianCustomePage extends StatelessWidget {
                 // ✅ Show receipt button
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Get.toNamed(AppRoutes.history);
 
                     // if (receiptData != null) {
                     //   Navigator.push(

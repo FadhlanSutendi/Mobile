@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../cek_item/cek_item_page.dart';
@@ -69,14 +70,14 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
           await mobileScannerController.start();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Data tidak ditemukan')),
+           SnackBar(content: Text('Data tidak ditemukan', style: GoogleFonts.poppins(),)),
           );
         }
       }
     } catch (e) {
       debugPrint('Error saat scanning: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Terjadi kesalahan saat scan')),
+       SnackBar(content: Text('Terjadi kesalahan saat scan', style: GoogleFonts.poppins(),))
       );
     } finally {
       setState(() {
@@ -89,7 +90,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Scan QR/Barcode")),
+      appBar: AppBar(title: Text("Scan QR/Barcode", style: GoogleFonts.poppins()),),
       body: Column(
         children: [
           Expanded(
@@ -97,7 +98,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
             child: Builder(
               builder: (context) {
                 if (cameraError != null) {
-                  return Center(child: Text(cameraError!));
+                  return Center(child: Text(cameraError!, style: GoogleFonts.poppins()));
                 }
                 return Stack(
                   children: [
@@ -110,7 +111,7 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
                             cameraError = 'Gagal mengakses kamera: $error';
                           });
                         });
-                        return Center(child: Text('Gagal mengakses kamera: $error'));
+                        return Center(child: Text('Gagal mengakses kamera: $error', style: GoogleFonts.poppins()));
                       },
                     ),
                     // Tombol switch camera & flash
@@ -151,8 +152,8 @@ class _ScanBarcodePageState extends State<ScanBarcodePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   scannedResult != null
-                      ? Text('Barcode terdeteksi: $scannedResult')
-                      : const Text('Arahkan kamera ke QR/Barcode'),
+                      ? Text('Barcode terdeteksi: $scannedResult', style: GoogleFonts.poppins(),)
+                      : Text('Arahkan kamera ke QR/Barcode', style: GoogleFonts.poppins(),),
                   const SizedBox(height: 16),
                   if (isLoading) const CircularProgressIndicator(),
                 ],

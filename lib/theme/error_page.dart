@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ErrorPage extends StatelessWidget {
   final int errorCode;
@@ -101,7 +102,7 @@ class ErrorPage extends StatelessWidget {
               const SizedBox(height: 32),
               Text(
                 '$errorCode',
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
@@ -109,7 +110,7 @@ class ErrorPage extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,
                 ),
@@ -117,7 +118,7 @@ class ErrorPage extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 description,
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -137,9 +138,9 @@ class ErrorPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     'Go back',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,

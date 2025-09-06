@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StruckCustomPage extends StatelessWidget {
   final String date;
@@ -88,9 +89,9 @@ class StruckCustomPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(date,
-                            style: const TextStyle(fontWeight: FontWeight.w500)),
+                            style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                         Text(time,
-                            style: const TextStyle(fontWeight: FontWeight.w500)),
+                            style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                       ],
                     ),
                     const Divider(height: 24, thickness: 1),
@@ -116,7 +117,7 @@ class StruckCustomPage extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Text(
                         author ?? "",
-                        style: const TextStyle(
+                        style: GoogleFonts.poppins(
                             fontSize: 12, color: Colors.black87),
                       ),
                     ),
@@ -144,9 +145,9 @@ class StruckCustomPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
-                    child: const Text(
+                    child: Text(
                       "Go to Dashboard",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         // fontWeight: FontWeight.bold,
                         fontSize: 13,
                         color: Colors.white,
@@ -171,13 +172,13 @@ class StruckCustomPage extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(label,
-                style: const TextStyle(fontSize: 13, color: Colors.black87)),
+                style: GoogleFonts.poppins(fontSize: 13, color: Colors.black87)),
           ),
           Expanded(
             flex: 3,
             child: Text(
               value ?? "-",
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
                   fontSize: 13,
                   color: Colors.black,
                   fontWeight: FontWeight.w500),

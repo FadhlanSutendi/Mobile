@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:project_prapw/routes/app_routes.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -42,7 +43,7 @@ class OnboardingPage extends StatelessWidget {
             // Judul
             Text(
               'WiKVENTORY',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 32,
                 color: Colors.black,
@@ -53,7 +54,7 @@ class OnboardingPage extends StatelessWidget {
             // Subjudul
             Text(
               'Smart Inventory for Smart School',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.black87,
               ),
@@ -79,7 +80,7 @@ class OnboardingPage extends StatelessWidget {
                     children: [
                       Text(
                         'Get Started',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                         ),

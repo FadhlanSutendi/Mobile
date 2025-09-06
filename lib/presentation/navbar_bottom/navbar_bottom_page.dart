@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../login/controller/login_controller.dart';
 import '../../core/api/app_api.dart';
 import 'controller/navbar_bottom_controller.dart';
@@ -46,6 +47,7 @@ class NavbarBottom extends StatelessWidget {
           ),
           Positioned(
             top: 0,
+            
             child: GestureDetector(
               onTap: () {
                 if (onItemSelected != null) onItemSelected!(4);
@@ -136,9 +138,9 @@ class NavbarBottom extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         /// Title
-                        const Text(
+                        Text(
                           'Select Page',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -147,7 +149,7 @@ class NavbarBottom extends StatelessWidget {
                         Text(
                           'Choose which kind of page\nyou want to show',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: Colors.grey[600],
@@ -171,7 +173,7 @@ class NavbarBottom extends StatelessWidget {
                               child: RadioListTile<String>(
                                 value: 'borrow',
                                 groupValue: choice,
-                                title: const Text('Borrowed Page'),
+                                title: Text('Borrowed Page', style: GoogleFonts.poppins(),),
                                 activeColor: const Color(0xFF1565C0),
                                 onChanged: (val) {
                                   setState(() {
@@ -194,7 +196,7 @@ class NavbarBottom extends StatelessWidget {
                               child: RadioListTile<String>(
                                 value: 'history',
                                 groupValue: choice,
-                                title: const Text('History Page'),
+                                title: Text('History Page', style: GoogleFonts.poppins(),),
                                 activeColor: const Color(0xFF1565C0),
                                 onChanged: (val) {
                                   setState(() {
@@ -219,10 +221,10 @@ class NavbarBottom extends StatelessWidget {
                               ),
                               padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
-                            child: const Text(
+                            child: Text(
                               'Continue',
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                                  GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                             ),
                             onPressed: () => Navigator.of(ctx).pop(choice),
                           ),
@@ -259,11 +261,11 @@ class NavbarBottom extends StatelessWidget {
                             top: Radius.circular(10),
                           ),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             "Are you sure want to\nlog out?",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -287,10 +289,10 @@ class NavbarBottom extends StatelessWidget {
                                         color: Colors.grey, width: 0.5),
                                   ),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     "Cancel",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey,
                                     ),
@@ -313,10 +315,10 @@ class NavbarBottom extends StatelessWidget {
                                         color: Colors.grey, width: 0.5),
                                   ),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     "Confirm",
-                                    style: TextStyle(
+                                    style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey,
                                     ),
@@ -346,7 +348,7 @@ class NavbarBottom extends StatelessWidget {
                     context, '/login', (route) => false);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Logout gagal')),
+                  SnackBar(content: Text('Logout gagal', style: GoogleFonts.poppins()), backgroundColor: Colors.red,),
                 );
               }
             }
@@ -360,7 +362,7 @@ class NavbarBottom extends StatelessWidget {
               color: isSelected ? Color(0xFF1565C0) : iconColor, size: 28),
           SizedBox(height: 4),
           Text(label,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                   fontSize: 13,
                   color: isSelected ? Color(0xFF1565C0) : iconColor)),
         ],

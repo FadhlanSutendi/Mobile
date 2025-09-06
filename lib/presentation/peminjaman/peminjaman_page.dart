@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter_image_compress/flutter_image_compress.dart'; // tambahkan import ini
+import 'package:google_fonts/google_fonts.dart';
 import '../cek_item/models/cek_item_models.dart'; // gunakan model yang benar
 import 'controller/peminjaman_controller.dart';
 import 'models/peminjaman_models.dart';
@@ -78,13 +79,14 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
     controller.nameController = nameController;
     controller.rayonController = rayonController;
     controller.majorController = majorController;
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Form Borrowing"),
+        title: Text("Form Borrowing", style: GoogleFonts.poppins(),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -119,7 +121,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
 
   Widget _stepCheckItem() {
     if (widget.unitItem == null) {
-      return Center(child: Text("No item selected"));
+      return Center(child: Text("No item selected", style: GoogleFonts.poppins()),);
     }
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -132,13 +134,13 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(widget.unitItem!.subItem.merk,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
               SizedBox(height: 8),
-              Text("Code: ${widget.unitItem!.codeUnit}"),
-              Text("Description: ${widget.unitItem!.description}"),
-              Text("Procurement Date: ${widget.unitItem!.procurementDate}"),
-              Text("Status: ${widget.unitItem!.status}"),
-              Text("Condition: ${widget.unitItem!.condition}"),
+              Text("Code: ${widget.unitItem!.codeUnit}", style: GoogleFonts.poppins()),
+              Text("Description: ${widget.unitItem!.description}",style: GoogleFonts.poppins()),
+              Text("Procurement Date: ${widget.unitItem!.procurementDate}",style: GoogleFonts.poppins()),
+              Text("Status: ${widget.unitItem!.status}",style: GoogleFonts.poppins()),
+              Text("Condition: ${widget.unitItem!.condition}",style: GoogleFonts.poppins()),
             ],
           ),
         ),
@@ -214,8 +216,8 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       const SizedBox(width: 8),
-                      const Text("Searching...",
-                          style: TextStyle(fontSize: 12)),
+                      Text("Searching...",
+                          style: GoogleFonts.poppins()),
                     ],
                   ),
                 );
@@ -223,28 +225,28 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               if (widget.borrowerType == 'student' &&
                   controller.student.value == null &&
                   nisController.text.isNotEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text("Student not found",
-                      style: TextStyle(color: Colors.red, fontSize: 12)),
+                      style: GoogleFonts.poppins(color: Colors.red, fontSize: 12)),
                 );
               }
               if (widget.borrowerType == 'teacher' &&
                   controller.teacher.value == null &&
                   nisController.text.isNotEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text("Teacher not found",
-                      style: TextStyle(color: Colors.red, fontSize: 12)),
+                      style: GoogleFonts.poppins(color: Colors.red, fontSize: 12)),
                 );
               }
               return const SizedBox.shrink();
             }),
 
             const SizedBox(height: 16),
-            const Text(
+            Text(
               "Warranty",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: Colors.black87,
@@ -285,9 +287,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   : Colors.grey,
                             ),
                             const SizedBox(width: 8),
-                            const Text(
+                            Text(
                               "BKP",
-                              style: TextStyle(fontSize: 14),
+                              style: GoogleFonts.poppins(fontSize: 14),
                             ),
                           ],
                         ),
@@ -324,9 +326,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                                   : Colors.grey,
                             ),
                             const SizedBox(width: 8),
-                            const Text(
+                            Text(
                               "Student Card",
-                              style: TextStyle(fontSize: 14),
+                              style: GoogleFonts.poppins(fontSize: 14),
                             ),
                           ],
                         ),
@@ -339,7 +341,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text("Upload Warranty",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
               ),
               SizedBox(height: 8),
               Obx(
@@ -425,7 +427,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text("Description",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             ),
             SizedBox(height: 8),
             TextFormField(
@@ -451,9 +453,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                       Text(
                           "Lender's Name",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -481,9 +483,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Room",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -525,9 +527,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ),
               SizedBox(height: 16),
             ],
-            const Text(
+            Text(
               "Date - Pick Up Time",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -590,7 +592,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                   },
                 ),
                 Flexible(
-                    child: Text("Make sure the data is correct",
+                    child: Text("Make sure the data is correct", style: GoogleFonts.poppins(),
                         overflow: TextOverflow.ellipsis)),
               ],
             ),
@@ -734,7 +736,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        icon: const Text("Submit"),
+                        icon: Text("Submit", style: GoogleFonts.poppins(),),
                         label: const Icon(Icons.arrow_forward),
                       ),
                     ),
@@ -762,7 +764,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 13,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
@@ -810,7 +812,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("Select Guarantee",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             Row(
               children: [
@@ -830,7 +832,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         guarantee = 'BKP';
                       });
                     },
-                    child: Text("BKP"),
+                    child: Text("BKP", style: GoogleFonts.poppins(),),
                   ),
                 ),
                 SizedBox(width: 8),
@@ -852,14 +854,15 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                         guarantee = 'kartu pelajar';
                       });
                     },
-                    child: Text("Kartu Pelajar"),
+                    child: Text("Kartu Pelajar", style: GoogleFonts.poppins(),
                   ),
+                ),
                 ),
               ],
             ),
             SizedBox(height: 16),
             Text("Upload Warranty",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
             SizedBox(height: 8),
             // Hanya bagian gambar yang pakai Obx
             Obx(() => controller.imagePath.value.isEmpty
@@ -947,9 +950,9 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
               ),
             ),
             SizedBox(height: 16),
-            const Text(
+            Text(
               "Date - Pick Up Time",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -1008,7 +1011,7 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
                   },
                 ),
                 Flexible(
-                    child: Text("Make sure the data is correct",
+                    child: Text("Make sure the data is correct", style: GoogleFonts.poppins(),
                         overflow: TextOverflow.ellipsis)),
               ],
             ),
@@ -1169,12 +1172,12 @@ class StepperWidget extends StatelessWidget {
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 60,
                 child: Text(
                   "Check Item",
@@ -1191,7 +1194,7 @@ class StepperWidget extends StatelessWidget {
                 width: 60,
                 child: Text(
                   "Borrower Info",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -1204,7 +1207,7 @@ class StepperWidget extends StatelessWidget {
                 width: 60,
                 child: Text(
                   "Collateral",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -1240,7 +1243,7 @@ class StepperWidget extends StatelessWidget {
             )
           : Text(
               "$number",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: Colors.white, // angka putih biar kontras
                 fontWeight: FontWeight.bold,
               ),

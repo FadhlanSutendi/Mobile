@@ -63,7 +63,7 @@ class HistoryPeminjamanPage extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               }
               if (borrowedItems.isEmpty) {
-                return Center(child: Text("No borrowed items found"));
+                return Center(child: Text("No borrowed items found", style: GoogleFonts.poppins()));
               }
 
               return TabBarView(
