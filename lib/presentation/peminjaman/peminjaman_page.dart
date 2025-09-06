@@ -511,6 +511,13 @@ class _PeminjamanPageState extends State<PeminjamanPage> {
 
             // Lender's Name (teacher)
             if (widget.borrowerType == 'teacher') ...[
+              const Text(
+                          "Lender's Name",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
               TextFormField(
                 controller: lenderController,
                 decoration: InputDecoration(

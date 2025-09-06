@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:project_prapw/presentation/home/models/home_models.dart';
+import 'package:project_prapw/presentation/navbar_bottom/navbar_bottom_page.dart';
 import 'package:project_prapw/routes/app_routes.dart';
 import 'controller/report_controller.dart';
 import 'models/report_models.dart';
@@ -327,6 +328,7 @@ class ReportPage extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: NavbarBottom(selectedIndex: 0),
     );
   }
 
