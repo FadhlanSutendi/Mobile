@@ -152,12 +152,12 @@ class LoginPage extends StatelessWidget {
                         ),
                       )),
                   const SizedBox(height: 40),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 100),
                     child: Center(
                       child: Text(
                         '© PPLG XII-V 2025. All Rights Reserved. ',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,

@@ -224,7 +224,7 @@ class _CategoryTabs extends StatelessWidget {
               children: [
                 Text(
                   cat,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
                     color: selected ? Colors.black : Colors.black54,
                   ),

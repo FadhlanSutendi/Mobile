@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:project_prapw/routes/app_routes.dart';
 import 'app_struckcostom.dart';
 
 class SuccessCustomPage extends StatelessWidget {
@@ -45,9 +49,9 @@ class SuccessCustomPage extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // ✅ Success text
-                const Text(
+                Text(
                   "Success",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -57,9 +61,9 @@ class SuccessCustomPage extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // ✅ Subtext
-                const Text(
+                Text(
                   "Borrowing item created successfully!",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black87,
                   ),
@@ -94,9 +98,9 @@ class SuccessCustomPage extends StatelessWidget {
                       onShowReceipt!();
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     "show receipt",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Colors.black,
                       fontSize: 14,
                       decoration: TextDecoration.underline,
@@ -109,10 +113,10 @@ class SuccessCustomPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Get.toNamed(AppRoutes.history);
                       },
-                      child: const Text("back to dashboard", 
-                        style: TextStyle(
+                      child: Text("Back to dashboard", 
+                        style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: 14,
                         decoration: TextDecoration.underline,

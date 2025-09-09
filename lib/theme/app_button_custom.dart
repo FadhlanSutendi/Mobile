@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppButtonCustom extends StatelessWidget {
   final String label;
@@ -41,7 +42,7 @@ class AppButtonCustom extends StatelessWidget {
               )
             : Text(
                 label,
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,

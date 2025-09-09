@@ -17,6 +17,8 @@ class ReportController extends GetxController {
   // Activity Statistics (BarChart)
   var isLoadingLoanReport = true.obs;
   var loanReportData = <String, int>{}.obs;
+  var selectedYear = RxnInt();
+
 
   @override
   void onInit() {
@@ -72,4 +74,30 @@ class ReportController extends GetxController {
     }
     isLoadingLoanReport.value = false;
   }
+
+  void fetchLoanReportByYear(int year) async {
+    isLoadingLoanReport.value = true;
+
+    final from = '$year-01-01';
+    final to = '$year-12-31';
+
+    final res = await AppApi.fetchLoanReport(
+      from: from,
+      to: to,
+      token: token.value,
+    );
+
+    print('LoanReport API response for year $year: $res');
+
+    if (res != null && res['data'] != null) {
+      loanReportData.value = Map<String, int>.from(res['data']);
+      selectedYear.value = year; // simpan tahun terpilih
+    } else {
+      loanReportData.clear();
+      selectedYear.value = year; // tetap set tahun biar validasi jalan
+    }
+
+    isLoadingLoanReport.value = false;
+  }
+
 }

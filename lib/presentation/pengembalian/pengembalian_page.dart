@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:project_prapw/core/api/app_api.dart';
 import 'package:project_prapw/theme/succespengembalian_custome_page.dart';
 import 'dart:io';
@@ -44,6 +45,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
     pickUpController.text = _formatDateTime(widget.loan.borrowedAt);
     returnController.text = _formatDateTime(DateTime.now().toString());
     guarantee = widget.loan.guarantee;
+    print("Guarantee dari loan: ${widget.loan.guarantee}");
+
   }
 
   String _formatDateTime(String dt) {
@@ -67,7 +70,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
     final teacher = widget.loan.teacher;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Return"),
+        title: Text("Return", style: GoogleFonts.poppins()),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -104,8 +107,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
               ),
             ),
             SizedBox(height: 4),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -113,7 +116,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     width: 60,
                     child: Text(
                       "Check Item",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -127,7 +130,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     width: 60,
                     child: Text(
                       "Borrower Info",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -140,7 +143,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     width: 60,
                     child: Text(
                       "Collateral",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -220,9 +223,9 @@ class _PengembalianPageState extends State<PengembalianPage> {
                       ),
                       const SizedBox(height: 12),
                     ],
-                    const Text(
+                    Text(
                       "Warranty",
-                      style: const TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: Colors.black87,
@@ -235,81 +238,71 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: GestureDetector(
-                            onTap: () => setState(() => guarantee = 'BKP'),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: widget.loan.guarantee == 'BKP'
+                                    ? const Color(0xFF023A8F)
+                                    : Colors.grey.shade300,
+                                width: 1.5,
+                              ),
+                              color: widget.loan.guarantee == 'BKP'
+                                  ? const Color(0xFF023A8F).withOpacity(0.05)
+                                  : Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  widget.loan.guarantee == 'BKP'
+                                      ? Icons.radio_button_checked
+                                      : Icons.radio_button_off,
                                   color: widget.loan.guarantee == 'BKP'
                                       ? const Color(0xFF023A8F)
-                                      : Colors.grey.shade300,
-                                  width: 1.5,
+                                      : Colors.grey,
                                 ),
-                                color: widget.loan.guarantee == 'BKP'
-                                    ? const Color(0xFF023A8F).withOpacity(0.05)
-                                    : Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    widget.loan.guarantee == 'BKP'
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_off,
-                                    color: widget.loan.guarantee == 'BKP'
-                                        ? const Color(0xFF023A8F)
-                                        : Colors.grey,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    "BKP",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "BKP",
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: GestureDetector(
-                            onTap: () =>
-                                setState(() => guarantee = 'STUDENT_CARD'),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: widget.loan.guarantee == 'STUDENT_CARD'
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: widget.loan.guarantee == 'kartu pelajar'
+                                    ? const Color(0xFF023A8F)
+                                    : Colors.grey.shade300,
+                                width: 1.5,
+                              ),
+                              color: widget.loan.guarantee == 'kartu pelajar'
+                                  ? const Color(0xFF023A8F).withOpacity(0.05)
+                                  : Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  widget.loan.guarantee == 'kartu pelajar'
+                                      ? Icons.radio_button_checked
+                                      : Icons.radio_button_off,
+                                  color: widget.loan.guarantee == 'kartu pelajar'
                                       ? const Color(0xFF023A8F)
-                                      : Colors.grey.shade300,
-                                  width: 1.5,
+                                      : Colors.grey,
                                 ),
-                                color: widget.loan.guarantee == 'STUDENT_CARD'
-                                    ? const Color(0xFF023A8F).withOpacity(0.05)
-                                    : Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    widget.loan.guarantee == 'STUDENT_CARD'
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_off,
-                                    color:
-                                        widget.loan.guarantee == 'STUDENT_CARD'
-                                            ? const Color(0xFF023A8F)
-                                            : Colors.grey,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    "Student Card",
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Student Card",
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -317,9 +310,9 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     ),
                     const SizedBox(height: 12),
 
-                    const Text(
+                    Text(
                       "Warranty Image",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: Colors.black87,
@@ -354,9 +347,9 @@ class _PengembalianPageState extends State<PengembalianPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Description",
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: Colors.black87,
@@ -466,7 +459,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                           },
                         ),
                         Flexible(
-                            child: Text("Make sure the item in good condition",
+                            child: Text("Make sure the item in good condition", style: GoogleFonts.poppins(),
                                 overflow: TextOverflow.ellipsis)),
                       ],
                     ),
@@ -551,7 +544,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                                 }
                               }
                             : null,
-                        child: Text("Return"),
+                        child: Text("Return", style: GoogleFonts.poppins()),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -575,7 +568,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 13,
               fontWeight: FontWeight.bold,
               color: Colors.black54,
@@ -585,7 +578,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
           TextFormField(
             enabled: false,
             initialValue: value,
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               color: Colors.black,
               fontSize: 14,
             ),

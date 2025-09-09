@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'controller/cek_item_controller.dart';
 // import '../scan barcode/models/scanbarcode_models.dart';
 import 'models/cek_item_models.dart'; // gunakan model yang benar
@@ -97,9 +98,9 @@ class _CekItemPageState extends State<CekItemPage> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
+                    Text(
                       "Form Borrowing",
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -126,8 +127,8 @@ class _CekItemPageState extends State<CekItemPage> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -136,23 +137,23 @@ class _CekItemPageState extends State<CekItemPage> {
                         child: Column(
                           children: [
                             Text("Check",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold, fontSize: 12)),
                             Text("Item",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold, fontSize: 12)),
                           ],
                         ),
                       ),
-                      SizedBox(
+                       SizedBox(
                         width: 80,
                         child: Column(
                           children: [
                             Text("Borrower",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey)),
                             Text("Info",
-                                style: TextStyle(
+                                style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey)),
                           ],
                         ),
@@ -160,7 +161,7 @@ class _CekItemPageState extends State<CekItemPage> {
                       SizedBox(
                         width: 60,
                         child: Text("Collateral",
-                            style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            style: GoogleFonts.poppins(color: Colors.grey, fontSize: 12)),
                       ),
                     ],
                   ),
@@ -175,7 +176,7 @@ class _CekItemPageState extends State<CekItemPage> {
                   if (cekItemController.errorMessage.value.isNotEmpty) {
                     return Text(
                       cekItemController.errorMessage.value,
-                      style: const TextStyle(color: Colors.red),
+                      style: GoogleFonts.poppins(color: Colors.red),
                     );
                   }
                   final unitItem = cekItemController.unitItem.value;
@@ -203,9 +204,9 @@ class _CekItemPageState extends State<CekItemPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Borrower",
-                              style: TextStyle(
+                              style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
@@ -247,9 +248,9 @@ class _CekItemPageState extends State<CekItemPage> {
                                             size: 18,
                                           ),
                                           const SizedBox(width: 7),
-                                          const Text(
+                                          Text(
                                             "Student",
-                                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                            style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
@@ -288,9 +289,9 @@ class _CekItemPageState extends State<CekItemPage> {
                                             size: 18,
                                           ),
                                           const SizedBox(width: 7),
-                                          const Text(
+                                          Text(
                                             "Teacher",
-                                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                            style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
@@ -339,7 +340,7 @@ class _CekItemPageState extends State<CekItemPage> {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     ),
-                                    icon: const Text("Next"),
+                                    icon: Text("Next", style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                                     label: const Icon(Icons.arrow_forward),
                                   ),
                                 ),
@@ -366,7 +367,7 @@ class _CekItemPageState extends State<CekItemPage> {
       backgroundColor: active ? Color(0xFF023A8F) : Colors.grey[300],
       child: Text(
         "$number",
-        style: TextStyle(
+        style: GoogleFonts.poppins(
           color: active ? Colors.white : Colors.black,
           fontWeight: FontWeight.bold,
         ),
@@ -389,7 +390,7 @@ class _CekItemPageState extends State<CekItemPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 12,
           ),
