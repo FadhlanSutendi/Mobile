@@ -17,80 +17,82 @@ class NavbarBottom extends StatelessWidget {
     final token = Get.find<LoginController>().token.value;
     final navbarController = Get.find<NavbarBottomController>();
 
-    return SizedBox(
-      height: 100, // lebih tinggi supaya tombol QR tidak terpotong
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          // NAVBAR utama
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _navItem(context, 'assets/home.png', 'Home', 0),
-                  _navItem(context, 'assets/report.png', 'Reports', 1),
-                  const SizedBox(width: 64), // space untuk QR Code
-                  _navItem(context, 'assets/invent.png', 'History', 2),
-                  _navItem(context, 'assets/logout.png', 'log Out', 3,
-                      token: token, navbarController: navbarController),
-                ],
-              ),
-            ),
-          ),
+    return Obx(() {
+      int currentIndex = navbarController.selectedIndex.value;
 
-          // Tombol QR Code Mengambang
-          Positioned(
-            bottom: 40, // posisinya naik ke atas navbar
-            child: GestureDetector(
-              onTap: () {
-                if (onItemSelected != null) onItemSelected!(4);
-                Get.toNamed(AppRoutes.scanBarcode);
-              },
+      return SizedBox(
+        height: 100, // lebih tinggi supaya tombol QR tidak terpotong
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: Container(
-                width: 70,
-                height: 70,
-                decoration: const BoxDecoration(
-                  color: const Color(0xFF1565C0),
-                  shape: BoxShape.circle,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(24)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 12,
-                      offset: Offset(0, 4),
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, -2),
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Image.asset(
-                    'assets/qr.png',
-                    width: 32,
-                    height: 32,
-                    color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _navItem(context, 'assets/home.png', 'Home', 0),
+                    _navItem(context, 'assets/report.png', 'Reports', 1),
+                    const SizedBox(width: 64), // space untuk QR Code
+                    _navItem(context, 'assets/invent.png', 'History', 2),
+                    _navItem(context, 'assets/logout.png', 'log Out', 3,
+                        token: token, navbarController: navbarController),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 40, // posisinya naik ke atas navbar
+              child: GestureDetector(
+                onTap: () {
+                  if (onItemSelected != null) onItemSelected!(4);
+                  Get.toNamed(AppRoutes.scanBarcode);
+                },
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF1565C0),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/qr.png',
+                      width: 32,
+                      height: 32,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _navItem(
@@ -101,20 +103,26 @@ class NavbarBottom extends StatelessWidget {
     String? token,
     NavbarBottomController? navbarController,
   }) {
+    final navController = Get.find<NavbarBottomController>();
+    bool isSelected = navController.selectedIndex.value == index;
+
     Color iconColor = Colors.grey[500]!;
     if (label == 'log Out') iconColor = Colors.black;
-    bool isSelected = selectedIndex == index;
 
     return GestureDetector(
       onTap: () async {
         if (onItemSelected != null) onItemSelected!(index);
+        navController.setIndex(index); // ✅ update index aktif
+
         switch (label) {
           case 'Home':
             Navigator.pushReplacementNamed(context, AppRoutes.home);
             break;
+
           case 'Reports':
             Navigator.pushReplacementNamed(context, AppRoutes.report);
             break;
+
           case 'History':
             final selected = await showModalBottomSheet<String>(
               context: context,
@@ -134,7 +142,6 @@ class NavbarBottom extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        /// Indicator bar
                         Container(
                           width: 48,
                           height: 4,
@@ -144,8 +151,6 @@ class NavbarBottom extends StatelessWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-
-                        /// Icon
                         Image.asset(
                           'assets/select_page.png',
                           width: 100,
@@ -153,8 +158,6 @@ class NavbarBottom extends StatelessWidget {
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(height: 20),
-
-                        /// Title
                         Text(
                           'Select Page',
                           style: GoogleFonts.poppins(
@@ -173,8 +176,6 @@ class NavbarBottom extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 28),
-
-                        /// Radio pilihan
                         Column(
                           children: [
                             Container(
@@ -231,8 +232,6 @@ class NavbarBottom extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 28),
-
-                        /// Tombol Continue
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -275,7 +274,6 @@ class NavbarBottom extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Bagian atas abu-abu
                       Container(
                         height: 150,
                         decoration: BoxDecoration(
@@ -295,7 +293,6 @@ class NavbarBottom extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Bagian tombol
                       Row(
                         children: [
                           Expanded(

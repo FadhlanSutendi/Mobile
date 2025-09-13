@@ -15,6 +15,10 @@ class ReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<ReportController>();
     final days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    final size = MediaQuery.of(context).size;
+    final isSmallDevice = size.width < 375;
+    final isMediumDevice = size.width >= 375 && size.width < 414;
+    final isLargeDevice = size.width >= 414;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,14 +28,16 @@ class ReportPage extends StatelessWidget {
         ),
         title: Text(
           'Reports',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: isSmallDevice ? 16 : 18,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
       ),
 
-      // 🔹 Bungkus dengan SingleChildScrollView
       body: RefreshIndicator(
         onRefresh: () {
           return controller.refreshData();
@@ -39,7 +45,7 @@ class ReportPage extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(isSmallDevice ? 12 : 16),
             child: Column(
               children: [
                 // --- Most of Borrowing Card ---
@@ -48,9 +54,9 @@ class ReportPage extends StatelessWidget {
                     return Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
-                      child: const Padding(
-                        padding: EdgeInsets.all(32),
-                        child: Center(child: CircularProgressIndicator()),
+                      child: Padding(
+                        padding: EdgeInsets.all(isSmallDevice ? 24 : 32),
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
                     );
                   }
@@ -61,7 +67,7 @@ class ReportPage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
                       child: Padding(
-                        padding: EdgeInsets.all(32),
+                        padding: EdgeInsets.all(isSmallDevice ? 24 : 32),
                         child: Center(
                             child: Text('No data',
                                 style:
@@ -86,7 +92,7 @@ class ReportPage extends StatelessWidget {
                   // Item utama (yang pertama dari API)
                   final mainItem = normalized.first;
 
-                  // ✅ Warna sesuai figma (ubah hex sesuai kebutuhan)
+                  // ✅ Warna sesuai figma
                   final List<Color> figmaColors = [
                     Color(0xFFD9D9D9), // Laptop
                     Color(0xFFB0B0B0), // Keyboard
@@ -99,26 +105,28 @@ class ReportPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(isSmallDevice ? 12 : 16),
                       child: Column(
                         children: [
                           Text(
                             'Most of Borrowing',
                             style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,
+                              fontSize: isSmallDevice ? 14 : 16,
+                            ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: isSmallDevice ? 12 : 16),
 
-                          // ✅ Pie Chart
+                          // ✅ Responsive Pie Chart
                           SizedBox(
-                            height: 160,
+                            height: isSmallDevice ? 140 : isMediumDevice ? 150 : 160,
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
                                 PieChart(
                                   PieChartData(
                                     sectionsSpace: 2,
-                                    centerSpaceRadius: 45,
+                                    centerSpaceRadius: isSmallDevice ? 35 : isMediumDevice ? 40 : 45,
                                     sections:
                                         normalized.asMap().entries.map((entry) {
                                       final idx = entry.key;
@@ -128,7 +136,7 @@ class ReportPage extends StatelessWidget {
                                             idx % figmaColors.length],
                                         value: data["percent"] as double,
                                         title: '',
-                                        radius: 45,
+                                        radius: isSmallDevice ? 35 : isMediumDevice ? 40 : 45,
                                       );
                                     }).toList(),
                                   ),
@@ -138,14 +146,19 @@ class ReportPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       '${(mainItem["percent"] as double).toStringAsFixed(0)}%',
-                                      style: const TextStyle(
-                                        fontSize: 24,
+                                      style: TextStyle(
+                                        fontSize: isSmallDevice ? 20 : 24,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
                                       mainItem["name"] as String,
-                                      style: const TextStyle(fontSize: 14),
+                                      style: TextStyle(
+                                        fontSize: isSmallDevice ? 11 : 14,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -153,9 +166,9 @@ class ReportPage extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 16),
+                          SizedBox(height: isSmallDevice ? 12 : 16),
 
-                          // ✅ Legend sinkron warna + data
+                          // ✅ Responsive Legend
                           Obx(() {
                             if (controller.isLoadingLegend.value) {
                               return const Center(
@@ -171,6 +184,7 @@ class ReportPage extends StatelessWidget {
                                   figmaColors[idx % figmaColors.length],
                                   e.name,
                                   e.totalBorrowed.toString(),
+                                  isSmallDevice,
                                 );
                               }).toList(),
                             );
@@ -180,7 +194,7 @@ class ReportPage extends StatelessWidget {
                     ),
                   );
                 }),
-                const SizedBox(height: 16),
+                SizedBox(height: isSmallDevice ? 12 : 16),
 
                 // --- Activity Statistics Card ---
                 Obx(() {
@@ -210,9 +224,11 @@ class ReportPage extends StatelessWidget {
                   ];
 
                   return Container(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    padding: const EdgeInsets.all(16),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: isSmallDevice ? 0 : 16, 
+                      vertical: isSmallDevice ? 4 : 8
+                    ),
+                    padding: EdgeInsets.all(isSmallDevice ? 12 : 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(18),
@@ -227,80 +243,88 @@ class ReportPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 🔹 Header + Year Picker Custom
+                        // 🔹 Responsive Header + Year Picker
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Overview Statistics",
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                            Flexible(
+                              child: Text(
+                                "Overview Statistics",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: isSmallDevice ? 14 : 16,
+                                ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Select Year",
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF959595)),
-                                ),
-                                const SizedBox(width: 8),
-                                GestureDetector(
-                                  onTap: () async {
-                                    final selectedDate = await showDatePicker(
-                                      context: Get.context!,
-                                      initialDate: DateTime(
-                                          controller.selectedYear.value ??
-                                              DateTime.now().year),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2100),
-                                      initialDatePickerMode:
-                                          DatePickerMode.year,
-                                    );
-                                    if (selectedDate != null) {
-                                      controller.fetchLoanReportByYear(
-                                          selectedDate.year);
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: const Color(
-                                          0xFFD9D9D9), // 🔹 sesuai figma
+                            SizedBox(width: isSmallDevice ? 4 : 8),
+                            Flexible(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!isSmallDevice)
+                                    Text(
+                                      "Select Year",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: isSmallDevice ? 8 : 10,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF959595)),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.calendar_today,
-                                          size: 10,
-                                          color: Colors.black87,
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          (controller.selectedYear.value ??
-                                                  DateTime.now().year)
-                                              .toString(),
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 10,
+                                  SizedBox(width: isSmallDevice ? 4 : 8),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final selectedDate = await showDatePicker(
+                                        context: Get.context!,
+                                        initialDate: DateTime(
+                                            controller.selectedYear.value ??
+                                                DateTime.now().year),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2100),
+                                        initialDatePickerMode:
+                                            DatePickerMode.year,
+                                      );
+                                      if (selectedDate != null) {
+                                        controller.fetchLoanReportByYear(
+                                            selectedDate.year);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: isSmallDevice ? 3 : 5, 
+                                          vertical: isSmallDevice ? 2 : 3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: const Color(0xFFD9D9D9),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: isSmallDevice ? 8 : 10,
+                                            color: Colors.black87,
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(width: isSmallDevice ? 4 : 6),
+                                          Text(
+                                            (controller.selectedYear.value ??
+                                                    DateTime.now().year)
+                                                .toString(),
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                              fontSize: isSmallDevice ? 8 : 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: isSmallDevice ? 8 : 12),
 
                         // 🔹 Validasi data
                         if (controller.selectedYear.value == null ||
@@ -309,13 +333,14 @@ class ReportPage extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.info_outline,
-                                    color: Colors.grey, size: 48),
-                                const SizedBox(height: 8),
+                                Icon(Icons.info_outline,
+                                    color: Colors.grey, 
+                                    size: isSmallDevice ? 36 : 48),
+                                SizedBox(height: isSmallDevice ? 6 : 8),
                                 Text(
                                   "Data tidak ditemukan",
                                   style: GoogleFonts.poppins(
-                                    fontSize: 14,
+                                    fontSize: isSmallDevice ? 12 : 14,
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -324,13 +349,13 @@ class ReportPage extends StatelessWidget {
                             ),
                           )
                         else
-                          // 🔹 Chart dengan scroll horizontal
+                          // 🔹 Responsive Chart dengan scroll horizontal
                           SizedBox(
-                            height: 280,
+                            height: isSmallDevice ? 220 : isMediumDevice ? 250 : 280,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: SizedBox(
-                                width: months.length * 70,
+                                width: months.length * (isSmallDevice ? 50 : isMediumDevice ? 60 : 70),
                                 child: Stack(
                                   children: [
                                     BarChart(
@@ -376,7 +401,7 @@ class ReportPage extends StatelessWidget {
                                                       months[value.toInt()],
                                                       style:
                                                           GoogleFonts.poppins(
-                                                        fontSize: 11,
+                                                        fontSize: isSmallDevice ? 9 : 11,
                                                         color:
                                                             Color(0xFF898989),
                                                       ),
@@ -401,7 +426,7 @@ class ReportPage extends StatelessWidget {
                                             barRods: [
                                               BarChartRodData(
                                                 toY: y,
-                                                width: 28,
+                                                width: isSmallDevice ? 20 : isMediumDevice ? 24 : 28,
                                                 borderRadius:
                                                     BorderRadius.circular(6),
                                                 color: const Color(0xFFD9D9D9),
@@ -412,7 +437,7 @@ class ReportPage extends StatelessWidget {
                                       ),
                                     ),
 
-                                    // 🔹 Badge angka
+                                    // 🔹 Responsive Badge angka
                                     Positioned.fill(
                                       child: LayoutBuilder(
                                         builder: (context, constraints) {
@@ -453,24 +478,23 @@ class ReportPage extends StatelessWidget {
                                               return Positioned(
                                                 left: itemWidth * i +
                                                     itemWidth / 2 -
-                                                    15,
-                                                bottom: barHeight + 30,
+                                                    (isSmallDevice ? 12 : 15),
+                                                bottom: barHeight + (isSmallDevice ? 20 : 30),
                                                 child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 4),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: isSmallDevice ? 8 : 12,
+                                                      vertical: isSmallDevice ? 3 : 4),
                                                   decoration: BoxDecoration(
                                                     color:
                                                         const Color(0xFF043D94),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            12),
+                                                            isSmallDevice ? 10 : 12),
                                                   ),
                                                   child: Text(
                                                     y.toInt().toString(),
                                                     style: GoogleFonts.poppins(
-                                                      fontSize: 9,
+                                                      fontSize: isSmallDevice ? 8 : 9,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.white,
@@ -501,16 +525,28 @@ class ReportPage extends StatelessWidget {
     );
   }
 
-  static Widget _legendItem(Color? color, String label, String value) {
+  static Widget _legendItem(Color? color, String label, String value, bool isSmallDevice) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: EdgeInsets.symmetric(vertical: isSmallDevice ? 1 : 2),
       child: Row(
         children: [
-          Icon(Icons.circle, color: color, size: 10),
-          const SizedBox(width: 8),
-          Text(label, style: GoogleFonts.poppins(fontSize: 14)),
-          const Spacer(),
-          Text(value, style: GoogleFonts.poppins(fontSize: 14)),
+          Icon(Icons.circle, color: color, size: isSmallDevice ? 8 : 10),
+          SizedBox(width: isSmallDevice ? 6 : 8),
+          Expanded(
+            child: Text(
+              label, 
+              style: GoogleFonts.poppins(
+                fontSize: isSmallDevice ? 12 : 14
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            value, 
+            style: GoogleFonts.poppins(
+              fontSize: isSmallDevice ? 12 : 14
+            )
+          ),
         ],
       ),
     );

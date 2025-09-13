@@ -5,6 +5,11 @@ import '../models/navbar_bottom_models.dart';
 class NavbarBottomController extends GetxController {
   var isLoading = false.obs;
   var logoutResponse = Rxn<LogoutResponse>();
+  var selectedIndex = 0.obs;
+
+  void setIndex(int index) {
+    selectedIndex.value = index;
+  }
 
   Future<void> logout(String token) async {
     isLoading.value = true;
