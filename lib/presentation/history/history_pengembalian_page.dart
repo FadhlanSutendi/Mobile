@@ -12,138 +12,147 @@ class HistoryPengembalianPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return ChangeNotifierProvider(
-    create: (_) => HistoryController(token: token)..fetchHistory(data: 'returning'),
-    child: DefaultTabController(
-      length: 6,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
+    return ChangeNotifierProvider(
+      create: (_) =>
+          HistoryController(token: token)..fetchHistory(data: 'returning'),
+      child: DefaultTabController(
+        length: 6,
+        child: Scaffold(
           backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            'History Page',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
             ),
-          ),
-          bottom: TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            indicatorColor: Colors.black,
-            indicatorWeight: 2.5,
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-            unselectedLabelStyle: GoogleFonts.poppins(),
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            tabs: const [
-              Tab(text: "All"),
-              Tab(text: "Laptop"),
-              Tab(text: "Mouse"),
-              Tab(text: "Keyboard"),
-              Tab(text: "Monitor"),
-              Tab(text: "Terminal"),
-            ],
-          ),
-        ),
-        body: Consumer<HistoryController>(
-          builder: (context, controller, _) {
-            final returnedItems = controller.filteredItems
-                .where((item) => item.status == true)
-                .toList();
-
-            // Group items by date
-            final grouped = <String, List<HistoryItem>>{};
-            for (var item in returnedItems) {
-              final date = _formatDate(item.borrowedAt);
-              grouped.putIfAbsent(date, () => []).add(item);
-            }
-
-            final sortedDates = grouped.keys.toList()
-              ..sort((a, b) => _parseDate(b).compareTo(_parseDate(a)));
-
-            return controller.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : TabBarView(
-                    children: [
-                      _buildGroupedList(grouped, sortedDates), // All
-                      _buildGroupedList(
-                        _filterByType(grouped, sortedDates, 'Laptop'),
-                        sortedDates,
-                      ),
-                      _buildGroupedList(
-                        _filterByType(grouped, sortedDates, 'Mouse'),
-                        sortedDates,
-                      ),
-                      _buildGroupedList(
-                        _filterByType(grouped, sortedDates, 'Keyboard'),
-                        sortedDates,
-                      ),
-                      _buildGroupedList(
-                        _filterByType(grouped, sortedDates, 'Monitor'),
-                        sortedDates,
-                      ),
-                      _buildGroupedList(
-                        _filterByType(grouped, sortedDates, 'Terminal'),
-                        sortedDates,
-                      ),
-                    ],
-                  );
-          },
-        ),
-        bottomNavigationBar: NavbarBottom(selectedIndex: 2),
-      ),
-    ),
-  );
-}
-
-// Helper untuk filter grouped items berdasarkan itemType
-Map<String, List<HistoryItem>> _filterByType(
-    Map<String, List<HistoryItem>> grouped, List<String> sortedDates, String type) {
-  final filtered = <String, List<HistoryItem>>{};
-  for (var date in sortedDates) {
-    final items = grouped[date]!.where((e) => e.itemType == type).toList();
-    if (items.isNotEmpty) filtered[date] = items;
-  }
-  return filtered;
-}
-
-Widget _buildGroupedList(Map<String, List<HistoryItem>> grouped, List<String> sortedDates) {
-  if (grouped.isEmpty) return const Center(child: Text("No returned items found"));
-
-  return ListView(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-    children: sortedDates.where((d) => grouped[d] != null).map((date) {
-      final items = grouped[date]!;
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              date,
+            title: Text(
+              'History Page',
               style: GoogleFonts.poppins(
-                fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: Colors.black,
               ),
             ),
+            bottom: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              indicatorColor: Colors.black,
+              indicatorWeight: 2.5,
+              indicatorSize: TabBarIndicatorSize.tab,
+              labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              unselectedLabelStyle: GoogleFonts.poppins(),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              tabs: const [
+                Tab(text: "All"),
+                Tab(text: "Laptop"),
+                Tab(text: "Mouse"),
+                Tab(text: "Keyboard"),
+                Tab(text: "Monitor"),
+                Tab(text: "Terminal"),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          ...items.map((e) => _HistoryCard(item: e)),
-          const SizedBox(height: 16),
-        ],
-      );
-    }).toList(),
-  );
-}
+          body: Consumer<HistoryController>(
+            builder: (context, controller, _) {
+              final returnedItems = controller.filteredItems
+                  .where((item) => item.status == true)
+                  .toList();
 
+              // Group items by date
+              final grouped = <String, List<HistoryItem>>{};
+              for (var item in returnedItems) {
+                final date = _formatDate(item.borrowedAt);
+                grouped.putIfAbsent(date, () => []).add(item);
+              }
+
+              final sortedDates = grouped.keys.toList()
+                ..sort((a, b) => _parseDate(b).compareTo(_parseDate(a)));
+
+              return controller.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : RefreshIndicator(
+                      onRefresh: () {
+                        return controller.refreshHistory();
+                      },
+                      child: TabBarView(
+                        children: [
+                          _buildGroupedList(grouped, sortedDates), // All
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Laptop'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Mouse'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Keyboard'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Monitor'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Terminal'),
+                            sortedDates,
+                          ),
+                        ],
+                      ),
+                    );
+            },
+          ),
+          bottomNavigationBar: NavbarBottom(selectedIndex: 2),
+        ),
+      ),
+    );
+  }
+
+// Helper untuk filter grouped items berdasarkan itemType
+  Map<String, List<HistoryItem>> _filterByType(
+      Map<String, List<HistoryItem>> grouped,
+      List<String> sortedDates,
+      String type) {
+    final filtered = <String, List<HistoryItem>>{};
+    for (var date in sortedDates) {
+      final items = grouped[date]!.where((e) => e.itemType == type).toList();
+      if (items.isNotEmpty) filtered[date] = items;
+    }
+    return filtered;
+  }
+
+  Widget _buildGroupedList(
+      Map<String, List<HistoryItem>> grouped, List<String> sortedDates) {
+    if (grouped.isEmpty)
+      return const Center(child: Text("No returned items found"));
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      children: sortedDates.where((d) => grouped[d] != null).map((date) {
+        final items = grouped[date]!;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                date,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            ...items.map((e) => _HistoryCard(item: e)),
+            const SizedBox(height: 16),
+          ],
+        );
+      }).toList(),
+    );
+  }
 
   // format ke label: Today, Yesterday, atau tanggal
   static String _formatDate(String dateStr) {
