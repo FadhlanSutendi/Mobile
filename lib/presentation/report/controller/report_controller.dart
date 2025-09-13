@@ -22,75 +22,129 @@ class ReportController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchToken();
-    fetchPieData();
-    fetchLegendData();
-    fetchLoanReport();
+    initData();
   }
 
-  // 🔹 Tambahkan ini
-  Future<void> refreshData() async {
-    // pastikan token sudah ada
-    if (token.value.isEmpty) {
-      fetchToken();
-    }
-
+  /// 🔹 Inisialisasi data: pastikan token siap sebelum fetch data
+  void initData() async {
+    await fetchToken(); // tunggu token selesai
     await Future.wait([
-      Future(() => fetchPieData()),
-      Future(() => fetchLegendData()),
-      Future(() => fetchLoanReport()),
+      fetchPieData(),
+      fetchLegendData(),
+      fetchLoanReport(),
     ]);
   }
 
-  void fetchToken() async {
-    // Ambil token dari LoginController
+  /// 🔹 Refresh semua data
+  Future<void> refreshData() async {
+    // pastikan token sudah ada
+    if (token.value.isEmpty) {
+      await fetchToken();
+    }
+
+    await Future.wait([
+      fetchPieData(),
+      fetchLegendData(),
+      fetchLoanReport(),
+    ]);
+  }
+
+  /// 🔹 Ambil token dari LoginController
+  Future<void> fetchToken() async {
     final loginController = Get.find<LoginController>();
     token.value = loginController.token.value;
     print('ReportController token: ${token.value}');
   }
 
-  void fetchPieData() async {
+  /// 🔹 Fetch PieChart
+  Future<void> fetchPieData() async {
     isLoadingPie.value = true;
+
+    // jangan panggil jika token kosong
+    if (token.value.isEmpty) {
+      print("fetchPieData: token kosong, batalkan request");
+      isLoadingPie.value = false;
+      return;
+    }
+
     final res = await AppApi.fetchPieChart(token: token.value);
     print('PieChart API response: $res');
+
     if (res != null && res['data'] != null) {
       pieData.value = List<ItemPercentage>.from(
         res['data'].map((e) => ItemPercentage.fromJson(e)),
       );
+    } else {
+      pieData.clear();
     }
+
     isLoadingPie.value = false;
   }
 
-  void fetchLegendData() async {
+  /// 🔹 Fetch Legend
+  Future<void> fetchLegendData() async {
     isLoadingLegend.value = true;
+
+    if (token.value.isEmpty) {
+      print("fetchLegendData: token kosong, batalkan request");
+      isLoadingLegend.value = false;
+      return;
+    }
+
     final res = await AppApi.fetchLegend(token: token.value);
     print('Legend API response: $res');
+
     if (res != null && res['data'] != null) {
       legendData.value = List<ItemCount>.from(
         res['data'].map((e) => ItemCount.fromJson(e)),
       );
+    } else {
+      legendData.clear();
     }
+
     isLoadingLegend.value = false;
   }
 
-  void fetchLoanReport() async {
+  /// 🔹 Fetch Loan Report
+  Future<void> fetchLoanReport() async {
     isLoadingLoanReport.value = true;
-    // Contoh: ambil data dari Januari sampai Desember tahun ini
+
+    if (token.value.isEmpty) {
+      print("fetchLoanReport: token kosong, batalkan request");
+      isLoadingLoanReport.value = false;
+      return;
+    }
+
     final now = DateTime.now();
     final from = '${now.year}-01-01';
     final to = '${now.year}-12-31';
-    final res =
-        await AppApi.fetchLoanReport(from: from, to: to, token: token.value);
+
+    final res = await AppApi.fetchLoanReport(
+      from: from,
+      to: to,
+      token: token.value,
+    );
+
     print('LoanReport API response: $res');
+
     if (res != null && res['data'] != null) {
-      // data: { "Jan": 10, "Feb": 5, ... }
       loanReportData.value = Map<String, int>.from(res['data']);
+    } else {
+      loanReportData.clear();
     }
+
     isLoadingLoanReport.value = false;
   }
 
-  void fetchLoanReportByYear(int year) async {
+  /// 🔹 Fetch Loan Report per Tahun
+  Future<void> fetchLoanReportByYear(int year) async {
     isLoadingLoanReport.value = true;
+
+    if (token.value.isEmpty) {
+      print("fetchLoanReportByYear: token kosong, batalkan request");
+      isLoadingLoanReport.value = false;
+      return;
+    }
 
     final from = '$year-01-01';
     final to = '$year-12-31';
@@ -105,12 +159,11 @@ class ReportController extends GetxController {
 
     if (res != null && res['data'] != null) {
       loanReportData.value = Map<String, int>.from(res['data']);
-      selectedYear.value = year; // simpan tahun terpilih
     } else {
       loanReportData.clear();
-      selectedYear.value = year; // tetap set tahun biar validasi jalan
     }
 
+    selectedYear.value = year;
     isLoadingLoanReport.value = false;
   }
 }

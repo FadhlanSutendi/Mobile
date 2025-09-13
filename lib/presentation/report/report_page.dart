@@ -37,19 +37,22 @@ class ReportPage extends StatelessWidget {
         elevation: 0,
         foregroundColor: Colors.black,
       ),
-
       body: RefreshIndicator(
         onRefresh: () {
           return controller.refreshData();
         },
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics:
+              const AlwaysScrollableScrollPhysics(), // wajib agar refresh bisa muncul
           child: Padding(
             padding: EdgeInsets.all(isSmallDevice ? 12 : 16),
             child: Column(
               children: [
                 // --- Most of Borrowing Card ---
                 Obx(() {
+                  print("isLoadingPie: ${controller.isLoadingPie.value}");
+                  print("pieData: ${controller.pieData}");
+
                   if (controller.isLoadingPie.value) {
                     return Card(
                       shape: RoundedRectangleBorder(
@@ -94,11 +97,11 @@ class ReportPage extends StatelessWidget {
 
                   // ✅ Warna sesuai figma
                   final List<Color> figmaColors = [
-                    Color(0xFFD9D9D9), // Laptop
-                    Color(0xFFB0B0B0), // Keyboard
-                    Color(0xFF8C8C8C), // Mouse
-                    Color(0xFF595959), // Earphone
-                    Color(0xFF000000), // Monitor
+                    Color.fromARGB(255, 1, 47, 116), // Laptop
+                    Color.fromARGB(255, 2, 67, 132), // Keyboard
+                    Color.fromARGB(255, 1, 66, 164), // Mouse
+                    Color.fromARGB(255, 0, 112, 187), // Earphone
+                    Color.fromARGB(255, 130, 176, 209), // Monitor
                   ];
 
                   return Card(
@@ -119,14 +122,22 @@ class ReportPage extends StatelessWidget {
 
                           // ✅ Responsive Pie Chart
                           SizedBox(
-                            height: isSmallDevice ? 140 : isMediumDevice ? 150 : 160,
+                            height: isSmallDevice
+                                ? 140
+                                : isMediumDevice
+                                    ? 150
+                                    : 160,
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
                                 PieChart(
                                   PieChartData(
                                     sectionsSpace: 2,
-                                    centerSpaceRadius: isSmallDevice ? 35 : isMediumDevice ? 40 : 45,
+                                    centerSpaceRadius: isSmallDevice
+                                        ? 35
+                                        : isMediumDevice
+                                            ? 40
+                                            : 45,
                                     sections:
                                         normalized.asMap().entries.map((entry) {
                                       final idx = entry.key;
@@ -136,7 +147,11 @@ class ReportPage extends StatelessWidget {
                                             idx % figmaColors.length],
                                         value: data["percent"] as double,
                                         title: '',
-                                        radius: isSmallDevice ? 35 : isMediumDevice ? 40 : 45,
+                                        radius: isSmallDevice
+                                            ? 35
+                                            : isMediumDevice
+                                                ? 40
+                                                : 45,
                                       );
                                     }).toList(),
                                   ),
@@ -225,9 +240,8 @@ class ReportPage extends StatelessWidget {
 
                   return Container(
                     margin: EdgeInsets.symmetric(
-                      horizontal: isSmallDevice ? 0 : 16, 
-                      vertical: isSmallDevice ? 4 : 8
-                    ),
+                        horizontal: isSmallDevice ? 0 : 16,
+                        vertical: isSmallDevice ? 4 : 8),
                     padding: EdgeInsets.all(isSmallDevice ? 12 : 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -290,7 +304,7 @@ class ReportPage extends StatelessWidget {
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: isSmallDevice ? 3 : 5, 
+                                          horizontal: isSmallDevice ? 3 : 5,
                                           vertical: isSmallDevice ? 2 : 3),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(6),
@@ -304,7 +318,8 @@ class ReportPage extends StatelessWidget {
                                             size: isSmallDevice ? 8 : 10,
                                             color: Colors.black87,
                                           ),
-                                          SizedBox(width: isSmallDevice ? 4 : 6),
+                                          SizedBox(
+                                              width: isSmallDevice ? 4 : 6),
                                           Text(
                                             (controller.selectedYear.value ??
                                                     DateTime.now().year)
@@ -334,7 +349,7 @@ class ReportPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(Icons.info_outline,
-                                    color: Colors.grey, 
+                                    color: Colors.grey,
                                     size: isSmallDevice ? 36 : 48),
                                 SizedBox(height: isSmallDevice ? 6 : 8),
                                 Text(
@@ -351,11 +366,20 @@ class ReportPage extends StatelessWidget {
                         else
                           // 🔹 Responsive Chart dengan scroll horizontal
                           SizedBox(
-                            height: isSmallDevice ? 220 : isMediumDevice ? 250 : 280,
+                            height: isSmallDevice
+                                ? 220
+                                : isMediumDevice
+                                    ? 250
+                                    : 280,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: SizedBox(
-                                width: months.length * (isSmallDevice ? 50 : isMediumDevice ? 60 : 70),
+                                width: months.length *
+                                    (isSmallDevice
+                                        ? 50
+                                        : isMediumDevice
+                                            ? 60
+                                            : 70),
                                 child: Stack(
                                   children: [
                                     BarChart(
@@ -401,7 +425,9 @@ class ReportPage extends StatelessWidget {
                                                       months[value.toInt()],
                                                       style:
                                                           GoogleFonts.poppins(
-                                                        fontSize: isSmallDevice ? 9 : 11,
+                                                        fontSize: isSmallDevice
+                                                            ? 9
+                                                            : 11,
                                                         color:
                                                             Color(0xFF898989),
                                                       ),
@@ -426,7 +452,11 @@ class ReportPage extends StatelessWidget {
                                             barRods: [
                                               BarChartRodData(
                                                 toY: y,
-                                                width: isSmallDevice ? 20 : isMediumDevice ? 24 : 28,
+                                                width: isSmallDevice
+                                                    ? 20
+                                                    : isMediumDevice
+                                                        ? 24
+                                                        : 28,
                                                 borderRadius:
                                                     BorderRadius.circular(6),
                                                 color: const Color(0xFFD9D9D9),
@@ -479,22 +509,30 @@ class ReportPage extends StatelessWidget {
                                                 left: itemWidth * i +
                                                     itemWidth / 2 -
                                                     (isSmallDevice ? 12 : 15),
-                                                bottom: barHeight + (isSmallDevice ? 20 : 30),
+                                                bottom: barHeight +
+                                                    (isSmallDevice ? 20 : 30),
                                                 child: Container(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: isSmallDevice ? 8 : 12,
-                                                      vertical: isSmallDevice ? 3 : 4),
+                                                      horizontal: isSmallDevice
+                                                          ? 8
+                                                          : 12,
+                                                      vertical: isSmallDevice
+                                                          ? 3
+                                                          : 4),
                                                   decoration: BoxDecoration(
                                                     color:
                                                         const Color(0xFF043D94),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            isSmallDevice ? 10 : 12),
+                                                            isSmallDevice
+                                                                ? 10
+                                                                : 12),
                                                   ),
                                                   child: Text(
                                                     y.toInt().toString(),
                                                     style: GoogleFonts.poppins(
-                                                      fontSize: isSmallDevice ? 8 : 9,
+                                                      fontSize:
+                                                          isSmallDevice ? 8 : 9,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.white,
@@ -525,7 +563,8 @@ class ReportPage extends StatelessWidget {
     );
   }
 
-  static Widget _legendItem(Color? color, String label, String value, bool isSmallDevice) {
+  static Widget _legendItem(
+      Color? color, String label, String value, bool isSmallDevice) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: isSmallDevice ? 1 : 2),
       child: Row(
@@ -534,19 +573,13 @@ class ReportPage extends StatelessWidget {
           SizedBox(width: isSmallDevice ? 6 : 8),
           Expanded(
             child: Text(
-              label, 
-              style: GoogleFonts.poppins(
-                fontSize: isSmallDevice ? 12 : 14
-              ),
+              label,
+              style: GoogleFonts.poppins(fontSize: isSmallDevice ? 12 : 14),
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Text(
-            value, 
-            style: GoogleFonts.poppins(
-              fontSize: isSmallDevice ? 12 : 14
-            )
-          ),
+          Text(value,
+              style: GoogleFonts.poppins(fontSize: isSmallDevice ? 12 : 14)),
         ],
       ),
     );

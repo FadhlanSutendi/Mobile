@@ -16,7 +16,7 @@ class HistoryPengembalianPage extends StatelessWidget {
       create: (_) =>
           HistoryController(token: token)..fetchHistory(data: 'returning'),
       child: DefaultTabController(
-        length: 6,
+        length: 8,
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -49,7 +49,9 @@ class HistoryPengembalianPage extends StatelessWidget {
                 Tab(text: "Mouse"),
                 Tab(text: "Keyboard"),
                 Tab(text: "Monitor"),
-                Tab(text: "Terminal"),
+                Tab(text: "Printer"),
+                Tab(text: "Speaker"),
+                Tab(text: "Komputer"),
               ],
             ),
           ),
@@ -72,9 +74,7 @@ class HistoryPengembalianPage extends StatelessWidget {
               return controller.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : RefreshIndicator(
-                      onRefresh: () {
-                        return controller.refreshHistory();
-                      },
+                      onRefresh: () => controller.refreshHistory(),
                       child: TabBarView(
                         children: [
                           _buildGroupedList(grouped, sortedDates), // All
@@ -95,7 +95,15 @@ class HistoryPengembalianPage extends StatelessWidget {
                             sortedDates,
                           ),
                           _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Terminal'),
+                            _filterByType(grouped, sortedDates, 'Printer'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Speaker'),
+                            sortedDates,
+                          ),
+                          _buildGroupedList(
+                            _filterByType(grouped, sortedDates, 'Komputer'),
                             sortedDates,
                           ),
                         ],
@@ -109,7 +117,7 @@ class HistoryPengembalianPage extends StatelessWidget {
     );
   }
 
-// Helper untuk filter grouped items berdasarkan itemType
+  // Helper untuk filter grouped items berdasarkan itemType
   Map<String, List<HistoryItem>> _filterByType(
       Map<String, List<HistoryItem>> grouped,
       List<String> sortedDates,
@@ -210,49 +218,6 @@ class HistoryPengembalianPage extends StatelessWidget {
   }
 }
 
-class _CategoryTabs extends StatelessWidget {
-  final HistoryController controller;
-  const _CategoryTabs({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: controller.categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 16),
-        itemBuilder: (context, idx) {
-          final cat = controller.categories[idx];
-          final selected = cat == controller.selectedCategory;
-          return GestureDetector(
-            onTap: () => controller.setCategory(cat),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  cat,
-                  style: GoogleFonts.poppins(
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-                    color: selected ? Colors.black : Colors.black54,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  height: 2,
-                  width: 24,
-                  color: selected ? Colors.black : Colors.transparent,
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 class _HistoryCard extends StatelessWidget {
   final HistoryItem item;
   const _HistoryCard({required this.item});
@@ -273,7 +238,7 @@ class _HistoryCard extends StatelessWidget {
           border: const Border(
             left: BorderSide(
               color: Color(0xFF1565C0), // warna biru
-              width: 8, // tebal garis kiri
+              width: 8,
             ),
           ),
         ),
@@ -286,8 +251,8 @@ class _HistoryCard extends StatelessWidget {
                 Container(
                   width: 8,
                   height: 8,
-                  margin: EdgeInsets.only(right: 6),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.only(right: 6),
+                  decoration: const BoxDecoration(
                     color: Color(0xFF1565C0),
                     shape: BoxShape.circle,
                   ),
@@ -312,7 +277,7 @@ class _HistoryCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             // Purpose
             Text(
               item.purpose,
@@ -323,7 +288,7 @@ class _HistoryCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             // Borrower
             Text(
               'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',

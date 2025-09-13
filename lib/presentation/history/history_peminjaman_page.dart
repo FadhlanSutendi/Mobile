@@ -16,7 +16,8 @@ class HistoryPeminjamanPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => HistoryController(token: token)..fetchHistory(),
       child: DefaultTabController(
-        length: 6, // All, Laptop, Mouse, Keyboard, Monitor, Terminal
+        length:
+            8, // All, Laptop, Mouse, Keyboard, Monitor, Printer, Speaker, Komputer
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -36,7 +37,7 @@ class HistoryPeminjamanPage extends StatelessWidget {
             ),
             bottom: TabBar(
               isScrollable: true,
-              tabAlignment: TabAlignment.start, // tab rapat ke kiri
+              tabAlignment: TabAlignment.start,
               indicatorColor: Colors.black,
               labelStyle: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
@@ -50,7 +51,9 @@ class HistoryPeminjamanPage extends StatelessWidget {
                 Tab(text: "Mouse"),
                 Tab(text: "Keyboard"),
                 Tab(text: "Monitor"),
-                Tab(text: "Terminal"),
+                Tab(text: "Printer"),
+                Tab(text: "Speaker"),
+                Tab(text: "Komputer"),
               ],
             ),
           ),
@@ -59,55 +62,82 @@ class HistoryPeminjamanPage extends StatelessWidget {
               final borrowedItems = controller.filteredItems
                   .where((item) => item.status == false)
                   .toList();
+
               if (controller.isLoading) {
                 return Center(child: CircularProgressIndicator());
               }
+
               if (borrowedItems.isEmpty) {
                 return Center(
-                    child: Text("No borrowed items found",
-                        style: GoogleFonts.poppins()));
+                  child: Text(
+                    "No borrowed items found",
+                    style: GoogleFonts.poppins(),
+                  ),
+                );
               }
 
-              return RefreshIndicator(
-                onRefresh: () {
-                  return controller.refreshHistory();
-                },
-                child: TabBarView(
-                  children: [
-                    _buildList(borrowedItems, context),
-                    _buildList(
-                        borrowedItems
-                            .where((e) => e.itemType == "Laptop")
-                            .toList(),
-                        context),
-                    _buildList(
-                        borrowedItems
-                            .where((e) => e.itemType == "Mouse")
-                            .toList(),
-                        context),
-                    _buildList(
-                        borrowedItems
-                            .where((e) => e.itemType == "Keyboard")
-                            .toList(),
-                        context),
-                    _buildList(
-                        borrowedItems
-                            .where((e) => e.itemType == "Monitor")
-                            .toList(),
-                        context),
-                    _buildList(
-                        borrowedItems
-                            .where((e) => e.itemType == "Terminal")
-                            .toList(),
-                        context),
-                  ],
-                ),
+              return TabBarView(
+                children: [
+                  _buildRefreshableList(borrowedItems, controller, context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Laptop")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Mouse")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Keyboard")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Monitor")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Printer")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Speaker")
+                          .toList(),
+                      controller,
+                      context),
+                  _buildRefreshableList(
+                      borrowedItems
+                          .where((e) => e.itemType == "Komputer")
+                          .toList(),
+                      controller,
+                      context),
+                ],
               );
             },
           ),
           bottomNavigationBar: NavbarBottom(selectedIndex: 2),
         ),
       ),
+    );
+  }
+
+  Widget _buildRefreshableList(List<HistoryItem> items,
+      HistoryController controller, BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () {
+        return controller.refreshHistory();
+      },
+      child: _buildList(items, context),
     );
   }
 
@@ -156,8 +186,8 @@ class _HistoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: const Border(
             left: BorderSide(
-              color: Color(0xFF1565C0), // warna biru
-              width: 8, // tebal garis kiri
+              color: Color(0xFF1565C0),
+              width: 8,
             ),
           ),
         ),

@@ -51,7 +51,7 @@ class NavbarBottom extends StatelessWidget {
                     _navItem(context, 'assets/report.png', 'Reports', 1),
                     const SizedBox(width: 64), // space untuk QR Code
                     _navItem(context, 'assets/invent.png', 'History', 2),
-                    _navItem(context, 'assets/logout.png', 'log Out', 3,
+                    _navItem(context, 'assets/logout.png', 'Log Out', 3,
                         token: token, navbarController: navbarController),
                   ],
                 ),
@@ -65,12 +65,12 @@ class NavbarBottom extends StatelessWidget {
                   Get.toNamed(AppRoutes.scanBarcode);
                 },
                 child: Container(
-                  width: 70,
-                  height: 70,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF1565C0),
-                    shape: BoxShape.circle,
-                    boxShadow: [
+                  width: 65,
+                  height: 65,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF023A8F),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 12,
@@ -107,7 +107,7 @@ class NavbarBottom extends StatelessWidget {
     bool isSelected = navController.selectedIndex.value == index;
 
     Color iconColor = Colors.grey[500]!;
-    if (label == 'log Out') iconColor = Colors.black;
+    if (label == 'Log Out') iconColor = Colors.black;
 
     return GestureDetector(
       onTap: () async {
@@ -263,7 +263,7 @@ class NavbarBottom extends StatelessWidget {
             }
             break;
 
-          case 'log Out':
+          case 'Log Out':
             final result = await showDialog<bool>(
               context: context,
               builder: (BuildContext context) {
@@ -284,7 +284,7 @@ class NavbarBottom extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            "Are you sure want to\nlog out?",
+                            "Are you sure want to\nLog out?",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,

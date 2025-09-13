@@ -6,14 +6,12 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AppApi {
   static final Dio _dio = Dio();
-  static String imagePath = 'https://18a3417ee40b.ngrok-free.app/storage/';
-
-  
+  static String imagePath = 'https://a7e6087fa89c.ngrok-free.app/storage/';
 
   /// LOGIN METHOD
   static Future<Map<String, dynamic>?> login(
       String username, String password) async {
-    const url = 'https://18a3417ee40b.ngrok-free.app/api/login';
+    const url = 'https://a7e6087fa89c.ngrok-free.app/api/login';
     try {
       final response = await _dio.post(
         url,
@@ -37,7 +35,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchUnitItem(String barcode,
       {required String token}) async {
     final url = Uri.parse(
-        'https://18a3417ee40b.ngrok-free.app/api/unititems?code_unit=$barcode');
+        'https://a7e6087fa89c.ngrok-free.app/api/unititems?code_unit=$barcode');
     try {
       final response = await http.get(
         url,
@@ -65,7 +63,7 @@ class AppApi {
       {required String token}) async {
     final sanitizedUnitCode = unitCode.trim();
     final url =
-        Uri.parse('https://18a3417ee40b.ngrok-free.app/api/unit-loan/check');
+        Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/unit-loan/check');
     try {
       print('fetchUnitLoanCheck: token=$token, unit_code=$sanitizedUnitCode');
       final response = await http.post(
@@ -99,7 +97,7 @@ class AppApi {
     // Use search query for student/teacher
     print('fetchPerson: search="$id", type="$type"');
     final url =
-        Uri.parse('https://18a3417ee40b.ngrok-free.app/api/$type?search=$id');
+        Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/$type?search=$id');
     try {
       final response = await http.get(
         url,
@@ -126,7 +124,7 @@ class AppApi {
   /// POST UNIT LOAN
   static Future<Map<String, dynamic>?> postUnitLoan(Map<String, dynamic> data,
       {required String token}) async {
-    final url = Uri.parse('https://18a3417ee40b.ngrok-free.app/api/unit-loan');
+    final url = Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/unit-loan');
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Accept'] = 'application/json'; // tambahkan Accept
@@ -159,7 +157,7 @@ class AppApi {
       String loanId, String returnedAt,
       {required String token}) async {
     final url =
-        Uri.parse('https://18a3417ee40b.ngrok-free.app/api/unit-loan/$loanId');
+        Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/unit-loan/$loanId');
     try {
       final response = await http.put(
         url,
@@ -191,28 +189,52 @@ class AppApi {
     String sortByTime = 'asc',
     String search = '',
   }) async {
-    final url = Uri.parse(
-        'https://18a3417ee40b.ngrok-free.app/api/unit-loan/history'
-        '?data=$data&sort_by_type=$sortByType&sort_by_time=$sortByTime&search=$search');
+    List<Map<String, dynamic>> allItems = [];
+    int page = 1;
+    int lastPage = 1;
+
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json', // tambahkan Accept
-        },
-      );
-      print(
-          "fetchUnitLoanHistory: status=${response.statusCode} - ${response.body}"); // log status code
-      print("token = ${token}");
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
+      do {
+        final url = Uri.parse(
+          'https://a7e6087fa89c.ngrok-free.app/api/unit-loan/history'
+          '?data=$data&sort_by_type=$sortByType&sort_by_time=$sortByTime&search=$search&page=$page',
+        );
+
+        final response = await http.get(
+          url,
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        );
+
         print(
-            "fetchUnitLoanHistory ERROR: ${response.statusCode} - ${response.body}");
-        return null;
-      }
+            "fetchUnitLoanHistory page $page: status=${response.statusCode} - ${response.body}");
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          allItems.addAll(List<Map<String, dynamic>>.from(data['data']));
+          lastPage = data['meta']['last_page'];
+          page++;
+        } else {
+          print(
+              "fetchUnitLoanHistory ERROR: ${response.statusCode} - ${response.body}");
+          return null;
+        }
+      } while (page <= lastPage);
+
+      return {
+        "data": allItems,
+        "meta": {
+          "current_page": 1,
+          "from": 1,
+          "to": allItems.length,
+          "last_page": 1,
+          "per_page": allItems.length,
+          "total": allItems.length,
+        }
+      };
     } catch (e) {
       print("fetchUnitLoanHistory Exception: $e");
       return null;
@@ -221,7 +243,7 @@ class AppApi {
 
   /// LOGOUT METHOD
   static Future<Map<String, dynamic>?> logout({required String token}) async {
-    final url = Uri.parse('https://18a3417ee40b.ngrok-free.app/api/logout');
+    final url = Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/logout');
     try {
       final response = await http.post(
         url,
@@ -247,7 +269,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchUnitLoanDetail(String id,
       {required String token}) async {
     final url =
-        Uri.parse('https://18a3417ee40b.ngrok-free.app/api/unit-loan/$id');
+        Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/unit-loan/$id');
     try {
       print('fetchUnitLoanDetail: token=$token, id=$id');
       final response = await http.get(
@@ -277,7 +299,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchDashboardCard(
       {required String token}) async {
     final url = Uri.parse(
-        'https://18a3417ee40b.ngrok-free.app/api/dashboard/mobile/card');
+        'https://a7e6087fa89c.ngrok-free.app/api/dashboard/mobile/card');
     try {
       final response = await http.get(
         url,
@@ -287,7 +309,8 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchDashboardCard response.body: ${response.body}'); // <--- print body mentah
+      print(
+          'fetchDashboardCard response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -305,7 +328,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchDashboardLatestActivity(
       {required String token}) async {
     final url = Uri.parse(
-        'https://18a3417ee40b.ngrok-free.app/api/dashboard/mobile/latest-activity');
+        'https://a7e6087fa89c.ngrok-free.app/api/dashboard/mobile/latest-activity');
     try {
       final response = await http.get(
         url,
@@ -315,7 +338,8 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchDashboardLatestActivity response.body: ${response.body}'); // <--- print body mentah
+      print(
+          'fetchDashboardLatestActivity response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -333,7 +357,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchLoanReport(
       {required String from, required String to, required String token}) async {
     final url = Uri.parse(
-        'https://18a3417ee40b.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
+        'https://a7e6087fa89c.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
     try {
       final response = await http.get(
         url,
@@ -343,7 +367,8 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchLoanReport response.body: ${response.body}'); // <--- print body mentah
+      print(
+          'fetchLoanReport response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -358,8 +383,10 @@ class AppApi {
   }
 
   /// FETCH PIE CHART DATA
-  static Future<Map<String, dynamic>?> fetchPieChart({required String token}) async {
-    final url = Uri.parse('https://18a3417ee40b.ngrok-free.app/api/dashboard/admin-user/item-count-percentage');
+  static Future<Map<String, dynamic>?> fetchPieChart(
+      {required String token}) async {
+    final url = Uri.parse(
+        'https://a7e6087fa89c.ngrok-free.app/api/dashboard/admin-user/most-borrowed-percentage');
     try {
       final response = await http.get(
         url,
@@ -383,8 +410,10 @@ class AppApi {
   }
 
   /// FETCH LEGEND DATA
-  static Future<Map<String, dynamic>?> fetchLegend({required String token}) async {
-    final url = Uri.parse('https://18a3417ee40b.ngrok-free.app/api/dashboard/admin-user/item-count');
+  static Future<Map<String, dynamic>?> fetchLegend(
+      {required String token}) async {
+    final url = Uri.parse(
+        'https://a7e6087fa89c.ngrok-free.app/api/dashboard/admin-user/item-count');
     try {
       final response = await http.get(
         url,
@@ -408,8 +437,9 @@ class AppApi {
   }
 
   /// FETCH USER DATA
-  static Future<Map<String, dynamic>?> fetchUser({required String token}) async {
-    final url = Uri.parse('https://18a3417ee40b.ngrok-free.app/api/user');
+  static Future<Map<String, dynamic>?> fetchUser(
+      {required String token}) async {
+    final url = Uri.parse('https://a7e6087fa89c.ngrok-free.app/api/user');
     try {
       final response = await http.get(
         url,
@@ -419,7 +449,8 @@ class AppApi {
           'Content-Type': 'application/json',
         },
       );
-      print('fetchUser response.body: ${response.body}'); // <--- print body mentah
+      print(
+          'fetchUser response.body: ${response.body}'); // <--- print body mentah
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {

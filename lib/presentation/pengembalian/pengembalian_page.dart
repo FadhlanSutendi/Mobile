@@ -70,7 +70,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
     final teacher = widget.loan.teacher;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Return", style: GoogleFonts.poppins()),
+        title: Text("Return", style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -469,7 +469,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              isChecked ? Colors.blue : Colors.grey,
+                              isChecked ? Color(0xFF023A8F) : Colors.grey,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),

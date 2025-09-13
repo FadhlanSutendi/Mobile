@@ -74,7 +74,7 @@ class SuccespengembalianCustomePage extends StatelessWidget {
                 // ✅ Show receipt button
                 TextButton(
                   onPressed: () {
-                    Get.toNamed(AppRoutes.history);
+                    Get.toNamed(AppRoutes.home);
 
                     // if (receiptData != null) {
                     //   Navigator.push(

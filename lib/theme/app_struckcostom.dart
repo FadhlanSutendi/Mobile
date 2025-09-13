@@ -26,7 +26,7 @@ class StruckCustomPage extends StatelessWidget {
     this.warranty,
     this.unitCode,
     this.merk,
-    this.author = "Iqbal Fajar Syahbana",
+    this.author,
   }) : super(key: key);
 
   @override
@@ -113,14 +113,14 @@ class StruckCustomPage extends StatelessWidget {
                     const Divider(thickness: 1),
                     const SizedBox(height: 16),
         
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        author ?? "",
-                        style: GoogleFonts.poppins(
-                            fontSize: 12, color: Colors.black87),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: Text(
+                    //     author ?? "",
+                    //     style: GoogleFonts.poppins(
+                    //         fontSize: 12, color: Colors.black87),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -133,7 +133,7 @@ class StruckCustomPage extends StatelessWidget {
               right: 0,
               child: Center(
                 child: SizedBox(
-                  width: 148,
+                  width: 160,
                   height: 38,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
