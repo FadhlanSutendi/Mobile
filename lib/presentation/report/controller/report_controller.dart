@@ -19,7 +19,6 @@ class ReportController extends GetxController {
   var loanReportData = <String, int>{}.obs;
   var selectedYear = RxnInt();
 
-
   @override
   void onInit() {
     super.onInit();
@@ -27,6 +26,20 @@ class ReportController extends GetxController {
     fetchPieData();
     fetchLegendData();
     fetchLoanReport();
+  }
+
+  // 🔹 Tambahkan ini
+  Future<void> refreshData() async {
+    // pastikan token sudah ada
+    if (token.value.isEmpty) {
+      fetchToken();
+    }
+
+    await Future.wait([
+      Future(() => fetchPieData()),
+      Future(() => fetchLegendData()),
+      Future(() => fetchLoanReport()),
+    ]);
   }
 
   void fetchToken() async {
@@ -66,7 +79,8 @@ class ReportController extends GetxController {
     final now = DateTime.now();
     final from = '${now.year}-01-01';
     final to = '${now.year}-12-31';
-    final res = await AppApi.fetchLoanReport(from: from, to: to, token: token.value);
+    final res =
+        await AppApi.fetchLoanReport(from: from, to: to, token: token.value);
     print('LoanReport API response: $res');
     if (res != null && res['data'] != null) {
       // data: { "Jan": 10, "Feb": 5, ... }
@@ -99,5 +113,4 @@ class ReportController extends GetxController {
 
     isLoadingLoanReport.value = false;
   }
-
 }

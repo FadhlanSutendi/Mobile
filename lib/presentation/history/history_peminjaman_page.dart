@@ -63,38 +63,45 @@ class HistoryPeminjamanPage extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               }
               if (borrowedItems.isEmpty) {
-                return Center(child: Text("No borrowed items found", style: GoogleFonts.poppins()));
+                return Center(
+                    child: Text("No borrowed items found",
+                        style: GoogleFonts.poppins()));
               }
 
-              return TabBarView(
-                children: [
-                  _buildList(borrowedItems, context),
-                  _buildList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Laptop")
-                          .toList(),
-                      context),
-                  _buildList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Mouse")
-                          .toList(),
-                      context),
-                  _buildList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Keyboard")
-                          .toList(),
-                      context),
-                  _buildList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Monitor")
-                          .toList(),
-                      context),
-                  _buildList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Terminal")
-                          .toList(),
-                      context),
-                ],
+              return RefreshIndicator(
+                onRefresh: () {
+                  return controller.refreshHistory();
+                },
+                child: TabBarView(
+                  children: [
+                    _buildList(borrowedItems, context),
+                    _buildList(
+                        borrowedItems
+                            .where((e) => e.itemType == "Laptop")
+                            .toList(),
+                        context),
+                    _buildList(
+                        borrowedItems
+                            .where((e) => e.itemType == "Mouse")
+                            .toList(),
+                        context),
+                    _buildList(
+                        borrowedItems
+                            .where((e) => e.itemType == "Keyboard")
+                            .toList(),
+                        context),
+                    _buildList(
+                        borrowedItems
+                            .where((e) => e.itemType == "Monitor")
+                            .toList(),
+                        context),
+                    _buildList(
+                        borrowedItems
+                            .where((e) => e.itemType == "Terminal")
+                            .toList(),
+                        context),
+                  ],
+                ),
               );
             },
           ),

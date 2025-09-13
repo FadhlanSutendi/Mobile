@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../login/controller/login_controller.dart';
 import '../../core/api/app_api.dart';
 import 'controller/navbar_bottom_controller.dart';
-import '../../routes/app_routes.dart'; // sudah ada
+import '../../routes/app_routes.dart';
 
 class NavbarBottom extends StatelessWidget {
   final int selectedIndex;
@@ -16,61 +16,74 @@ class NavbarBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     final token = Get.find<LoginController>().token.value;
     final navbarController = Get.find<NavbarBottomController>();
-    return Container(
-      height: 80,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
+
+    return SizedBox(
+      height: 100, // lebih tinggi supaya tombol QR tidak terpotong
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          Positioned.fill(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _navItem(context, Icons.home, 'Home', 0),
-                _navItem(context, Icons.bar_chart, 'Reports', 1),
-                SizedBox(width: 64),
-                _navItem(context, Icons.history, 'History', 2),
-                _navItem(context, Icons.logout, 'log Out', 3,
-                    token: token, navbarController: navbarController),
-              ],
+          // NAVBAR utama
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, -2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _navItem(context, 'assets/home.png', 'Home', 0),
+                  _navItem(context, 'assets/report.png', 'Reports', 1),
+                  const SizedBox(width: 64), // space untuk QR Code
+                  _navItem(context, 'assets/invent.png', 'History', 2),
+                  _navItem(context, 'assets/logout.png', 'log Out', 3,
+                      token: token, navbarController: navbarController),
+                ],
+              ),
             ),
           ),
+
+          // Tombol QR Code Mengambang
           Positioned(
-            top: 0,
-            
+            bottom: 40, // posisinya naik ke atas navbar
             child: GestureDetector(
               onTap: () {
                 if (onItemSelected != null) onItemSelected!(4);
-                // Navigasi ke halaman scan barcode
                 Get.toNamed(AppRoutes.scanBarcode);
               },
               child: Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: Color(0xFF1565C0),
+                width: 70,
+                height: 70,
+                decoration: const BoxDecoration(
+                  color: const Color(0xFF1565C0),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
+                      blurRadius: 12,
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
                 child: Center(
-                  child: Icon(Icons.qr_code_scanner,
-                      color: Colors.white, size: 32),
+                  child: Image.asset(
+                    'assets/qr.png',
+                    width: 32,
+                    height: 32,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -80,11 +93,18 @@ class NavbarBottom extends StatelessWidget {
     );
   }
 
-  Widget _navItem(BuildContext context, IconData icon, String label, int index,
-      {String? token, NavbarBottomController? navbarController}) {
+  Widget _navItem(
+    BuildContext context,
+    String imagePath,
+    String label,
+    int index, {
+    String? token,
+    NavbarBottomController? navbarController,
+  }) {
     Color iconColor = Colors.grey[500]!;
     if (label == 'log Out') iconColor = Colors.black;
     bool isSelected = selectedIndex == index;
+
     return GestureDetector(
       onTap: () async {
         if (onItemSelected != null) onItemSelected!(index);
@@ -96,15 +116,12 @@ class NavbarBottom extends StatelessWidget {
             Navigator.pushReplacementNamed(context, AppRoutes.report);
             break;
           case 'History':
-            // Tampilkan popup pilihan history
             final selected = await showModalBottomSheet<String>(
               context: context,
               isScrollControlled: true,
-              backgroundColor:
-                  Colors.transparent, // biar bisa kasih rounded di dalam
+              backgroundColor: Colors.transparent,
               builder: (ctx) {
                 String choice = 'history'; // default
-
                 return StatefulBuilder(
                   builder: (context, setState) => Container(
                     padding: const EdgeInsets.symmetric(
@@ -117,7 +134,7 @@ class NavbarBottom extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        /// Indicator bar atas
+                        /// Indicator bar
                         Container(
                           width: 48,
                           height: 4,
@@ -173,7 +190,10 @@ class NavbarBottom extends StatelessWidget {
                               child: RadioListTile<String>(
                                 value: 'borrow',
                                 groupValue: choice,
-                                title: Text('Borrowed Page', style: GoogleFonts.poppins(),),
+                                title: Text(
+                                  'Borrowed Page',
+                                  style: GoogleFonts.poppins(),
+                                ),
                                 activeColor: const Color(0xFF1565C0),
                                 onChanged: (val) {
                                   setState(() {
@@ -196,7 +216,10 @@ class NavbarBottom extends StatelessWidget {
                               child: RadioListTile<String>(
                                 value: 'history',
                                 groupValue: choice,
-                                title: Text('History Page', style: GoogleFonts.poppins(),),
+                                title: Text(
+                                  'History Page',
+                                  style: GoogleFonts.poppins(),
+                                ),
                                 activeColor: const Color(0xFF1565C0),
                                 onChanged: (val) {
                                   setState(() {
@@ -214,8 +237,7 @@ class NavbarBottom extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color(0xFF0D47A1), // biru gelap
+                              backgroundColor: const Color(0xFF0D47A1),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -223,8 +245,8 @@ class NavbarBottom extends StatelessWidget {
                             ),
                             child: Text(
                               'Continue',
-                              style:
-                                  GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: Colors.white),
                             ),
                             onPressed: () => Navigator.of(ctx).pop(choice),
                           ),
@@ -241,13 +263,14 @@ class NavbarBottom extends StatelessWidget {
               Get.toNamed(AppRoutes.history, arguments: token);
             }
             break;
+
           case 'log Out':
             final result = await showDialog<bool>(
               context: context,
               builder: (BuildContext context) {
                 return Dialog(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // border bulet
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -256,7 +279,7 @@ class NavbarBottom extends StatelessWidget {
                       Container(
                         height: 150,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300], // abu-abu background
+                          color: Colors.grey[300],
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(10),
                           ),
@@ -272,7 +295,6 @@ class NavbarBottom extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       // Bagian tombol
                       Row(
                         children: [
@@ -304,7 +326,6 @@ class NavbarBottom extends StatelessWidget {
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                // aksi confirm logout
                                 Get.toNamed(AppRoutes.login);
                               },
                               child: Container(
@@ -338,17 +359,18 @@ class NavbarBottom extends StatelessWidget {
               await navbarController.logout(token ?? '');
               if (navbarController.logoutResponse.value != null &&
                   navbarController.logoutResponse.value!.status == 200) {
-                // Bersihkan data login agar tidak auto save
                 final loginController = Get.find<LoginController>();
                 loginController.token.value = '';
                 loginController.usernameController.clear();
                 loginController.passwordController.clear();
-                // ...jika ada data lain yang perlu dibersihkan, tambahkan di sini...
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/login', (route) => false);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Logout gagal', style: GoogleFonts.poppins()), backgroundColor: Colors.red,),
+                  SnackBar(
+                    content: Text('Logout gagal', style: GoogleFonts.poppins()),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
             }
@@ -358,13 +380,20 @@ class NavbarBottom extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon,
-              color: isSelected ? Color(0xFF1565C0) : iconColor, size: 28),
-          SizedBox(height: 4),
-          Text(label,
-              style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: isSelected ? Color(0xFF1565C0) : iconColor)),
+          Image.asset(
+            imagePath,
+            width: 28,
+            height: 28,
+            color: isSelected ? const Color(0xFF1565C0) : iconColor,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 13,
+              color: isSelected ? const Color(0xFF1565C0) : iconColor,
+            ),
+          ),
         ],
       ),
     );

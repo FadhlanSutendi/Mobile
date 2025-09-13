@@ -113,14 +113,16 @@ class SuccessCustomPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.toNamed(AppRoutes.history);
+                        Get.toNamed(AppRoutes.home);
                       },
-                      child: Text("Back to dashboard", 
+                      child: Text(
+                        "Back to dashboard",
                         style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
-                        decoration: TextDecoration.underline,
-                    ),),
+                          color: Colors.black,
+                          fontSize: 14,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                   ),
 
