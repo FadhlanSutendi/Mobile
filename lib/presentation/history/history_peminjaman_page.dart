@@ -15,118 +15,78 @@ class HistoryPeminjamanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => HistoryController(token: token)..fetchHistory(),
-      child: DefaultTabController(
-        length:
-            8, // All, Laptop, Mouse, Keyboard, Monitor, Printer, Speaker, Komputer
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            title: Text(
-              'Borrowed Page',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            bottom: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              indicatorColor: Colors.black,
-              labelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-              ),
-              unselectedLabelStyle: GoogleFonts.poppins(),
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(text: "All"),
-                Tab(text: "Laptop"),
-                Tab(text: "Mouse"),
-                Tab(text: "Keyboard"),
-                Tab(text: "Monitor"),
-                Tab(text: "Printer"),
-                Tab(text: "Speaker"),
-                Tab(text: "Komputer"),
-              ],
-            ),
-          ),
-          body: Consumer<HistoryController>(
-            builder: (context, controller, _) {
-              final borrowedItems = controller.filteredItems
-                  .where((item) => item.status == false)
-                  .toList();
+      child: Consumer<HistoryController>(
+        builder: (context, controller, _) {
+          if (controller.isLoading && controller.availableCategories.length <= 1) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-              if (controller.isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
+          final borrowedItems = controller.filteredItems
+              .where((item) => item.status == false)
+              .toList();
 
-              if (borrowedItems.isEmpty) {
-                return Center(
-                  child: Text(
-                    "No borrowed items found",
-                    style: GoogleFonts.poppins(),
+          final categories = controller.availableCategories;
+
+          return DefaultTabController(
+            length: categories.length,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                backgroundColor: Colors.white,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                title: Text(
+                  'Borrowed Page',
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
-                );
-              }
-
-              return TabBarView(
+                ),
+              ),
+              body: Column(
                 children: [
-                  _buildRefreshableList(borrowedItems, controller, context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Laptop")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Mouse")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Keyboard")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Monitor")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Printer")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Speaker")
-                          .toList(),
-                      controller,
-                      context),
-                  _buildRefreshableList(
-                      borrowedItems
-                          .where((e) => e.itemType == "Komputer")
-                          .toList(),
-                      controller,
-                      context),
+                  TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    indicatorColor: Colors.black,
+                    labelStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    unselectedLabelStyle: GoogleFonts.poppins(),
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: categories.map((cat) => Tab(text: cat)).toList(),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: categories.map((cat) {
+                        final filtered = cat == 'All'
+                            ? borrowedItems
+                            : borrowedItems.where((e) => e.itemType.toLowerCase() == cat.toLowerCase()).toList();
+
+                        if (filtered.isEmpty) {
+                          return Center(
+                            child: Text(
+                              "No items found in $cat category",
+                              style: GoogleFonts.poppins(),
+                            ),
+                          );
+                        }
+
+                        return _buildRefreshableList(filtered, controller, context);
+                      }).toList(),
+                    ),
+                  ),
                 ],
-              );
-            },
-          ),
-          bottomNavigationBar: NavbarBottom(selectedIndex: 2),
-        ),
+              ),
+              bottomNavigationBar: NavbarBottom(selectedIndex: 2),
+            ),
+          );
+        },
       ),
     );
   }
@@ -256,8 +216,11 @@ class _HistoryCard extends StatelessWidget {
 
   String _getTimeAgo(String dateTimeStr) {
     try {
+      // Parse as UTC, lalu konversi ke WIB/Jakarta (UTC+7)
       final dt = DateTime.parse(dateTimeStr.replaceFirst(' ', 'T'));
-      final diff = DateTime.now().difference(dt);
+      final dtJakarta = dt.isUtc ? dt.add(const Duration(hours: 7)) : dt.toUtc().add(const Duration(hours: 7));
+      final nowJakarta = DateTime.now().toUtc().add(const Duration(hours: 7));
+      final diff = nowJakarta.difference(dtJakarta);
       if (diff.inMinutes < 1) return 'now';
       if (diff.inMinutes < 60) return '${diff.inMinutes}m';
       if (diff.inHours < 24) return '${diff.inHours}h';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart'; // ⬅️ Tambah ini
+import 'package:google_fonts/google_fonts.dart'; // ⬅ Tambah ini
 import 'models/history_models.dart';
 import '../../core/api/app_api.dart';
 
@@ -15,9 +15,24 @@ class DetailHistoryPage extends StatelessWidget {
     final itemType = subItem['item'] ?? {};
     final student = item.student ?? {};
     final teacher = item.teacher ?? {};
+
+    // Debug data untuk memastikan struktur data benar
+    print("Unit Item: $unitItem");
+    print("Sub Item: $subItem");
+    print("Item Type: $itemType");
+    print("Student: $student");
+    print("Teacher: $teacher");
+
     final nis = student['nis']?.toString() ?? '';
     final rayon = student['rayon'] ?? '';
     final jurusan = student['major']?['name'] ?? '';
+
+    // Pastikan description diambil dari tempat yang benar
+    final description = unitItem?['description'] ?? subItem['description'] ?? '-';
+
+    // Pastikan lender name diambil dari teacher atau data yang sesuai
+    final lenderName = teacher['name'] ?? 'Admin';
+
     final qrcodeUrl = (unitItem?['qrcode'] ?? '').replaceFirst(
       'http://localhost:8000',
       AppApi.imagePath.replaceFirst('/storage/', ''),
@@ -34,7 +49,7 @@ class DetailHistoryPage extends StatelessWidget {
         ),
         title: Text(
           "Detail Borrowed",
-          style: GoogleFonts.poppins( // ⬅️ Poppins di AppBar
+          style: GoogleFonts.poppins( // ⬅ Poppins
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -57,7 +72,7 @@ class DetailHistoryPage extends StatelessWidget {
                   SizedBox(height: 80),
                   Text(
                     unitItem?['code_unit'] ?? '',
-                    style: GoogleFonts.poppins( // ⬅️ Poppins
+                    style: GoogleFonts.poppins( // ⬅ Poppins
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
@@ -112,14 +127,14 @@ class DetailHistoryPage extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
 
-                  // DESCRIPTION
+                  // DESCRIPTION - PERBAIKAN DI SINI
                   sectionTitle("Description"),
-                  infoField("", unitItem?['description'] ?? '-'),
+                  infoField("", description),
                   SizedBox(height: 16),
 
-                  // LENDER INFO
+                  // LENDER INFO - PERBAIKAN DI SINI
                   sectionTitle("Lender's Name"),
-                  infoField("", teacher['name'] ?? '-'),
+                  infoField("", lenderName),
                   SizedBox(height: 32),
                 ],
               ),
@@ -175,7 +190,7 @@ class DetailHistoryPage extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Text(
           title,
-          style: GoogleFonts.poppins( // ⬅️ Poppins
+          style: GoogleFonts.poppins( // ⬅ Poppins
             fontWeight: FontWeight.bold,
             fontSize: 13,
             color: Colors.grey[700],
@@ -194,7 +209,7 @@ class DetailHistoryPage extends StatelessWidget {
           if (label.isNotEmpty)
             Text(
               label,
-              style: GoogleFonts.poppins( // ⬅️ Poppins
+              style: GoogleFonts.poppins( // ⬅ Poppins
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
                 color: Colors.black87,
@@ -211,7 +226,7 @@ class DetailHistoryPage extends StatelessWidget {
             ),
             child: Text(
               value,
-              style: GoogleFonts.poppins( // ⬅️ Poppins
+              style: GoogleFonts.poppins( // ⬅ Poppins
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),

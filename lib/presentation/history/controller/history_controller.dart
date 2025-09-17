@@ -24,7 +24,27 @@ class HistoryController extends ChangeNotifier {
     'Other'
   ];
 
+  List<String> dynamicCategories = ['All'];
+
+  Future<void> fetchCategories() async {
+    try {
+      final fetched = await AppApi.fetchItemCategories(token: token);
+      if (fetched.isNotEmpty) {
+        dynamicCategories = ['All', ...fetched];
+      } else {
+        // Fallback ke kategori default jika API tidak mengembalikan data
+        dynamicCategories = ['All', 'Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Printer', 'Speaker', 'Komputer'];
+      }
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching categories: $e");
+      dynamicCategories = ['All', 'Laptop', 'Mouse', 'Keyboard', 'Monitor', 'Printer', 'Speaker', 'Komputer'];
+      notifyListeners();
+    }
+  }
+
   Future<void> refreshHistory() async {
+    await fetchCategories();
     await fetchHistory();
   }
 
@@ -51,8 +71,18 @@ class HistoryController extends ChangeNotifier {
     } else {
       print('No history data fetched'); // log ke terminal
     }
+    // Filter kategori yang ada datanya
+    await fetchCategories();
     isLoading = false;
     notifyListeners();
+  }
+
+  List<String> get availableCategories {
+    // Ambil kategori dari API, tapi hanya tampilkan jika ada item di kategori tsb (case-insensitive)
+    final Set<String> itemTypes = items.map((e) => e.itemType.toLowerCase()).toSet();
+    return dynamicCategories.where((cat) =>
+      cat == 'All' || itemTypes.contains(cat.toLowerCase())
+    ).toList();
   }
 
   List<HistoryItem> get filteredItems {

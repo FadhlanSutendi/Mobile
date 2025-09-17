@@ -6,12 +6,12 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AppApi {
   static final Dio _dio = Dio();
-  static String imagePath = 'https://4803a8d6f334.ngrok-free.app/storage/';
+  static String imagePath = 'https://bd041fdc59fc.ngrok-free.app/storage/';
 
   /// LOGIN METHOD
   static Future<Map<String, dynamic>?> login(
       String username, String password) async {
-    const url = 'https://4803a8d6f334.ngrok-free.app/api/login';
+    const url = 'https://bd041fdc59fc.ngrok-free.app/api/login';
     try {
       final response = await _dio.post(
         url,
@@ -35,7 +35,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchUnitItem(String barcode,
       {required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/unititems?code_unit=$barcode');
+        'https://bd041fdc59fc.ngrok-free.app/api/unititems?code_unit=$barcode');
     try {
       final response = await http.get(
         url,
@@ -63,7 +63,7 @@ class AppApi {
       {required String token}) async {
     final sanitizedUnitCode = unitCode.trim();
     final url =
-        Uri.parse('https://4803a8d6f334.ngrok-free.app/api/unit-loan/check');
+        Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/unit-loan/check');
     try {
       print('fetchUnitLoanCheck: token=$token, unit_code=$sanitizedUnitCode');
       final response = await http.post(
@@ -97,7 +97,7 @@ class AppApi {
     // Use search query for student/teacher
     print('fetchPerson: search="$id", type="$type"');
     final url =
-        Uri.parse('https://4803a8d6f334.ngrok-free.app/api/$type?search=$id');
+        Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/$type?search=$id');
     try {
       final response = await http.get(
         url,
@@ -124,7 +124,7 @@ class AppApi {
   /// POST UNIT LOAN
   static Future<Map<String, dynamic>?> postUnitLoan(Map<String, dynamic> data,
       {required String token}) async {
-    final url = Uri.parse('https://4803a8d6f334.ngrok-free.app/api/unit-loan');
+    final url = Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/unit-loan');
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Accept'] = 'application/json'; // tambahkan Accept
@@ -157,7 +157,7 @@ class AppApi {
       String loanId, String returnedAt,
       {required String token}) async {
     final url =
-        Uri.parse('https://4803a8d6f334.ngrok-free.app/api/unit-loan/$loanId');
+        Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/unit-loan/$loanId');
     try {
       final response = await http.put(
         url,
@@ -196,7 +196,7 @@ class AppApi {
     try {
       do {
         final url = Uri.parse(
-          'https://4803a8d6f334.ngrok-free.app/api/unit-loan/history'
+          'https://bd041fdc59fc.ngrok-free.app/api/unit-loan/history'
           '?data=$data&sort_by_type=$sortByType&sort_by_time=$sortByTime&search=$search&page=$page',
         );
 
@@ -243,7 +243,7 @@ class AppApi {
 
   /// LOGOUT METHOD
   static Future<Map<String, dynamic>?> logout({required String token}) async {
-    final url = Uri.parse('https://4803a8d6f334.ngrok-free.app/api/logout');
+    final url = Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/logout');
     try {
       final response = await http.post(
         url,
@@ -269,7 +269,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchUnitLoanDetail(String id,
       {required String token}) async {
     final url =
-        Uri.parse('https://4803a8d6f334.ngrok-free.app/api/unit-loan/$id');
+        Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/unit-loan/$id');
     try {
       print('fetchUnitLoanDetail: token=$token, id=$id');
       final response = await http.get(
@@ -299,7 +299,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchDashboardCard(
       {required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/dashboard/mobile/card');
+        'https://bd041fdc59fc.ngrok-free.app/api/dashboard/mobile/card');
     try {
       final response = await http.get(
         url,
@@ -328,7 +328,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchDashboardLatestActivity(
       {required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/dashboard/mobile/latest-activity');
+        'https://bd041fdc59fc.ngrok-free.app/api/dashboard/mobile/latest-activity');
     try {
       final response = await http.get(
         url,
@@ -357,7 +357,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchLoanReport(
       {required String from, required String to, required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
+        'https://bd041fdc59fc.ngrok-free.app/api/dashboard/loan-report?from=$from&to=$to');
     try {
       final response = await http.get(
         url,
@@ -386,7 +386,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchPieChart(
       {required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/dashboard/admin-user/most-borrowed-percentage');
+        'https://bd041fdc59fc.ngrok-free.app/api/dashboard/admin-user/most-borrowed-percentage');
     try {
       final response = await http.get(
         url,
@@ -413,7 +413,7 @@ class AppApi {
   static Future<Map<String, dynamic>?> fetchLegend(
       {required String token}) async {
     final url = Uri.parse(
-        'https://4803a8d6f334.ngrok-free.app/api/dashboard/admin-user/item-count');
+        'https://bd041fdc59fc.ngrok-free.app/api/dashboard/admin-user/item-count');
     try {
       final response = await http.get(
         url,
@@ -439,7 +439,7 @@ class AppApi {
   /// FETCH USER DATA
   static Future<Map<String, dynamic>?> fetchUser(
       {required String token}) async {
-    final url = Uri.parse('https://4803a8d6f334.ngrok-free.app/api/user');
+    final url = Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/user');
     try {
       final response = await http.get(
         url,
@@ -460,6 +460,38 @@ class AppApi {
     } catch (e) {
       print("fetchUser Exception: $e");
       return null;
+    }
+  }
+
+  /// FETCH ITEM CATEGORY LIST - DIPERBAIKI
+  static Future<List<String>> fetchItemCategories({required String token}) async {
+    final url = Uri.parse('https://bd041fdc59fc.ngrok-free.app/api/item');
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      );
+      print('fetchItemCategories response: ${response.statusCode} - ${response.body}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 200 && data['data'] != null) {
+          final List<dynamic> items = data['data'];
+          return items.map<String>((e) => e['name'].toString()).toList();
+        } else {
+          print("Invalid response structure");
+          return [];
+        }
+      } else {
+        print("fetchItemCategories ERROR: ${response.statusCode} - ${response.body}");
+        return [];
+      }
+    } catch (e) {
+      print("fetchItemCategories Exception: $e");
+      return [];
     }
   }
 }

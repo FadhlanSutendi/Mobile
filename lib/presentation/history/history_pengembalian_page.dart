@@ -33,27 +33,6 @@ class HistoryPengembalianPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            bottom: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              indicatorColor: Colors.black,
-              indicatorWeight: 2.5,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-              unselectedLabelStyle: GoogleFonts.poppins(),
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              tabs: const [
-                Tab(text: "All"),
-                Tab(text: "Laptop"),
-                Tab(text: "Mouse"),
-                Tab(text: "Keyboard"),
-                Tab(text: "Monitor"),
-                Tab(text: "Printer"),
-                Tab(text: "Speaker"),
-                Tab(text: "Komputer"),
-              ],
-            ),
           ),
           body: Consumer<HistoryController>(
             builder: (context, controller, _) {
@@ -71,40 +50,34 @@ class HistoryPengembalianPage extends StatelessWidget {
               final sortedDates = grouped.keys.toList()
                 ..sort((a, b) => _parseDate(b).compareTo(_parseDate(a)));
 
+              final categories = controller.availableCategories;
               return controller.isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      onRefresh: () => controller.refreshHistory(),
-                      child: TabBarView(
+                  : DefaultTabController(
+                      length: categories.length,
+                      child: Column(
                         children: [
-                          _buildGroupedList(grouped, sortedDates), // All
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Laptop'),
-                            sortedDates,
+                          TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.start,
+                            indicatorColor: Colors.black,
+                            indicatorWeight: 2.5,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                            unselectedLabelStyle: GoogleFonts.poppins(),
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Colors.grey,
+                            tabs: categories.map((cat) => Tab(text: cat)).toList(),
                           ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Mouse'),
-                            sortedDates,
-                          ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Keyboard'),
-                            sortedDates,
-                          ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Monitor'),
-                            sortedDates,
-                          ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Printer'),
-                            sortedDates,
-                          ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Speaker'),
-                            sortedDates,
-                          ),
-                          _buildGroupedList(
-                            _filterByType(grouped, sortedDates, 'Komputer'),
-                            sortedDates,
+                          Expanded(
+                            child: TabBarView(
+                              children: categories.map((cat) {
+                                final filteredGrouped = cat == 'All'
+                                    ? grouped
+                                    : _filterByType(grouped, sortedDates, cat);
+                                return _buildGroupedList(filteredGrouped, sortedDates);
+                              }).toList(),
+                            ),
                           ),
                         ],
                       ),
@@ -124,7 +97,7 @@ class HistoryPengembalianPage extends StatelessWidget {
       String type) {
     final filtered = <String, List<HistoryItem>>{};
     for (var date in sortedDates) {
-      final items = grouped[date]!.where((e) => e.itemType == type).toList();
+      final items = grouped[date]!.where((e) => e.itemType.toLowerCase() == type.toLowerCase()).toList();
       if (items.isNotEmpty) filtered[date] = items;
     }
     return filtered;
@@ -237,7 +210,7 @@ class _HistoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: const Border(
             left: BorderSide(
-              color: Color(0xFF1565C0), // warna biru
+              color: Color(0xFF1565C0),
               width: 8,
             ),
           ),
@@ -245,7 +218,6 @@ class _HistoryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header (dot + kode)
             Row(
               children: [
                 Container(
@@ -289,7 +261,6 @@ class _HistoryCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 2),
-            // Borrower
             Text(
               'For ${item.studentName ?? item.teacherName ?? item.borrowedBy}',
               style: GoogleFonts.poppins(
@@ -307,8 +278,9 @@ class _HistoryCard extends StatelessWidget {
 
   String _getTimeAgo(String dateTimeStr) {
     try {
-      final dt = DateTime.parse(dateTimeStr.replaceFirst(' ', 'T'));
-      final diff = DateTime.now().difference(dt);
+      final dt = DateTime.parse(dateTimeStr.replaceFirst(' ', 'T')).toUtc().add(const Duration(hours: 7)); // WIB/Jakarta
+      final now = DateTime.now().toUtc().add(const Duration(hours: 7)); // WIB/Jakarta
+      final diff = now.difference(dt);
       if (diff.inMinutes < 1) return 'now';
       if (diff.inMinutes < 60) return '${diff.inMinutes}m';
       if (diff.inHours < 24) return '${diff.inHours}h';
