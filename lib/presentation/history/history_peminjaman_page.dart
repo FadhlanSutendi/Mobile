@@ -17,9 +17,14 @@ class HistoryPeminjamanPage extends StatelessWidget {
       create: (_) => HistoryController(token: token)..fetchHistory(),
       child: Consumer<HistoryController>(
         builder: (context, controller, _) {
-          if (controller.isLoading && controller.availableCategories.length <= 1) {
-            return Center(child: CircularProgressIndicator());
-          }
+          // if (controller.isLoading && controller.availableCategories.length <= 1) {
+          //   return Scaffold(
+          //     backgroundColor: Colors.white, // supaya putih
+          //     body: Center(
+          //       child: CircularProgressIndicator(),
+          //     ),
+          //   );
+          // }
 
           final borrowedItems = controller.filteredItems
               .where((item) => item.status == false)
@@ -70,13 +75,11 @@ class HistoryPeminjamanPage extends StatelessWidget {
 
                         if (filtered.isEmpty) {
                           return Center(
-                            child: Text(
-                              "No items found in $cat category",
-                              style: GoogleFonts.poppins(),
+                            child: Center(
+                              child: CircularProgressIndicator(),
                             ),
                           );
                         }
-
                         return _buildRefreshableList(filtered, controller, context);
                       }).toList(),
                     ),
