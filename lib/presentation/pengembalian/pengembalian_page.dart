@@ -46,6 +46,7 @@ class _PengembalianPageState extends State<PengembalianPage> {
     returnController.text = _formatDateTime(DateTime.now().toString());
     guarantee = widget.loan.guarantee;
     print("Guarantee dari loan: ${widget.loan.guarantee}");
+    
 
   }
 
@@ -68,6 +69,8 @@ class _PengembalianPageState extends State<PengembalianPage> {
   Widget build(BuildContext context) {
     final student = widget.loan.student;
     final teacher = widget.loan.teacher;
+    print("Student Major: ${student?['major_id']}");
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Return", style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
@@ -179,14 +182,19 @@ class _PengembalianPageState extends State<PengembalianPage> {
                       Row(
                         children: [
                           buildReadonlyField(
-                              label: "Rayon",
-                              value: safeString(student['rayon'])),
+                            label: "Rayon",
+                            value: safeString(student['rayon']),
+                          ),
                           const SizedBox(width: 8),
                           buildReadonlyField(
-                              label: "Major",
-                              value: safeString(student['major'])),
+                            label: "Major",
+                            value: (student['major'] as List<dynamic>?)
+                                      ?.map((m) => m['name'])
+                                      .join(', ') ?? '',
+                          ),
                         ],
                       ),
+
                       const SizedBox(height: 12),
                       Row(
                         children: [

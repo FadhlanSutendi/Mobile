@@ -37,11 +37,9 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 🔹 Banner + Summary Card pakai Stack
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Banner
                   SizedBox(
                     height: 250,
                     width: double.infinity,
@@ -71,7 +69,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
 
-                  // Logo
                   Positioned(
                     top: 40,
                     left: 16,
@@ -89,7 +86,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
 
-                  // User info
                   Positioned(
                     top: 175,
                     left: 16,
@@ -128,7 +124,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
 
-                  // 🔹 Summary Card
                   Positioned(
                     left: 16,
                     right: 16,
@@ -139,7 +134,6 @@ class HomePage extends StatelessWidget {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      // Gunakan model CardOverview
                       final card = CardOverview.fromJson(
                           Map<String, dynamic>.from(controller.cardData));
                       return Container(
@@ -215,7 +209,6 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 135),
 
-              // 🔹 Chart Section
               Obx(() {
                 if (controller.isLoadingLoanReport.value) {
                   return const Center(child: CircularProgressIndicator());
@@ -242,8 +235,7 @@ class HomePage extends StatelessWidget {
                 ];
 
                 return Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -259,7 +251,6 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 🔹 Header + Year Picker Custom
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -276,9 +267,10 @@ class HomePage extends StatelessWidget {
                               Text(
                                 "Select Year",
                                 style: GoogleFonts.poppins(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF959595)),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color(0xFF959595),
+                                ),
                               ),
                               const SizedBox(width: 8),
                               GestureDetector(
@@ -286,24 +278,22 @@ class HomePage extends StatelessWidget {
                                   final selectedDate = await showDatePicker(
                                     context: Get.context!,
                                     initialDate: DateTime(
-                                        controller.selectedYear.value ??
-                                            DateTime.now().year),
+                                      controller.selectedYear.value ?? DateTime.now().year,
+                                    ),
                                     firstDate: DateTime(2000),
                                     lastDate: DateTime(2100),
                                     initialDatePickerMode: DatePickerMode.year,
                                   );
                                   if (selectedDate != null) {
-                                    controller.fetchLoanReportByYear(
-                                        selectedDate.year);
+                                    controller.fetchLoanReportByYear(selectedDate.year);
                                   }
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 3),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6),
-                                    color: const Color(
-                                        0xFFD9D9D9), // 🔹 sesuai figma
+                                    color: const Color(0xFFD9D9D9),
                                   ),
                                   child: Row(
                                     children: [
@@ -333,15 +323,13 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
 
-                      // 🔹 Validasi data
                       if (controller.selectedYear.value == null ||
                           reportModel.monthlyData.values.every((v) => v == 0))
                         Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.info_outline,
-                                  color: Colors.grey, size: 48),
+                              const Icon(Icons.info_outline, color: Colors.grey, size: 48),
                               const SizedBox(height: 8),
                               Text(
                                 "Data tidak ditemukan",
@@ -355,52 +343,45 @@ class HomePage extends StatelessWidget {
                           ),
                         )
                       else
-                        // 🔹 Chart dengan scroll horizontal
-                        SizedBox(
-                          height: 280,
+                      SizedBox(
+                        height: 280, // batas kontainer luar
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: SizedBox(
-                              width: months.length * 70,
+                              width: months.length * 70, 
+                              height: ((months.length / 10).ceil() * 130).toDouble(), 
                               child: Stack(
                                 children: [
                                   BarChart(
                                     BarChartData(
                                       alignment: BarChartAlignment.spaceAround,
-                                      maxY: (reportModel
-                                                  .monthlyData.values.isNotEmpty
+                                      maxY: (reportModel.monthlyData.values.isNotEmpty
                                               ? (reportModel.monthlyData.values
-                                                      .reduce((a, b) =>
-                                                          a > b ? a : b) +
-                                                  2)
+                                                      .reduce((a, b) => a > b ? a : b) +
+                                                  10)
                                               : 10)
                                           .toDouble(),
-                                      barTouchData:
-                                          BarTouchData(enabled: false),
+                                      barTouchData: BarTouchData(enabled: false),
                                       titlesData: FlTitlesData(
                                         leftTitles: const AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false),
+                                          sideTitles: SideTitles(showTitles: false),
                                         ),
                                         rightTitles: const AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false),
+                                          sideTitles: SideTitles(showTitles: false),
                                         ),
                                         topTitles: const AxisTitles(
-                                          sideTitles:
-                                              SideTitles(showTitles: false),
+                                          sideTitles: SideTitles(showTitles: false),
                                         ),
                                         bottomTitles: AxisTitles(
                                           sideTitles: SideTitles(
                                             showTitles: true,
                                             getTitlesWidget: (value, meta) {
                                               if (value.toInt() >= 0 &&
-                                                  value.toInt() <
-                                                      months.length) {
+                                                  value.toInt() < months.length) {
                                                 return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 4),
+                                                  padding: const EdgeInsets.only(top: 4),
                                                   child: Text(
                                                     months[value.toInt()],
                                                     style: GoogleFonts.poppins(
@@ -417,20 +398,16 @@ class HomePage extends StatelessWidget {
                                       ),
                                       gridData: const FlGridData(show: false),
                                       borderData: FlBorderData(show: false),
-                                      barGroups:
-                                          List.generate(months.length, (i) {
-                                        final y = reportModel
-                                                .monthlyData[months[i]]
-                                                ?.toDouble() ??
-                                            0.0;
+                                      barGroups: List.generate(months.length, (i) {
+                                        final y =
+                                            reportModel.monthlyData[months[i]]?.toDouble() ?? 0.0;
                                         return BarChartGroupData(
                                           x: i,
                                           barRods: [
                                             BarChartRodData(
                                               toY: y,
-                                              width: 28,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
+                                              width: 30,
+                                              borderRadius: BorderRadius.circular(6),
                                               color: const Color(0xFFD9D9D9),
                                             ),
                                           ],
@@ -439,56 +416,37 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
 
-                                  // 🔹 Badge angka
                                   Positioned.fill(
                                     child: LayoutBuilder(
                                       builder: (context, constraints) {
-                                        final chartHeight =
-                                            constraints.maxHeight;
+                                        final chartHeight = constraints.maxHeight;
                                         final chartWidth = constraints.maxWidth;
-                                        final itemWidth =
-                                            chartWidth / months.length;
+                                        final itemWidth = chartWidth / months.length;
 
                                         return Stack(
-                                          children:
-                                              List.generate(months.length, (i) {
-                                            final y = reportModel
-                                                    .monthlyData[months[i]]
-                                                    ?.toDouble() ??
-                                                0.0;
-                                            final maxY = (reportModel
-                                                        .monthlyData
-                                                        .values
-                                                        .isNotEmpty
-                                                    ? (reportModel
-                                                            .monthlyData.values
-                                                            .reduce((a, b) =>
-                                                                a > b ? a : b) +
-                                                        2)
+                                          children: List.generate(months.length, (i) {
+                                            final y =
+                                                reportModel.monthlyData[months[i]]?.toDouble() ?? 0.0;
+                                            final maxY = (reportModel.monthlyData.values.isNotEmpty
+                                                    ? (reportModel.monthlyData.values
+                                                            .reduce((a, b) => a > b ? a : b) +
+                                                        10)
                                                     : 10)
                                                 .toDouble();
 
-                                            if (y <= 0)
-                                              return const SizedBox.shrink();
+                                            if (y <= 0) return const SizedBox.shrink();
 
-                                            final barHeight =
-                                                (y / maxY) * chartHeight;
+                                            final barHeight = (y / maxY) * chartHeight;
 
                                             return Positioned(
-                                              left: itemWidth * i +
-                                                  itemWidth / 2 -
-                                                  15,
+                                              left: itemWidth * i + itemWidth / 2 - 15,
                                               bottom: barHeight + 30,
                                               child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 4),
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 12, vertical: 4),
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      const Color(0xFF043D94),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
+                                                  color: const Color(0xFF043D94),
+                                                  borderRadius: BorderRadius.circular(12),
                                                 ),
                                                 child: Text(
                                                   y.toInt().toString(),
@@ -510,16 +468,16 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                         ),
-                    ],
+                      ),
+                      ],
                   ),
                 );
+
               }),
-              // 🔹 Latest Activity
               Obx(() {
                 if (controller.isLoadingActivity.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                // Gunakan model LatestActivityModel
                 final activities = controller.activityList
                     .map((item) => LatestActivityModel.fromJson(item))
                     .toList();
